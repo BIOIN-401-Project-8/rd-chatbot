@@ -8,12 +8,11 @@ from llama_index import (SimpleDirectoryReader, StorageContext,
                          load_index_from_storage)
 from llama_index.embeddings import resolve_embed_model
 
-from reader import AbstractsReader, FullArticleReader
-from src.service_context import EMBED_MODEL, get_service_context
+from reader import AbstractCSVReader, FullArticleXMLReader
+from service_context import EMBED_MODEL, get_service_context
 
-DATA_DIR = "/data/pmc-open-access-subset/abstracts/Duchenne muscular dystrophy.csv"
-PERSIST_DIR = f"/data/rgd-chatbot/storage/abstracts/vector_store_index/{EMBED_MODEL}"
-
+DATA_DIR = "/data/pmc-open-access-subset/6291"
+PERSIST_DIR = f"/data/rgd-chatbot/storage/6291/vector_store_index/{EMBED_MODEL}"
 
 
 def main():
@@ -23,11 +22,11 @@ def main():
         reader = SimpleDirectoryReader(
             DATA_DIR,
             file_extractor={
-                ".csv": AbstractsReader(),
-                ".xml": FullArticleReader(),
-            }
+                ".csv": AbstractCSVReader(),
+                ".xml": FullArticleXMLReader(),
+            },
         )
-        documents = reader.load_data(file=DATA_DIR, show_progress=True)
+        documents = reader.load_data(show_progress=True)
         index = VectorStoreIndex.from_documents(
             documents,
             service_context=service_context,

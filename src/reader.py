@@ -5,19 +5,16 @@ from llama_index.readers.base import BaseReader
 from llama_index.readers.schema.base import Document
 
 
-class AbstractsReader(BaseReader):
+class AbstractCSVReader(BaseReader):
     def __init__(
-        self,
-        *args: Any,
-        pd_read_csv_kwargs: Optional[Dict] = None,
-        **kwargs: Any
+        self, *args: Any, extra_info: Optional[Dict] = None, pd_read_csv_kwargs: Optional[Dict] = None, **kwargs: Any
     ) -> None:
         """Init params."""
         super().__init__(*args, **kwargs)
         self._pd_read_csv_kwargs = pd_read_csv_kwargs or {}
 
     def load_data(
-        self, file: Path, show_progress: bool = False
+        self, file: Path, extra_info: Optional[Dict] = None, show_progress: bool = False
     ) -> List[Document]:
         """Parse file."""
         import pandas as pd
@@ -28,23 +25,20 @@ class AbstractsReader(BaseReader):
             from tqdm import tqdm
             iterator = tqdm(iterator, total=len(df))
         return [
-            Document(text=row["abstract"], metadata={
+            Document(text=row["abstract"], extra_info=extra_info, metadata={
                 "PMID": str(row["PMID"]),
             }) for _, row in iterator
         ]
 
 
-class FullArticleReader(BaseReader):
-    def __init__(
-        self,
-        *args: Any,
-        **kwargs: Any
-    ) -> None:
+class FullArticleXMLReader(BaseReader):
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Init params."""
         super().__init__(*args, **kwargs)
 
     def load_data(
-        self, file: Path,
+        self, file: Path, extra_info: Optional[Dict] = None
     ) -> List[Document]:
         """Parse file."""
         from bs4 import BeautifulSoup
@@ -61,7 +55,7 @@ class FullArticleReader(BaseReader):
         text = f"{title_text}\n{abstract_text}\n{body_text}"
 
         return [
-            Document(text=text, metadata={
+            Document(text=text, extra_info=extra_info, metadata={
                 "PMC": Path(file).stem.replace("PMC", "")
             })
         ]
