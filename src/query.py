@@ -32,5 +32,6 @@ print("-- INTERNAL --")
 print("Source nodes:")
 for source_node in response.source_nodes:
     print(source_node.node.get_text())
+    print(source_node.node.metadata)
 
 # %%

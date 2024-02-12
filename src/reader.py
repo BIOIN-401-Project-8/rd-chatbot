@@ -25,8 +25,9 @@ class AbstractCSVReader(BaseReader):
             from tqdm import tqdm
             iterator = tqdm(iterator, total=len(df))
         return [
-            Document(text=row["abstract"], extra_info=extra_info, metadata={
+            Document(text=row["abstract"], metadata={
                 "PMID": str(row["PMID"]),
+                "extra_info": extra_info or {}
             }) for _, row in iterator
         ]
 
@@ -55,7 +56,8 @@ class FullArticleXMLReader(BaseReader):
         text = f"{title_text}\n{abstract_text}\n{body_text}"
 
         return [
-            Document(text=text, extra_info=extra_info, metadata={
-                "PMC": Path(file).stem.replace("PMC", "")
+            Document(text=text, metadata={
+                "PMC": Path(file).stem.replace("PMC", ""),
+                "extra_info": extra_info or {}
             })
         ]
