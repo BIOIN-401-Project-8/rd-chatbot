@@ -1,8 +1,2 @@
-chainlit==1.0.200
-ctransformers==0.2.27
-faiss-gpu==1.7.2
-langchain==0.1.5
-neo4j==5.17.0
-sentence-transformers==2.3.1
-unstructured==0.12.3
-gql==3.5.0
+llama-index==0.9.47
+transformers==4.37.2
