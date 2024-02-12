@@ -32,3 +32,34 @@ class AbstractsReader(BaseReader):
                 "PMID": str(row["PMID"]),
             }) for _, row in iterator
         ]
+
+
+class FullArticleReader(BaseReader):
+    def __init__(
+        self,
+        *args: Any,
+        **kwargs: Any
+    ) -> None:
+        """Init params."""
+        super().__init__(*args, **kwargs)
+
+    def load_data(
+        self, file: Path,
+    ) -> List[Document]:
+        """Parse file."""
+        from bs4 import BeautifulSoup
+        import lxml
+        with open(file, "r") as f:
+            text = f.read()
+        soup = BeautifulSoup(text, "lxml")
+        title = soup.find("article-title").get_text()
+        abstract = soup.find("abstract").get_text()
+        body = soup.find("body").get_text()
+
+        text = title + "\n" + abstract + "\n" + body
+
+        return [
+            Document(text=text, metadata={
+                "PMC": Path(file).stem.replace("PMC", "")
+            })
+        ]

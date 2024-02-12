@@ -7,7 +7,7 @@ from llama_index import StorageContext, load_index_from_storage
 from llama_index.query_engine import CitationQueryEngine
 
 from index import PERSIST_DIR
-from service_context import get_service_context
+from src.service_context import get_service_context
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
