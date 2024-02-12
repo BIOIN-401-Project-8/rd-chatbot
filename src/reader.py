@@ -48,7 +48,6 @@ class FullArticleReader(BaseReader):
     ) -> List[Document]:
         """Parse file."""
         from bs4 import BeautifulSoup
-        import lxml
         with open(file, "r") as f:
             text = f.read()
         soup = BeautifulSoup(text, "lxml")
