@@ -30,3 +30,26 @@ services:
     ports:
       - "7474:7474"
       - "7687:7687"
+
+  ollama:
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - driver: nvidia
+                          count: all
+                          capabilities:
+                              - gpu
+        volumes:
+            - ollama:/root/.ollama
+        ports:
+            - 11434:11434
+        container_name: ollama
+        pull_policy: always
+        tty: true
+        restart: unless-stopped
+        image: ollama/ollama:latest
+
+volumes:
+    ollama: {}
+
