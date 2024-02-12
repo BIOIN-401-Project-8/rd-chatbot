@@ -4,6 +4,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    environment:
+      - LLAMA_INDEX_CACHE_DIR=/root/.cache
     deploy:
       resources:
         reservations:
@@ -19,8 +21,9 @@ services:
       - ~/.wakatime.cfg:/root/.wakatime.cfg:cached
       - ~/.cache:/root/.cache:cached
       - ~/Github/bioin-401-project/data:/data:cached
-    network_mode: service:neo4j
     command: sleep infinity
+    networks:
+      - rgd-net
 
   neo4j:
     image: neo4j:5.16.0
@@ -30,26 +33,32 @@ services:
     ports:
       - "7474:7474"
       - "7687:7687"
+    networks:
+      - rgd-net
 
   ollama:
-        deploy:
-            resources:
-                reservations:
-                    devices:
-                        - driver: nvidia
-                          count: all
-                          capabilities:
-                              - gpu
-        volumes:
-            - ollama:/root/.ollama
-        ports:
-            - 11434:11434
-        container_name: ollama
-        pull_policy: always
-        tty: true
-        restart: unless-stopped
-        image: ollama/ollama:latest
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities:
+                - gpu
+    volumes:
+      - ollama:/root/.ollama
+    ports:
+      - 11434:11434
+    container_name: ollama
+    pull_policy: always
+    tty: true
+    restart: unless-stopped
+    image: ollama/ollama:latest
+    networks:
+      - rgd-net
 
 volumes:
-    ollama: {}
+  ollama:
 
+networks:
+  rgd-net:
