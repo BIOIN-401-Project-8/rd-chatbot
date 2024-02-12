@@ -50,12 +50,15 @@ class FullArticleReader(BaseReader):
         from bs4 import BeautifulSoup
         with open(file, "r") as f:
             text = f.read()
-        soup = BeautifulSoup(text, "lxml")
-        title = soup.find("article-title").get_text()
-        abstract = soup.find("abstract").get_text()
-        body = soup.find("body").get_text()
+        soup = BeautifulSoup(text, "html.parser")
+        title = soup.find("article-title")
+        title_text = title.get_text() if title else ""
+        abstract = soup.find("abstract")
+        abstract_text = abstract.get_text() if abstract else ""
+        body = soup.find("body")
+        body_text = body.get_text() if body else ""
 
-        text = title + "\n" + abstract + "\n" + body
+        text = f"{title_text}\n{abstract_text}\n{body_text}"
 
         return [
             Document(text=text, metadata={

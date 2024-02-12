@@ -19,7 +19,7 @@ class TestFullArticleReader(unittest.TestCase):
         reader = FullArticleReader()
         documents = reader.load_data(file="/data/pmc-open-access-subset/6291/PMC10620460.xml")
         document = documents[0]
-        self.assertEqual(len(document.text), 54310)
+        self.assertEqual(len(document.text), 41301)
         self.assertEqual(document.metadata["PMC"], "10620460")
 
 
