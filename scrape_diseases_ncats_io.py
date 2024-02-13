@@ -1,7 +1,7 @@
 # %%
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 import time
 from neo4j import GraphDatabase, RoutingControl
@@ -103,17 +103,17 @@ with GraphDatabase.driver("neo4j://neo4j:7687", auth=("neo4j", "12345678")) as d
     start = time.time()
     nodes = read_nodes(driver_disease_ncats_io)
     end = time.time()
-    logging.info(f"Time to read nodes from disease.ncats.io: {end - start}")
+    logging.info(f"Time to read nodes from disease.ncats.io: {timedelta(seconds=end - start)}")
     logging.info("Writing nodes to local")
     start = time.time()
     write_nodes(driver, nodes)
     end = time.time()
-    logging.info(f"Time to write nodes to local: {end - start}")
+    logging.info(f"Time to write nodes to local: {timedelta(seconds=end - start)}")
     logging.info("Reading relationships from disease.ncats.io")
     start = time.time()
     relationships = read_relationships(driver_disease_ncats_io)
     end = time.time()
-    logging.info(f"Time to read relationships from disease.ncats.io: {end - start}")
+    logging.info(f"Time to read relationships from disease.ncats.io: {timedelta(seconds=end - start)}")
     logging.info("Writing relationships to local")
     start = time.time()
     write_relationships(driver, relationships)
