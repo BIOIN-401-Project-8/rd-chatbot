@@ -22,8 +22,6 @@ services:
       - ~/.cache:/root/.cache:cached
       - ~/Github/bioin-401-project/data:/data:cached
     command: sleep infinity
-    networks:
-      - rgd-net
 
   neo4j:
     image: neo4j:5.16.0
@@ -33,8 +31,6 @@ services:
     ports:
       - "7474:7474"
       - "7687:7687"
-    networks:
-      - rgd-net
 
   ollama:
     deploy:
@@ -54,11 +50,6 @@ services:
     tty: true
     restart: unless-stopped
     image: ollama/ollama:latest
-    networks:
-      - rgd-net
 
 volumes:
   ollama:
-
-networks:
-  rgd-net:
