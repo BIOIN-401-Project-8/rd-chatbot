@@ -1,46 +1,102 @@
 import logging
-import os.path
-import sys
+import time
+from datetime import datetime, timedelta
+from functools import cache
+from os import PathLike
 from pathlib import Path
+from typing import Sequence
 
-from llama_index import (SimpleDirectoryReader, StorageContext,
-                         VectorStoreIndex, download_loader,
-                         load_index_from_storage)
-from llama_index.embeddings import resolve_embed_model
+from llama_index import Document, KnowledgeGraphIndex, ServiceContext, SimpleDirectoryReader, VectorStoreIndex
 
 from reader import AbstractCSVReader, FullArticleXMLReader
-from service_context import EMBED_MODEL, get_service_context
+from service_context import get_service_context
 
 DATA_DIR = "/data/pmc-open-access-subset/6291"
-PERSIST_DIR = f"/data/rgd-chatbot/storage/6291/vector_store_index/{EMBED_MODEL}"
+PERSIST_DIR = Path("/data/rgd-chatbot/storage/6291/")
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.FileHandler(f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log"),
+        logging.StreamHandler(),
+    ],
+)
+logger = logging.getLogger(__name__)
 
 
 def main():
+    start = time.time()
     service_context = get_service_context()
 
-    if not os.path.exists(PERSIST_DIR):
-        reader = SimpleDirectoryReader(
-            DATA_DIR,
-            file_extractor={
-                ".csv": AbstractCSVReader(),
-                ".xml": FullArticleXMLReader(),
-            },
-        )
-        documents = reader.load_data(show_progress=True)
-        index = VectorStoreIndex.from_documents(
-            documents,
-            service_context=service_context,
-            show_progress=True,
-        )
-        index.storage_context.persist(persist_dir=PERSIST_DIR)
-    else:
-        storage_context = StorageContext.from_defaults(persist_dir=PERSIST_DIR)
-        index = load_index_from_storage(
-            storage_context,
-            service_context=service_context,
-            show_progress=True,
-        )
-        # append new data?
+    vector_store_index_perist_dir = PERSIST_DIR / "vector_store_index"
+    if not vector_store_index_perist_dir.exists():
+        documents = read_documents()
+        logger.info("Generating vector store index")
+        generate_vector_store_index(service_context, documents, vector_store_index_perist_dir)
+
+    graph_store_index_persist_dir = PERSIST_DIR / "graph_store_index"
+    if not graph_store_index_persist_dir.exists():
+        documents = read_documents()
+        logger.info("Generating graph store index")
+        generate_graph_store_index(service_context, documents, graph_store_index_persist_dir)
+
+    end = time.time()
+    logger.info(f"Total time: {timedelta(end - start)}")
+
+
+@cache
+def read_documents():
+    logger.info("Reading documents")
+    start = time.time()
+    reader = SimpleDirectoryReader(
+        DATA_DIR,
+        file_extractor={
+            ".csv": AbstractCSVReader(),
+            ".xml": FullArticleXMLReader(),
+        },
+    )
+    documents = reader.load_data(show_progress=True)
+    end = time.time()
+    logger.info(f"Reading documents took {timedelta(end - start)}")
+    return documents
+
+
+def generate_graph_store_index(
+    service_context: ServiceContext, documents: Sequence[Document], persist_dir: str | PathLike
+):
+    start = time.time()
+    knowledge_graph_index = KnowledgeGraphIndex.from_documents(
+        documents,
+        max_triplets_per_chunk=2,
+        service_context=service_context,
+        include_embeddings=True,
+        show_progress=True,
+    )
+    end = time.time()
+    logger.info(f"Generating graph store index took {timedelta(end - start)}")
+    start = time.time()
+    knowledge_graph_index.storage_context.persist(persist_dir=persist_dir)
+    end = time.time()
+    logger.info(f"Persisting graph store index took {timedelta(end - start)}")
+
+
+def generate_vector_store_index(
+    service_context: ServiceContext, documents: Sequence[Document], persist_dir: str | PathLike
+):
+    start = time.time()
+    vector_store_index = VectorStoreIndex.from_documents(
+        documents,
+        service_context=service_context,
+        show_progress=True,
+    )
+    end = time.time()
+    logger.info(f"Generating vector store index took {timedelta(end - start)}")
+    start = time.time()
+    vector_store_index.storage_context.persist(persist_dir=persist_dir)
+    end = time.time()
+    logger.info(f"Persisting vector store index took {timedelta(end - start)}")
+
 
 if __name__ == "__main__":
     main()
