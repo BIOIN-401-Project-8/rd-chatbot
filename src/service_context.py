@@ -1,4 +1,5 @@
 from llama_index import ServiceContext
+from llama_index.callbacks import CallbackManager
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.llms import Ollama
 
@@ -6,7 +7,7 @@ LLM_MODEL = "starling-lm"
 EMBED_MODEL = "dmis-lab/biobert-v1.1"
 
 
-def get_service_context():
+def get_service_context(callback_manager: CallbackManager = None):
     embed_model = HuggingFaceEmbedding(
         model_name=EMBED_MODEL,
         embed_batch_size=32,
@@ -18,5 +19,5 @@ def get_service_context():
         request_timeout=30.0,
         temperature=0.0,
     )
-    service_context = ServiceContext.from_defaults(embed_model=embed_model, llm=llm)
+    service_context = ServiceContext.from_defaults(embed_model=embed_model, llm=llm, callback_manager=callback_manager)
     return service_context
