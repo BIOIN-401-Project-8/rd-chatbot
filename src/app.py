@@ -14,7 +14,7 @@ from graph_stores import CustomNeo4jGraphStore
 from query_engine import CustomCitationQueryEngine
 from retrievers import KG_RAG_KnowledgeGraphRAGRetriever
 from service_context import get_service_context
-from translation import translation
+from translation import detect_language, translate
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
@@ -131,9 +131,13 @@ async def factory():
 @cl.on_message
 async def main(message: cl.Message):
     query_engine: CitationQueryEngine = cl.user_session.get("query_engine")
-    translated = await translation(message.content, "en")
-    content = translated["translation"]
-    response = await cl.make_async(query_engine.query)(message.content)
+    content = message.content
+
+    detected_language = await detect_language(message.content)
+    if detected_language != "en" and detected_language is not None:
+        content = await translate(content, target="en")
+
+    response = await cl.make_async(query_engine.query)(content)
     response_message =  cl.Message(content="")
 
     if hasattr(response, "response_gen"):
@@ -142,11 +146,12 @@ async def main(message: cl.Message):
 
     content = response_message.content
     response_message.content = response_message.content.removesuffix("DONE")
+
+    if detected_language != "en" and detected_language is not None:
+        response_message.content = await translate(response_message.content, target=detected_language)
+
     response_message.content += await get_formatted_sources(response, content)
 
     add_graph(response_message)
-
-    translated = await translation(response_message.content, "es")
-    response_message.content = translated["translation"]
 
     await response_message.send()
