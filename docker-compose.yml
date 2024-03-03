@@ -13,8 +13,7 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
-    ports:
-      - 8000:8000
+    shm_size: 2gb
     volumes:
       - ..:/workspaces:cached
       - /var/run/docker.sock:/var/run/docker.sock
@@ -24,6 +23,42 @@ services:
       - ~/.cache:/root/.cache:cached
       - ~/Github/bioin-401-project/data:/data:cached
     command: sleep infinity
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - LLAMA_INDEX_CACHE_DIR=/root/.cache
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    shm_size: 2gb
+    ports:
+      - 8000:8000
+    volumes:
+      - ..:/workspaces:cached
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ~/.cache:/root/.cache:cached
+      - ~/Github/bioin-401-project/data:/data:cached
+    working_dir: /workspaces/rgd-chatbot
+    command: chainlit run -hw src/app.py
+
+
+  nginx-proxy-manager:
+    image: 'docker.io/jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ~/Github/bioin-401-project/data/nginx-proxy-manager/data:/data
+      - ~/Github/bioin-401-project/data/nginx-proxy-manager/letsencrypt:/etc/letsencrypt
 
   neo4j:
     image: neo4j:5.16.0
