@@ -14,6 +14,7 @@ from graph_stores import CustomNeo4jGraphStore
 from query_engine import CustomCitationQueryEngine
 from retrievers import KG_RAG_KnowledgeGraphRAGRetriever
 from service_context import get_service_context
+from translation import translation
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
@@ -130,6 +131,8 @@ async def factory():
 @cl.on_message
 async def main(message: cl.Message):
     query_engine: CitationQueryEngine = cl.user_session.get("query_engine")
+    translated = await translation(message.content, "en")
+    content = translated["translation"]
     response = await cl.make_async(query_engine.query)(message.content)
     response_message =  cl.Message(content="")
 
@@ -141,5 +144,8 @@ async def main(message: cl.Message):
     response_message.content += await get_formatted_sources(response, content)
 
     add_graph(response_message)
+
+    translated = await translation(response_message.content, "es")
+    response_message.content = translated["translation"]
 
     await response_message.send()
