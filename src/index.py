@@ -15,19 +15,21 @@ LOG_PATH = Path(f"logs/{Path(__file__).stem}_{datetime.now().strftime('%Y-%m-%d_
 DATA_DIR = "/data/pmc-open-access-subset/6291"
 PERSIST_DIR = Path("/data/rgd-chatbot/storage/6291/")
 
-LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.FileHandler(LOG_PATH),
-        logging.StreamHandler(),
-    ],
-)
+
 logger = logging.getLogger(__name__)
 
 
 def main():
+    logging.basicConfig(
+    level=logging.INFO,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        handlers=[
+            logging.FileHandler(LOG_PATH),
+            logging.StreamHandler(),
+        ],
+    )
+    LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    logger.addHandler(logging.FileHandler(LOG_PATH))
     start = time.time()
     service_context = get_service_context()
 
