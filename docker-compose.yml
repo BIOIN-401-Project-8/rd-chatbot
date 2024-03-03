@@ -29,6 +29,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    restart: unless-stopped
     environment:
       - LLAMA_INDEX_CACHE_DIR=/root/.cache
       - NEO4J_PASSWORD=${NEO4J_PASSWORD}
