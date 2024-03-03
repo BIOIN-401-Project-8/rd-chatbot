@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 import sys
 
 import chainlit as cl
@@ -7,6 +8,7 @@ import networkx as nx
 import plotly.graph_objects as go
 from llama_index import StorageContext
 from llama_index.callbacks import CallbackManager
+from llama_index.core.response.schema import RESPONSE_TYPE
 from llama_index.prompts import PromptTemplate
 from llama_index.prompts.base import PromptType
 from llama_index.query_engine import CitationQueryEngine
@@ -33,11 +35,9 @@ async def factory():
         node_label="Congenital and Genetic Diseases",
     )
 
-
     storage_context = StorageContext.from_defaults(
         graph_store=graph_store,
     )
-
 
     CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL = (
         "A question is provided below. Given the question, extract up to {max_keywords} "
@@ -54,8 +54,8 @@ async def factory():
         verbose=True,
         service_context=service_context,
         graph_traversal_depth=1,
-        max_entities=1,
-        max_synonyms=0,
+        max_entities=3,
+        max_synonyms=1,
         entity_extract_template=PromptTemplate(
             CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL,
             prompt_type=PromptType.QUERY_KEYWORD_EXTRACT,
@@ -69,14 +69,16 @@ async def factory():
         "Every answer should include at least one source citation. "
         "Only cite a source when you are explicitly referencing it. "
         "If none of the sources are helpful, you should indicate that. "
+        "Once you have answered the question, stop and say 'DONE'."
         "For example:\n"
         "Source 1:\n"
         "The sky is red in the evening and blue in the morning.\n"
         "Source 2:\n"
         "Water is wet when the sky is red.\n"
         "Query: When is water wet?\n"
-        "Answer: Water will be wet when the sky is red [2], "
-        "which occurs in the evening [1].\n"
+        "Answer: Water will be wet when the sky is red (SOURCE 2), "
+        "which occurs in the evening (SOURCE 1).\n"
+        "DONE\n"
         "Now it's your turn. Below are several numbered sources of information:"
         "\n------\n"
         "{context_str}"
@@ -92,14 +94,16 @@ async def factory():
         "Every answer should include at least one source citation. "
         "Only cite a source when you are explicitly referencing it. "
         "If none of the sources are helpful, you should indicate that. "
+        "Once you have answered the question, stop and say 'DONE'."
         "For example:\n"
         "Source 1:\n"
         "The sky is red in the evening and blue in the morning.\n"
         "Source 2:\n"
         "Water is wet when the sky is red.\n"
         "Query: When is water wet?\n"
-        "Answer: Water will be wet when the sky is red [2], "
-        "which occurs in the evening [1].\n"
+        "Answer: Water will be wet when the sky is red [(SOURCE 2)], "
+        "which occurs in the evening (SOURCE 1).\n"
+        "DONE\n"
         "Now it's your turn. "
         "We have provided an existing answer: {existing_answer}"
         "Below are several numbered sources of information. "
@@ -118,7 +122,7 @@ async def factory():
         retriever=retriever,
         similarity_top_k=5,  # TODO: make this param actually do something, it's currently hardcoded somewhere
         citation_qa_template=CUSTOM_CITATION_QA_TEMPLATE,
-        citation_refine_template=None,
+        citation_refine_template=CUSTOM_CITATION_REFINE_TEMPLATE,
         use_async=True,
         streaming=True,
         verbose=True,
@@ -136,18 +140,26 @@ async def main(message: cl.Message):
         for token in response.response_gen:
             await response_message.stream_token(token=token)
 
-    response_message.content += response.get_formatted_sources()
-
-    response_message.content += "\n".join(
-        [
-            f"{node.score:.2f}: {node.text}"
-            for node in sorted(response.source_nodes, key=lambda x: x.score, reverse=True)[:5]
-        ]
-    )
+    content = response_message.content
+    response_message.content += await get_formatted_sources(response, content)
 
     add_graph(response_message)
 
     await response_message.send()
+
+
+async def get_formatted_sources(response: RESPONSE_TYPE, content: str):
+    sources = set(map(int, re.findall(r"SOURCE (\d+)", content)))
+    source_nodes = []
+    for source_node in response.source_nodes:
+        source = int(source_node.text.split(":")[0].removeprefix("Source "))
+        if source in sources:
+            source_nodes.append(source_node)
+    references = "SOURCES:\n"
+    references += "\n".join(
+        [f"{node.score:.2f}: {node.text}" for node in sorted(source_nodes, key=lambda x: x.score, reverse=True)]
+    )
+    return references
 
 
 def add_graph(response_message: cl.Message):

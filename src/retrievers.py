@@ -71,7 +71,7 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
         ]
 
         # get top k
-        k = 1000
+        k = 10
         nodes = sorted(nodes, key=lambda x: x.score, reverse=True)
         nodes = nodes[:k]
 
