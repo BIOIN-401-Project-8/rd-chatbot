@@ -141,6 +141,7 @@ async def main(message: cl.Message):
             await response_message.stream_token(token=token)
 
     content = response_message.content
+    response_message.content = response_message.content.removesuffix("DONE")
     response_message.content += await get_formatted_sources(response, content)
 
     add_graph(response_message)
