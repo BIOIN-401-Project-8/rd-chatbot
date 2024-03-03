@@ -54,6 +54,7 @@ async def factory():
         graph_traversal_depth=1,
         max_entities=3,
         max_synonyms=1,
+        similarity_top_k=100,
         entity_extract_template=PromptTemplate(
             CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL,
             prompt_type=PromptType.QUERY_KEYWORD_EXTRACT,
@@ -118,7 +119,6 @@ async def factory():
     query_engine = CustomCitationQueryEngine.from_args(
         service_context,
         retriever=retriever,
-        similarity_top_k=5,  # TODO: make this param actually do something, it's currently hardcoded somewhere
         citation_qa_template=CUSTOM_CITATION_QA_TEMPLATE,
         citation_refine_template=CUSTOM_CITATION_REFINE_TEMPLATE,
         use_async=True,

@@ -1,10 +1,15 @@
 import logging
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple
+from llama_index import BasePromptTemplate, ServiceContext, StorageContext
+from llama_index.callbacks.base import CallbackManager
+from llama_index.indices.knowledge_graph.retrievers import REL_TEXT_LIMIT
 
 import numpy as np
 from llama_index.indices.query.embedding_utils import (
-    get_top_k_embeddings, get_top_k_embeddings_learner,
-    get_top_k_mmr_embeddings)
+    get_top_k_embeddings,
+    get_top_k_embeddings_learner,
+    get_top_k_mmr_embeddings,
+)
 from llama_index.retrievers import KnowledgeGraphRAGRetriever
 from llama_index.schema import NodeWithScore, QueryBundle, TextNode
 
@@ -12,26 +17,56 @@ logger = logging.getLogger(__name__)
 
 
 class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
+    def __init__(
+        self,
+        service_context: Optional[ServiceContext] = None,
+        storage_context: Optional[StorageContext] = None,
+        entity_extract_fn: Optional[Callable] = None,
+        entity_extract_template: Optional[BasePromptTemplate] = None,
+        entity_extract_policy: Optional[str] = "union",
+        synonym_expand_fn: Optional[Callable] = None,
+        synonym_expand_template: Optional[BasePromptTemplate] = None,
+        synonym_expand_policy: Optional[str] = "union",
+        max_entities: int = 5,
+        max_synonyms: int = 5,
+        retriever_mode: Optional[str] = "keyword",
+        with_nl2graphquery: bool = False,
+        graph_traversal_depth: int = 2,
+        max_knowledge_sequence: int = REL_TEXT_LIMIT,
+        verbose: bool = False,
+        callback_manager: Optional[CallbackManager] = None,
+        similarity_top_k: int = 10,
+        **kwargs: Any,
+    ) -> None:
+        """Initialize the retriever."""
+        super().__init__(
+            service_context=service_context,
+            storage_context=storage_context,
+            entity_extract_fn=entity_extract_fn,
+            entity_extract_template=entity_extract_template,
+            entity_extract_policy=entity_extract_policy,
+            synonym_expand_fn=synonym_expand_fn,
+            synonym_expand_template=synonym_expand_template,
+            synonym_expand_policy=synonym_expand_policy,
+            max_entities=max_entities,
+            max_synonyms=max_synonyms,
+            retriever_mode=retriever_mode,
+            with_nl2graphquery=with_nl2graphquery,
+            graph_traversal_depth=graph_traversal_depth,
+            max_knowledge_sequence=max_knowledge_sequence,
+            verbose=verbose,
+            callback_manager=callback_manager,
+            **kwargs,
+        )
+        self._similarity_top_k = similarity_top_k
+
     def _build_nodes(
-        self, knowledge_sequence: List[str], rel_map: Optional[Dict[Any, Any]] = None,
-        query_bundle: QueryBundle = None
+        self, knowledge_sequence: List[str], rel_map: Optional[Dict[Any, Any]] = None, query_bundle: QueryBundle = None
     ) -> List[NodeWithScore]:
         """Build nodes from knowledge sequence."""
         if len(knowledge_sequence) == 0:
             logger.info("> No knowledge sequence extracted from entities.")
             return []
-        # _new_line_char = "\n"
-        # context_string = (
-        #     f"The following are knowledge sequence in max depth"
-        #     f" {self._graph_traversal_depth} "
-        #     f"in the form of directed graph like:\n"
-        #     f"`subject -[predicate]->, object, <-[predicate_next_hop]-,"
-        #     f" object_next_hop ...`"
-        #     f" extracted based on key entities as subject:\n"
-        #     f"{_new_line_char.join(knowledge_sequence)}"
-        # )
-        # if self._verbose:
-        #     print_text(f"Graph RAG context:\n{context_string}\n", color="blue")
 
         rel_node_info = {
             "kg_rel_map": rel_map,
@@ -45,9 +80,7 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
         service_context = self.get_service_context()
         embed_model = service_context.embed_model
 
-        query_node = TextNode(
-            text=query_bundle.query_str
-        )
+        query_node = TextNode(text=query_bundle.query_str)
         query_node = embed_model([query_node])[0]
         query_embedding = np.array(query_node.embedding)
 
@@ -70,10 +103,8 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
             for node in nodes
         ]
 
-        # get top k
-        k = 10
         nodes = sorted(nodes, key=lambda x: x.score, reverse=True)
-        nodes = nodes[:k]
+        nodes = nodes[: self._similarity_top_k]
 
         return nodes
 
@@ -96,9 +127,7 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
 
         return self._build_nodes(knowledge_sequence, rel_map, query_bundle)
 
-    async def _aretrieve_keyword(
-        self, query_bundle: QueryBundle
-    ) -> List[NodeWithScore]:
+    async def _aretrieve_keyword(self, query_bundle: QueryBundle) -> List[NodeWithScore]:
         """Retrieve in keyword mode."""
         if self._retriever_mode not in ["keyword", "keyword_embedding"]:
             return []
@@ -117,9 +146,7 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
 
         return self._build_nodes(knowledge_sequence, rel_map, query_bundle)
 
-    def _get_knowledge_sequence(
-        self, entities: List[str]
-    ) -> Tuple[List[str], Optional[Dict[Any, Any]]]:
+    def _get_knowledge_sequence(self, entities: List[str]) -> Tuple[List[str], Optional[Dict[Any, Any]]]:
         """Get knowledge sequence from entities."""
         # Get SubGraph from Graph Store as Knowledge Sequence
         rel_map: Optional[Dict] = self._graph_store.get_rel_map(
@@ -130,18 +157,15 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
         # Build Knowledge Sequence
         knowledge_sequence = []
         if rel_map:
-            knowledge_sequence.extend(
-                [" ".join(rel_obj) for rel_objs in rel_map.values() for rel_obj in rel_objs]
-            )
+            for rel_key, rel_values in rel_map.items():
+                knowledge_sequence.extend([rel_key + " " + " ".join(rel_obj) for rel_obj in rel_values])
         else:
             logger.info("> No knowledge sequence extracted from entities.")
             return [], None
 
         return knowledge_sequence, rel_map
 
-    async def _aget_knowledge_sequence(
-        self, entities: List[str]
-    ) -> Tuple[List[str], Optional[Dict[Any, Any]]]:
+    async def _aget_knowledge_sequence(self, entities: List[str]) -> Tuple[List[str], Optional[Dict[Any, Any]]]:
         """Get knowledge sequence from entities."""
         # Get SubGraph from Graph Store as Knowledge Sequence
         # TBD: async in graph store
@@ -153,9 +177,7 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
         # Build Knowledge Sequence
         knowledge_sequence = []
         if rel_map:
-            knowledge_sequence.extend(
-                [" ".join(rel_obj) for rel_objs in rel_map.values() for rel_obj in rel_objs]
-            )
+            knowledge_sequence.extend([" ".join(rel_obj) for rel_objs in rel_map.values() for rel_obj in rel_objs])
         else:
             logger.info("> No knowledge sequence extracted from entities.")
             return [], None
