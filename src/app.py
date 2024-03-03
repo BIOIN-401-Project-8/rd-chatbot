@@ -1,13 +1,21 @@
 
 import logging
+import os
 import sys
 
+
 import chainlit as cl
-from llama_index import StorageContext, load_index_from_storage
+import networkx as nx
+import plotly.graph_objects as go
+from llama_index import StorageContext
 from llama_index.callbacks import CallbackManager
+from llama_index.prompts import PromptTemplate
+from llama_index.prompts.base import PromptType
 from llama_index.query_engine import CitationQueryEngine
 
-from index import PERSIST_DIR
+from graph_stores import CustomNeo4jGraphStore
+from query_engine import CustomCitationQueryEngine
+from retrievers import KG_RAG_KnowledgeGraphRAGRetriever
 from service_context import get_service_context
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
@@ -18,25 +26,106 @@ logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 async def factory():
     callback_manager = CallbackManager([cl.LlamaIndexCallbackHandler()])
     service_context = get_service_context(callback_manager=callback_manager)
-    await cl.Message(content="Loaded service context").send()
 
-    storage_context = StorageContext.from_defaults(persist_dir=PERSIST_DIR / "vector_store_index")
-    vector_store_index = load_index_from_storage(
-        storage_context,
-        service_context=service_context,
-        show_progress=True,
+    graph_store = CustomNeo4jGraphStore(
+        username="neo4j",
+        password=os.environ["NEO4J_PASSWORD"],
+        url="bolt://neo4j:7687",
+        database="neo4j",
+        node_label="Congenital and Genetic Diseases",
     )
-    await cl.Message(content="Loaded index from storage").send()
 
-    query_engine = CitationQueryEngine.from_args(
-        vector_store_index,
-        similarity_top_k=10,
-        citation_chunk_size=512,
+
+    storage_context = StorageContext.from_defaults(
+        graph_store=graph_store,
+    )
+
+
+    CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL = (
+        "A question is provided below. Given the question, extract up to {max_keywords} "
+        "diseases from the text. Focus on extracting the diseases that we can use "
+        "to best lookup answers to the question. Avoid stopwords.\n"
+        "---------------------\n"
+        "{question}\n"
+        "---------------------\n"
+        "Provide diseases in the following comma-separated format: 'KEYWORDS: <diseases>'\n"
+    )
+
+    retriever = KG_RAG_KnowledgeGraphRAGRetriever(
+        storage_context=storage_context,
+        verbose=True,
+        service_context=service_context,
+        graph_traversal_depth=1,
+        max_entities=1,
+        max_synonyms=0,
+        entity_extract_template=PromptTemplate(
+            CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL,
+            prompt_type=PromptType.QUERY_KEYWORD_EXTRACT,
+        ),
+    )
+
+    CUSTOM_CITATION_QA_TEMPLATE = PromptTemplate(
+        "Please provide an answer based solely on the provided sources. "
+        "When referencing information from a source, "
+        "cite the appropriate source(s) using their corresponding numbers. "
+        "Every answer should include at least one source citation. "
+        "Only cite a source when you are explicitly referencing it. "
+        "If none of the sources are helpful, you should indicate that. "
+        "For example:\n"
+        "Source 1:\n"
+        "The sky is red in the evening and blue in the morning.\n"
+        "Source 2:\n"
+        "Water is wet when the sky is red.\n"
+        "Query: When is water wet?\n"
+        "Answer: Water will be wet when the sky is red [2], "
+        "which occurs in the evening [1].\n"
+        "Now it's your turn. Below are several numbered sources of information:"
+        "\n------\n"
+        "{context_str}"
+        "\n------\n"
+        "Query: {query_str}\n"
+        "Answer: "
+    )
+
+    CUSTOM_CITATION_REFINE_TEMPLATE = PromptTemplate(
+        "Please provide an answer based solely on the provided sources. "
+        "When referencing information from a source, "
+        "cite the appropriate source(s) using their corresponding numbers. "
+        "Every answer should include at least one source citation. "
+        "Only cite a source when you are explicitly referencing it. "
+        "If none of the sources are helpful, you should indicate that. "
+        "For example:\n"
+        "Source 1:\n"
+        "The sky is red in the evening and blue in the morning.\n"
+        "Source 2:\n"
+        "Water is wet when the sky is red.\n"
+        "Query: When is water wet?\n"
+        "Answer: Water will be wet when the sky is red [2], "
+        "which occurs in the evening [1].\n"
+        "Now it's your turn. "
+        "We have provided an existing answer: {existing_answer}"
+        "Below are several numbered sources of information. "
+        "Use them to refine the existing answer. "
+        "If the provided sources are not helpful, you will repeat the existing answer."
+        "\nBegin refining!"
+        "\n------\n"
+        "{context_msg}"
+        "\n------\n"
+        "Query: {query_str}\n"
+        "Answer: "
+    )
+
+    query_engine = CustomCitationQueryEngine.from_args(
+        service_context,
+        retriever=retriever,
+        similarity_top_k=5,  # TODO: make this param actually do something, it's currently hardcoded somewhere
+        citation_qa_template=CUSTOM_CITATION_QA_TEMPLATE,
+        citation_refine_template=None,
         use_async=True,
         streaming=True,
+        verbose=True,
     )
     cl.user_session.set("query_engine", query_engine)
-    await cl.Message(content="Loaded query engine").send()
 
 
 @cl.on_message
@@ -50,10 +139,20 @@ async def main(message: cl.Message):
 
     response_message.content += response.get_formatted_sources()
 
-    import plotly.graph_objects as go
+    response_message.content += "\n".join(
+        [
+            f"{node.score:.2f}: {node.text}"
+            for node in sorted(response.source_nodes, key=lambda x: x.score, reverse=True)[:5]
+        ]
+    )
 
-    import networkx as nx
+    add_graph(response_message)
 
+    await response_message.send()
+
+
+def add_graph(response_message):
+    # TODO: experiment with unsafe_allow_html = false, and send a interactive neo4j graph / networkx graph
     G = nx.random_geometric_graph(200, 0.125)
     edge_x = []
     edge_y = []
@@ -122,7 +221,8 @@ async def main(message: cl.Message):
             text="Python code: <a href='https://plotly.com/ipython-notebooks/network-graphs/'> https://plotly.com/ipython-notebooks/network-graphs/</a>",
             showarrow=False,
             xref="paper", yref="paper",
-            x=0.005, y=-0.002 ) ],
+            x=0.005, y=-0.002 ),
+        ],
         xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
         yaxis=dict(showgrid=False, zeroline=False, showticklabels=False))
     )
@@ -130,31 +230,3 @@ async def main(message: cl.Message):
     elements = [cl.Plotly(name="chart", figure=fig, display="inline")]
 
     response_message.elements = elements
-
-    await response_message.send()
-
-    # for toke in response.source_nodes:
-    #     response_message.content += f"{toke.node.get_text()}\n"
-    # print("-- INTERNAL --")
-    # print("Source nodes:")
-    # for source_node in response.source_nodes:
-    #     print(source_node.node.get_text())
-    #     print(source_node.node.metadata)
-
-# %%
-# from pathlib import Path
-
-# storage_context = StorageContext.from_defaults(persist_dir=PERSIST_DIR / "graph_store_index")
-
-# knowledge_graph_index = load_index_from_storage(
-#     storage_context,
-#     service_context=service_context,
-#     show_progress=True,
-# )
-# from pyvis.network import Network
-
-# g = knowledge_graph_index.get_networkx_graph()
-# print(g)
-# net = Network(notebook=True, cdn_resources="in_line", directed=True)
-# net.from_nx(g)
-# net.show("example_llm.html")
