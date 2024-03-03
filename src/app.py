@@ -133,7 +133,7 @@ async def main(message: cl.Message):
     query_engine: CitationQueryEngine = cl.user_session.get("query_engine")
     content = message.content
 
-    detected_language = await detect_language(message.content)
+    detected_language = await detect_language(content)
     if detected_language != "en" and detected_language is not None:
         content = await translate(content, target="en")
 
