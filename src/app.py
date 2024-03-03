@@ -6,10 +6,10 @@ import sys
 import time
 
 import chainlit as cl
-from llama_index import StorageContext
-from llama_index.callbacks import CallbackManager
-from llama_index.prompts import PromptTemplate
-from llama_index.prompts.base import PromptType
+from llama_index.core import StorageContext
+from llama_index.core.callbacks import CallbackManager
+from llama_index.core import PromptTemplate
+from llama_index.core.prompts import PromptType
 
 from citation import get_formatted_sources, get_source_graph, get_source_nodes
 from graph_stores import CustomNeo4jGraphStore

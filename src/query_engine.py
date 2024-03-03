@@ -1,19 +1,15 @@
 from typing import Any, List, Optional
 
-from llama_index.core.base_retriever import BaseRetriever
-from llama_index.node_parser import TextSplitter
-from llama_index.postprocessor.types import BaseNodePostprocessor
-from llama_index.prompts.base import BasePromptTemplate
-from llama_index.query_engine import CitationQueryEngine
-from llama_index.query_engine.citation_query_engine import (
-    CITATION_QA_TEMPLATE,
-    CITATION_REFINE_TEMPLATE,
-    DEFAULT_CITATION_CHUNK_OVERLAP,
-    DEFAULT_CITATION_CHUNK_SIZE,
-)
-from llama_index.response_synthesizers import BaseSynthesizer, ResponseMode, get_response_synthesizer
-from llama_index.schema import MetadataMode
-from llama_index.service_context import ServiceContext
+from llama_index.core.retrievers import BaseRetriever
+from llama_index.core.node_parser import TextSplitter
+from llama_index.core.postprocessor.types import BaseNodePostprocessor
+from llama_index.core import BasePromptTemplate
+from llama_index.core.query_engine import CitationQueryEngine
+from llama_index.core.query_engine.citation_query_engine import CITATION_QA_TEMPLATE, CITATION_REFINE_TEMPLATE, DEFAULT_CITATION_CHUNK_OVERLAP, DEFAULT_CITATION_CHUNK_SIZE
+from llama_index.core.response_synthesizers import BaseSynthesizer, ResponseMode
+from llama_index.core import get_response_synthesizer
+from llama_index.core.schema import MetadataMode
+from llama_index.core import ServiceContext
 
 
 class CustomCitationQueryEngine(CitationQueryEngine):

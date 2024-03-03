@@ -3,8 +3,8 @@
 import logging
 import sys
 
-from llama_index import StorageContext, load_index_from_storage
-from llama_index.query_engine import CitationQueryEngine
+from llama_index.core import StorageContext, load_index_from_storage
+from llama_index.core.query_engine import CitationQueryEngine
 
 from index import PERSIST_DIR
 from service_context import get_service_context

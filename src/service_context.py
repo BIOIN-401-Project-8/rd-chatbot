@@ -1,10 +1,10 @@
 import httpx
 import torch
-from llama_index import ServiceContext
-from llama_index.callbacks import CallbackManager
+from llama_index.core import ServiceContext
+from llama_index.core.callbacks import CallbackManager
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
-from llama_index.llms import Ollama
-from llama_index.utils import get_cache_dir
+from llama_index.llms.ollama import Ollama
+from llama_index.core.utils import get_cache_dir
 from transformers import AutoModel
 
 EMBED_MODEL = "michiyasunaga/BioLinkBERT-base"

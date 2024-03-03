@@ -2,12 +2,13 @@ import logging
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import faiss
-from llama_index import BasePromptTemplate, ServiceContext, StorageContext
-from llama_index.callbacks.base import CallbackManager
-from llama_index.indices import VectorStoreIndex
-from llama_index.indices.knowledge_graph.retrievers import REL_TEXT_LIMIT
-from llama_index.retrievers import KnowledgeGraphRAGRetriever
-from llama_index.schema import NodeWithScore, QueryBundle, TextNode
+from llama_index.core import BasePromptTemplate, ServiceContext, StorageContext
+from llama_index.core.callbacks import CallbackManager
+from llama_index.core import VectorStoreIndex
+from llama_index.core.indices.knowledge_graph.retrievers import REL_TEXT_LIMIT
+from llama_index.core.retrievers import KnowledgeGraphRAGRetriever
+from llama_index.core.schema import NodeWithScore, TextNode
+from llama_index.core import QueryBundle
 from llama_index.vector_stores.faiss import FaissVectorStore
 
 from service_context import EMBED_DIM

@@ -6,7 +6,7 @@ from os import PathLike
 from pathlib import Path
 from typing import Sequence
 
-from llama_index import Document, KnowledgeGraphIndex, ServiceContext, SimpleDirectoryReader, VectorStoreIndex
+from llama_index.core import Document, KnowledgeGraphIndex, ServiceContext, SimpleDirectoryReader, VectorStoreIndex
 
 from reader import AbstractCSVReader, FullArticleXMLReader
 from service_context import get_service_context

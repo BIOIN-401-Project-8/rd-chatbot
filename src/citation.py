@@ -6,7 +6,7 @@ import networkx as nx
 import plotly.graph_objects as go
 import pydot
 from llama_index.core.response.schema import RESPONSE_TYPE
-from llama_index.schema import NodeWithScore
+from llama_index.core.schema import NodeWithScore
 
 
 def format_source(node: NodeWithScore):
