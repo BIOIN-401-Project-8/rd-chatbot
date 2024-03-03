@@ -6,6 +6,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - LLAMA_INDEX_CACHE_DIR=/root/.cache
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD}
     deploy:
       resources:
         reservations:
@@ -30,6 +31,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - LLAMA_INDEX_CACHE_DIR=/root/.cache
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD}
     deploy:
       resources:
         reservations:
