@@ -1,8 +1,6 @@
-
 import logging
 import os
 import sys
-
 
 import chainlit as cl
 import networkx as nx
@@ -134,8 +132,9 @@ async def main(message: cl.Message):
     response = await cl.make_async(query_engine.query)(message.content)
     response_message =  cl.Message(content="")
 
-    for token in response.response_gen:
-        await response_message.stream_token(token=token)
+    if hasattr(response, "response_gen"):
+        for token in response.response_gen:
+            await response_message.stream_token(token=token)
 
     response_message.content += response.get_formatted_sources()
 
@@ -151,8 +150,7 @@ async def main(message: cl.Message):
     await response_message.send()
 
 
-def add_graph(response_message):
-    # TODO: experiment with unsafe_allow_html = false, and send a interactive neo4j graph / networkx graph
+def add_graph(response_message: cl.Message):
     G = nx.random_geometric_graph(200, 0.125)
     edge_x = []
     edge_y = []
