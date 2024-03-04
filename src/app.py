@@ -30,7 +30,7 @@ async def factory():
         password=os.environ["NEO4J_PASSWORD"],
         url="bolt://neo4j:7687",
         database="neo4j",
-        node_label="Congenital and Genetic Diseases",
+        node_label="S_PHENOTYPE",
     )
 
     storage_context = StorageContext.from_defaults(
