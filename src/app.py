@@ -67,8 +67,8 @@ async def factory():
         "cite the appropriate source(s) using their corresponding numbers. "
         "Every answer should include at least one source citation. "
         "Only cite a source when you are explicitly referencing it. "
+        "Do not list the sources again at the end. "
         "If none of the sources are helpful, you should indicate that. "
-        "Once you have answered the question, stop and say 'DONE'."
         "For example:\n"
         "Source 1:\n"
         "The sky is red in the evening and blue in the morning.\n"
@@ -93,21 +93,20 @@ async def factory():
         "Every answer should include at least one source citation. "
         "Only cite a source when you are explicitly referencing it. "
         "If none of the sources are helpful, you should indicate that. "
-        "Once you have answered the question, stop and say 'DONE'."
         "For example:\n"
         "Source 1:\n"
         "The sky is red in the evening and blue in the morning.\n"
         "Source 2:\n"
         "Water is wet when the sky is red.\n"
         "Query: When is water wet?\n"
-        "Answer: Water will be wet when the sky is red [(SOURCE 2)], "
+        "Answer: Water will be wet when the sky is red (SOURCE 2), "
         "which occurs in the evening (SOURCE 1).\n"
-        "DONE\n"
         "Now it's your turn. "
         "We have provided an existing answer: {existing_answer}"
         "Below are several numbered sources of information. "
         "Use them to refine the existing answer. "
         "If the provided sources are not helpful, you will repeat the existing answer."
+        "Do not list the sources again at the end. "
         "\nBegin refining!"
         "\n------\n"
         "{context_msg}"
@@ -138,14 +137,13 @@ async def main(message: cl.Message):
         content = await translate(content, target="en")
 
     response = await cl.make_async(query_engine.query)(content)
-    response_message =  cl.Message(content="")
+    response_message = cl.Message(content="")
 
     if hasattr(response, "response_gen"):
         for token in response.response_gen:
             await response_message.stream_token(token=token)
 
     content = response_message.content
-    response_message.content = response_message.content.removesuffix("DONE")
 
     if detected_language != "en" and detected_language is not None:
         response_message.content = await translate(response_message.content, target=detected_language)
