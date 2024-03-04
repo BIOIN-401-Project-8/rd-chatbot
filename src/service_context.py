@@ -3,7 +3,7 @@ from llama_index.callbacks import CallbackManager
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.llms import Ollama
 
-from embeddings import SentenceTransformerEmbeddings
+from .embeddings import SentenceTransformerEmbeddings
 
 
 def get_service_context(callback_manager: CallbackManager = None):
