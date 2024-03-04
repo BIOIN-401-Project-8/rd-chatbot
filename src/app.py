@@ -52,9 +52,10 @@ async def factory():
         verbose=True,
         service_context=service_context,
         graph_traversal_depth=1,
-        max_entities=3,
+        max_entities=2,
         max_synonyms=1,
-        similarity_top_k=100,
+        similarity_top_k=10,
+        max_knowledge_sequence=1000,
         entity_extract_template=PromptTemplate(
             CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL,
             prompt_type=PromptType.QUERY_KEYWORD_EXTRACT,
