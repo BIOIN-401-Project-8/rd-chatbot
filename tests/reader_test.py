@@ -16,7 +16,7 @@ class TestAbstractCSVReader:
 class TestFullArticleXMLReader:
     def test_load_data(self):
         reader = FullArticleXMLReader()
-        documents = reader.load_data(file="/data/pmc-open-access-subset/6291/PMC10620460.xml")
+        documents = reader.load_data(file=DATA_DIR / "PMC10620460.xml")
         document = documents[0]
         assert len(document.text) ==  41301
         assert document.metadata["PMC"] == "10620460"
