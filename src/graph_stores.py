@@ -90,16 +90,18 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
             return rel_map
 
         for record in data:
-            # replace _ with space
             flattened_rels = list(
                 set(
                     tuple(
-                        [str(flattened_rel[1]) or str(flattened_rel[0]), str(flattened_rel[2]) or str(flattened_rel[3])]
+                        [(str(flattened_rel[1]) or str(flattened_rel[0])).replace("_", " "), str(flattened_rel[2]) or str(flattened_rel[3])]
                     )
                     for flattened_rel in record["flattened_rels"]
                 )
             )
-            rel_map[record["subj"]] = flattened_rels
+            for subj in record["subj"].split("|"):
+                if subj not in rel_map:
+                    rel_map[subj] = []
+                rel_map[subj] += flattened_rels
 
         rel_map_organization = self.get_rel_map_organization(subjs, depth, limit)
         for subj, rels in rel_map_organization.items():
