@@ -55,7 +55,7 @@ async def factory():
         graph_traversal_depth=1,
         max_entities=2,
         max_synonyms=1,
-        similarity_top_k=10,
+        similarity_top_k=30,
         max_knowledge_sequence=1000,
         entity_extract_template=PromptTemplate(
             CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL,
@@ -134,7 +134,8 @@ async def main(message: cl.Message):
     query_engine: CitationQueryEngine = cl.user_session.get("query_engine")
     content = message.content
 
-    detected_language = await detect_language(content)
+    detection = await detect_language(content)
+    detected_language = detection["language"]
     if detected_language != "en" and detected_language is not None:
         content = await translate(content, target="en")
 
