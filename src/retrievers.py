@@ -80,9 +80,7 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
         service_context = self.get_service_context()
         embed_model = service_context.embed_model
 
-        query_node = TextNode(text=query_bundle.query_str)
-        query_node = embed_model([query_node])[0]
-        query_embedding = np.array(query_node.embedding)
+        query_embedding = embed_model.get_query_embedding(query_bundle.query_str)
 
         nodes = [
             TextNode(
