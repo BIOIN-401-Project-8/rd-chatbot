@@ -7,15 +7,22 @@ from llama_index.core.response.schema import RESPONSE_TYPE
 
 
 async def get_formatted_sources(response: RESPONSE_TYPE, content: str):
-    sources = set(map(int, re.findall(r"SOURCE (\d+)", content)))
+    sources = set(map(int, re.findall(r"SOURCE (\d+)", content, re.I)))
     source_nodes = []
     for source_node in response.source_nodes:
         source = int(source_node.text.split(":")[0].removeprefix("Source "))
         if source in sources:
             source_nodes.append(source_node)
-    references = "SOURCES:\n"
+    references = "\n\n### Sources\n"
     references += "\n".join(
-        [f"{node.score:.2f}: {node.text}" for node in sorted(source_nodes, key=lambda x: x.score, reverse=True)]
+        [
+            f"{node.score:.2f}: {node.text}"
+            for node in sorted(
+                source_nodes,
+                key=lambda x: x.score,
+                reverse=True,
+            )
+        ]
     )
     return references
 
