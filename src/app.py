@@ -40,11 +40,11 @@ async def factory():
     CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL = (
         "A question is provided below. Given the question, extract up to {max_keywords} "
         "diseases from the text. Focus on extracting the diseases that we can use "
-        "to best lookup answers to the question. Avoid stopwords.\n"
+        "to best lookup answers to the question. Avoid stopwords. Do not add an explanation.\n"
         "---------------------\n"
-        "{question}\n"
+        "QUESTION: {question}\n"
         "---------------------\n"
-        "Provide diseases in the following comma-separated format: 'KEYWORDS: <diseases>'\n"
+        "Provide diseases in the following comma-separated format: 'KEYWORDS: disease1, disease2'\n"
     )
 
     retriever = KG_RAG_KnowledgeGraphRAGRetriever(
