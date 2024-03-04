@@ -1,3 +1,4 @@
+from itertools import chain
 from typing import Any, Dict, List
 
 from llama_index.graph_stores.neo4j import Neo4jGraphStore
@@ -90,19 +91,25 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
             return rel_map
 
         for record in data:
-            # replace _ with space
             flattened_rels = list(
                 set(
                     tuple(
-                        [str(flattened_rel[1]) or str(flattened_rel[0]), str(flattened_rel[2]) or str(flattened_rel[3])]
+                        [
+                            (str(flattened_rel[1]) or str(flattened_rel[0])).replace("_", " "),
+                            str(flattened_rel[2]) or str(flattened_rel[3]),
+                        ]
                     )
                     for flattened_rel in record["flattened_rels"]
                 )
             )
-            rel_map[record["subj"]] = flattened_rels
+            for subj in record["subj"].split("|"):
+                if subj not in rel_map:
+                    rel_map[subj] = []
+                rel_map[subj] += flattened_rels
 
         rel_map_organization = self.get_rel_map_organization(subjs, depth, limit)
-        for subj, rels in rel_map_organization.items():
+        rel_map_prevalence = self.get_rel_map_prevalence(subjs, depth, limit)
+        for subj, rels in chain(rel_map_organization.items(), rel_map_prevalence.items()):
             if subj in rel_map:
                 rel_map[subj] += rels
             else:
@@ -157,7 +164,56 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
                 if obj not in rel_map:
                     rel_map[obj] = []
                 rel_map[obj].append(
-                    ("has organization", "\n".join(organization_description),)
+                    (
+                        "has organization",
+                        "\n".join(organization_description),
+                    )
+                )
+        return rel_map
+
+    def get_rel_map_prevalence(
+        self, subjs: List[str] | None = None, depth: int = 2, limit: int = 30
+    ) -> Dict[str, List[List[str]]]:
+        rel_map: Dict[Any, List[Any]] = {}
+        if subjs is None or len(subjs) == 0:
+            return rel_map
+
+        subjs = [subj.upper() for subj in subjs]
+
+        query = f"""
+            MATCH p=(n1:`{self.node_label}`)<-[:PREVALENCE*1..{depth}]-(n2)
+            {"WHERE apoc.coll.intersection(apoc.convert.toList(n1.N_Name), $subjs)" if subjs else ""}
+            RETURN n1._N_Name AS _N_Name, n2.PrevalenceClass AS PrevalenceClass, n2.PrevalenceGeographic AS PrevalenceGeographic, n2.PrevalenceQualification AS PrevalenceQualification, n2.PrevalenceValidationStatus AS PrevalenceValidationStatus, n2.Source AS Source, n2.ValMoy as ValMoy
+            LIMIT {limit}
+        """
+        prevalences = list(self.query(query, {"subjs": subjs}))
+
+        if not prevalences:
+            return rel_map
+
+        for prevalence in prevalences:
+            prevalence_description = []
+            if prevalence["PrevalenceClass"]:
+                prevalence_description.append(f"PrevalenceClass: {prevalence['PrevalenceClass']}")
+            if prevalence["PrevalenceGeographic"]:
+                prevalence_description.append(f"PrevalenceGeographic: {prevalence['PrevalenceGeographic']}")
+            if prevalence["PrevalenceQualification"]:
+                prevalence_description.append(f"PrevalenceQualification: {prevalence['PrevalenceQualification']}")
+            if prevalence["PrevalenceValidationStatus"]:
+                prevalence_description.append(f"PrevalenceValidationStatus: {prevalence['PrevalenceValidationStatus']}")
+            if prevalence["Source"]:
+                prevalence_description.append(f"Source: {prevalence['Source']}")
+            if prevalence["ValMoy"]:
+                prevalence_description.append(f"ValMoy: {prevalence['ValMoy']}")
+
+            for obj in prevalence["_N_Name"].split("|"):
+                if obj not in rel_map:
+                    rel_map[obj] = []
+                rel_map[obj].append(
+                    (
+                        "has prevalence",
+                        "\n".join(prevalence_description),
+                    )
                 )
         return rel_map
 
