@@ -78,8 +78,7 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
 
         query = (
             f"""MATCH p=(n1:`{self.node_label}`)-[*1..{depth}]->() """
-            # f"""{"WHERE apoc.coll.intersection(apoc.convert.toList(n1.N_Name), $subjs)" if subjs else ""} """
-            f"""{"WHERE any(subj in $subjs WHERE n1._N_Name CONTAINS subj)" if subjs else ""} """
+            f"""{"WHERE apoc.coll.intersection(apoc.convert.toList(n1.N_Name), $subjs)" if subjs else ""} """
             "UNWIND relationships(p) AS rel "
             "WITH n1._N_Name AS subj, p, apoc.coll.flatten(apoc.coll.toSet("
             "collect([type(rel), rel.name, endNode(rel)._N_Name, endNode(rel)._I_GENE]))) AS flattened_rels "
