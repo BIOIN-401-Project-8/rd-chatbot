@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 import sys
 
 import chainlit as cl
@@ -9,7 +10,7 @@ from llama_index.prompts import PromptTemplate
 from llama_index.prompts.base import PromptType
 from llama_index.query_engine import CitationQueryEngine
 
-from citation import add_graph, get_formatted_sources
+from citation import get_formatted_sources, get_source_graph, get_source_nodes
 from graph_stores import CustomNeo4jGraphStore
 from query_engine import CustomCitationQueryEngine
 from retrievers import KG_RAG_KnowledgeGraphRAGRetriever
@@ -146,11 +147,20 @@ async def main(message: cl.Message):
 
     content = response_message.content
 
+    source_nodes = get_source_nodes(response, content)
+
+    response_message.content = re.split(r"Sources:", response_message.content, flags=re.I)[0].strip()
+    response_message.content = re.sub(r"Source (\d+)", r"[\1]", response_message.content, flags=re.I)
+    response_message.content = re.sub(r"\(\[", "[", response_message.content)
+    response_message.content = re.sub(r"\]\)", "]", response_message.content)
+
     if detected_language != "en" and detected_language is not None:
         response_message.content = await translate(response_message.content, target=detected_language)
 
-    response_message.content += await get_formatted_sources(response, content)
-
-    add_graph(response_message)
+    if source_nodes:
+        response_message.content += await get_formatted_sources(source_nodes)
+        filename = get_source_graph(source_nodes)
+        elements = [cl.Image(path=filename, display="inline", size="large")]
+        response_message.elements = elements
 
     await response_message.send()

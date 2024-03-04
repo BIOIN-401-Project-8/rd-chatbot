@@ -68,14 +68,7 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
             logger.info("> No knowledge sequence extracted from entities.")
             return []
 
-        rel_node_info = {
-            "kg_rel_map": rel_map,
-            "kg_rel_text": knowledge_sequence,
-        }
-        metadata_keys = ["kg_rel_map", "kg_rel_text"]
-        if self._graph_schema != "":
-            rel_node_info["kg_schema"] = {"schema": self._graph_schema}
-            metadata_keys.append("kg_schema")
+        metadata_keys = ["subject", "predicate", "object"]
 
         service_context = self.get_service_context()
         embed_model = service_context.embed_model
@@ -84,8 +77,12 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
 
         nodes = [
             TextNode(
-                text=knowledge,
-                metadata=rel_node_info,
+                text=" ".join(knowledge),
+                metadata={
+                    "subject": knowledge[0],
+                    "predicate": knowledge[1],
+                    "object": knowledge[2],
+                },
                 excluded_embed_metadata_keys=metadata_keys,
                 excluded_llm_metadata_keys=metadata_keys,
             )
@@ -144,7 +141,7 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
 
         return self._build_nodes(knowledge_sequence, rel_map, query_bundle)
 
-    def _get_knowledge_sequence(self, entities: List[str]) -> Tuple[List[str], Optional[Dict[Any, Any]]]:
+    def _get_knowledge_sequence(self, entities: List[str]) -> Tuple[List[List[str]], Optional[Dict[Any, Any]]]:
         """Get knowledge sequence from entities."""
         # Get SubGraph from Graph Store as Knowledge Sequence
         rel_map: Optional[Dict] = self._graph_store.get_rel_map(
@@ -156,7 +153,7 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
         knowledge_sequence = []
         if rel_map:
             for rel_key, rel_values in rel_map.items():
-                knowledge_sequence.extend([rel_key + " " + " ".join(rel_obj) for rel_obj in rel_values])
+                knowledge_sequence.extend([[rel_key, *rel_obj] for rel_obj in rel_values])
         else:
             logger.info("> No knowledge sequence extracted from entities.")
             return [], None
@@ -164,20 +161,4 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
         return knowledge_sequence, rel_map
 
     async def _aget_knowledge_sequence(self, entities: List[str]) -> Tuple[List[str], Optional[Dict[Any, Any]]]:
-        """Get knowledge sequence from entities."""
-        # Get SubGraph from Graph Store as Knowledge Sequence
-        # TBD: async in graph store
-        rel_map: Optional[Dict] = self._graph_store.get_rel_map(
-            entities, self._graph_traversal_depth, limit=self._max_knowledge_sequence
-        )
-        logger.debug(f"rel_map from GraphStore:\n{rel_map}")
-
-        # Build Knowledge Sequence
-        knowledge_sequence = []
-        if rel_map:
-            knowledge_sequence.extend([" ".join(rel_obj) for rel_objs in rel_map.values() for rel_obj in rel_objs])
-        else:
-            logger.info("> No knowledge sequence extracted from entities.")
-            return [], None
-
-        return knowledge_sequence, rel_map
+        return self._get_knowledge_sequence(entities)

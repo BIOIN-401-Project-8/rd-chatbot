@@ -1,22 +1,26 @@
 import re
+from typing import List
+from uuid import uuid4
 
-import chainlit as cl
 import networkx as nx
 import plotly.graph_objects as go
+import pydot
 from llama_index.core.response.schema import RESPONSE_TYPE
+from llama_index.schema import NodeWithScore
 
 
-async def get_formatted_sources(response: RESPONSE_TYPE, content: str):
-    sources = set(map(int, re.findall(r"SOURCE (\d+)", content, re.I)))
-    source_nodes = []
-    for source_node in response.source_nodes:
-        source = int(source_node.text.split(":")[0].removeprefix("Source "))
-        if source in sources:
-            source_nodes.append(source_node)
+def format_source(node: NodeWithScore):
+    text = node.text
+    source_number = int(text.split(":")[0].removeprefix("Source "))
+    source = node.text.split(":")[1].strip()
+    return f"[{source_number}] {source} ({node.score:.2f})"
+
+
+async def get_formatted_sources(source_nodes: List[NodeWithScore]):
     references = "\n\n### Sources\n"
     references += "\n".join(
         [
-            f"{node.score:.2f}: {node.text}"
+            format_source(node)
             for node in sorted(
                 source_nodes,
                 key=lambda x: x.score,
@@ -27,76 +31,33 @@ async def get_formatted_sources(response: RESPONSE_TYPE, content: str):
     return references
 
 
-def add_graph(response_message: cl.Message):
-    G = nx.random_geometric_graph(200, 0.125)
-    edge_x = []
-    edge_y = []
-    for edge in G.edges():
-        x0, y0 = G.nodes[edge[0]]["pos"]
-        x1, y1 = G.nodes[edge[1]]["pos"]
-        edge_x.append(x0)
-        edge_x.append(x1)
-        edge_x.append(None)
-        edge_y.append(y0)
-        edge_y.append(y1)
-        edge_y.append(None)
+def get_source_nodes(response: RESPONSE_TYPE, content: str):
+    sources = get_sources(content)
+    source_nodes = []
+    for source_node in response.source_nodes:
+        source = int(source_node.text.split(":")[0].removeprefix("Source "))
+        if source in sources:
+            source_nodes.append(source_node)
+    return source_nodes
 
-    edge_trace = go.Scatter(
-        x=edge_x,
-        y=edge_y,
-        line=dict(width=0.5, color="#888"),
-        hoverinfo="text",
-        mode="lines",
-    )
 
-    node_x = []
-    node_y = []
-    for node in G.nodes():
-        x, y = G.nodes[node]["pos"]
-        node_x.append(x)
-        node_y.append(y)
+def get_sources(content: str):
+    sources = set(map(int, re.findall(r"SOURCE (\d+)", content, re.I)))
+    matches = re.findall(r"SOURCES ([\d, ]+)", content)
+    if matches:
+        sources.update(map(int, matches[0].split(",")))
+    return sources
 
-    node_trace = go.Scatter(
-        x=node_x,
-        y=node_y,
-        mode="markers",
-        hoverinfo="text",
-        marker=dict(
-            showscale=True,
-            colorscale="YlGnBu",
-            reversescale=True,
-            color=[],
-            size=10,
-            colorbar=dict(thickness=15, title="Node Connections", xanchor="left", titleside="right",),
-            line_width=2,
-        ),
-    )
 
-    node_adjacencies = []
-    node_text = []
-    for node, adjacencies in enumerate(G.adjacency()):
-        node_adjacencies.append(len(adjacencies[1]))
-        node_text.append("# of connections: " + str(len(adjacencies[1])))
+def get_source_graph(source_nodes: List[NodeWithScore]):
+    graph = pydot.Dot("source_graph", graph_type="digraph")
 
-    node_trace.marker.color = node_adjacencies
-    node_trace.text = node_text
+    for node in source_nodes:
+        subj = node.metadata["subject"]
+        obj = node.metadata["object"]
+        predicate = node.metadata["predicate"]
+        graph.add_edge(pydot.Edge(subj, obj, label=predicate))
 
-    fig = go.Figure(
-        data=[edge_trace, node_trace],
-        layout=go.Layout(
-            title="<br>Network graph made with Python",
-            titlefont_size=16,
-            showlegend=False,
-            hovermode="closest",
-            margin=dict(b=20, l=5, r=5, t=40),
-            annotations=[
-                dict(showarrow=False, xref="paper", yref="paper", x=0.005, y=-0.002),
-            ],
-            xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
-            yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
-        ),
-    )
-
-    elements = [cl.Plotly(name="chart", figure=fig, display="inline")]
-
-    response_message.elements = elements
+    filename = f".files/{uuid4()}.png"
+    graph.write_png(filename)
+    return filename
