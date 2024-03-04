@@ -3,7 +3,7 @@ from functools import cache
 import chainlit as cl
 import hanzidentifier
 from deep_translator import GoogleTranslator
-from lingua import LanguageDetectorBuilder
+from lingua import Language, LanguageDetectorBuilder
 
 
 @cache
@@ -16,17 +16,26 @@ def get_translator():
     return GoogleTranslator(source="auto", target="en")
 
 
-def _detect_language(content: str):
+def _detect_language(content: str, threshold: float = 0.5):
     detector = get_language_detector()
-    detected_langauge = detector.detect_language_of(content)
-    iso_code = detected_langauge.iso_code_639_1.name if detected_langauge else None
+    confidence_values = detector.compute_language_confidence_values(content)
+    language = Language.ENGLISH
+    for confidence_value in confidence_values:
+        if confidence_value.value > threshold:
+            language = confidence_value.language
+            break
+    iso_code = language.iso_code_639_1.name if language else None
     iso_code = iso_code.lower() if iso_code else None
     if iso_code == "zh":
         if hanzidentifier.is_traditional(content):
             iso_code = "zh-TW"
         else:
             iso_code = "zh-CN"
-    return iso_code
+    confidence_values_dict = {confidence_value.language.name: confidence_value.value for confidence_value in confidence_values[:5]}
+    return {
+        "language": iso_code,
+        "confidence_values": confidence_values_dict,
+    }
 
 
 @cl.step

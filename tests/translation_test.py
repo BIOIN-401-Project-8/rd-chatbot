@@ -3,21 +3,22 @@ from src.translation import _detect_language, _translate
 
 class TestDetectLanguage:
     def test_detect_language_en(self):
-        language = _detect_language("What is Duchenne Muscular Dystrophy?")
+        language = _detect_language("What is Duchenne Muscular Dystrophy?")["language"]
+        assert language == "en"
+        language = _detect_language("What treats phenylketonuria?")["language"]
         assert language == "en"
 
     def test_detect_language_fr(self):
-        language = _detect_language("Qu'est-ce que la dystrophie musculaire de Duchenne?")
+        language = _detect_language("Qu'est-ce que la dystrophie musculaire de Duchenne?")["language"]
         assert language == "fr"
 
     def test_detect_language_zh_CN(self):
-        language = _detect_language("什么是杜氏肌营养不良症？")
+        language = _detect_language("什么是杜氏肌营养不良症？")["language"]
         assert language == "zh-CN"
 
     def test_detect_language_zh_TW(self):
-        language = _detect_language("什麼是杜氏肌肉營養不良症？")
+        language = _detect_language("什麼是杜氏肌肉營養不良症？")["language"]
         assert language == "zh-TW"
-
 
 class TestTranslate:
     def test_translate_fr_en(self):
