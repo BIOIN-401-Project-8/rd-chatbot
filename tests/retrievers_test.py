@@ -71,3 +71,8 @@ class TestKG_RAG_KnowledgeGraphRAGRetriever:
     def test_genes(self, retriever):
         nodes = retriever.retrieve("What genes are associated with Duchenne Muscular Dystrophy?")
         assert len(nodes) > 0
+
+    @pytest.mark.skip(reason="This test is not yet implemented")
+    def test_prevalence(self, retriever):
+        nodes = retriever.retrieve("What is the prevalence of Duchenne Muscular Dystrophy in the UK?")
+        assert len(nodes) > 0

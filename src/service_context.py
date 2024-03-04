@@ -1,9 +1,13 @@
+import sys
+from pathlib import Path
+
 from llama_index import ServiceContext
 from llama_index.callbacks import CallbackManager
-from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.llms import Ollama
 
-from .embeddings import SentenceTransformerEmbeddings
+# TODO: This is a hack to get this to work with pytest
+sys.path.append(str(Path(__file__).resolve().parent))
+from embeddings import SentenceTransformerEmbeddings
 
 
 def get_service_context(callback_manager: CallbackManager = None):
