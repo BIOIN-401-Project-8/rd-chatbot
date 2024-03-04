@@ -1,12 +1,7 @@
-import sys
-from pathlib import Path
-
 from llama_index import ServiceContext
 from llama_index.callbacks import CallbackManager
 from llama_index.llms import Ollama
 
-# TODO: This is a hack to get this to work with pytest
-sys.path.append(str(Path(__file__).resolve().parent))
 from embeddings import SentenceTransformerEmbeddings
 
 
