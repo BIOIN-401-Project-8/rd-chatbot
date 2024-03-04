@@ -1,0 +1,2742 @@
+<!DOCTYPE article PUBLIC "-//NLM//DTD JATS (Z39.96) Journal Archiving and Interchange DTD with MathML3 v1.3 20210610//EN" "JATS-archivearticle1-3-mathml3.dtd">
+<article xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink"
+  dtd-version="1.3" xml:lang="en" article-type="research-article">
+  <?properties open_access?>
+  <processing-meta base-tagset="archiving" mathml-version="3.0" table-model="xhtml"
+    tagset-family="jats">
+    <restricted-by>pmc</restricted-by>
+  </processing-meta>
+  <front>
+    <journal-meta>
+      <journal-id journal-id-type="nlm-ta">Endocr Connect</journal-id>
+      <journal-id journal-id-type="iso-abbrev">Endocr Connect</journal-id>
+      <journal-id journal-id-type="hwp">EC</journal-id>
+      <journal-title-group>
+        <journal-title>Endocrine Connections</journal-title>
+      </journal-title-group>
+      <issn pub-type="epub">2049-3614</issn>
+      <publisher>
+        <publisher-name>Bioscientifica Ltd</publisher-name>
+        <publisher-loc>Bristol</publisher-loc>
+      </publisher>
+    </journal-meta>
+    <article-meta>
+      <article-id pub-id-type="pmid">37768006</article-id>
+      <article-id pub-id-type="pmc">PMC10620460</article-id>
+      <article-id pub-id-type="doi">10.1530/EC-23-0245</article-id>
+      <article-id pub-id-type="publisher-id">EC-23-0245</article-id>
+      <article-categories>
+        <subj-group subj-group-type="heading">
+          <subject>Research</subject>
+        </subj-group>
+      </article-categories>
+      <title-group>
+        <article-title>Is ongoing testosterone required after pubertal induction in Duchenne
+          muscular dystrophy?</article-title>
+        <alt-title alt-title-type="lrh">C L Wood et al.</alt-title>
+      </title-group>
+      <contrib-group>
+        <contrib contrib-type="author" corresp="yes">
+          <contrib-id contrib-id-type="orcid" authenticated="true">
+            http://orcid.org/0000-0002-6084-5174</contrib-id>
+          <name>
+            <surname>Wood</surname>
+            <given-names>Claire L</given-names>
+          </name>
+          <xref rid="aff1" ref-type="aff">1</xref>
+          <xref rid="aff2" ref-type="aff">2</xref>
+          <xref rid="cor1" ref-type="corresp" />
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Hollingsworth</surname>
+            <given-names>Kieren G</given-names>
+          </name>
+          <xref rid="aff2" ref-type="aff">2</xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Bokaie</surname>
+            <given-names>Edrina</given-names>
+          </name>
+          <xref rid="aff2" ref-type="aff">2</xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Hughes</surname>
+            <given-names>Eric</given-names>
+          </name>
+          <xref rid="aff2" ref-type="aff">2</xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Muni-Lofra</surname>
+            <given-names>Robert</given-names>
+          </name>
+          <xref rid="aff2" ref-type="aff">2</xref>
+          <xref rid="aff3" ref-type="aff">3</xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Mayhew</surname>
+            <given-names>Anna</given-names>
+          </name>
+          <xref rid="aff2" ref-type="aff">2</xref>
+          <xref rid="aff3" ref-type="aff">3</xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Mitchell</surname>
+            <given-names>Rod T</given-names>
+          </name>
+          <xref rid="aff4" ref-type="aff">4</xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Guglieri</surname>
+            <given-names>Michela</given-names>
+          </name>
+          <xref rid="aff2" ref-type="aff">2</xref>
+          <xref rid="aff3" ref-type="aff">3</xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>McElvaney</surname>
+            <given-names>Joseph</given-names>
+          </name>
+          <xref rid="aff1" ref-type="aff">1</xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Cheetham</surname>
+            <given-names>Timothy D</given-names>
+          </name>
+          <xref rid="aff1" ref-type="aff">1</xref>
+          <xref rid="aff2" ref-type="aff">2</xref>
+          <xref rid="fn1" ref-type="author-notes">*</xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Straub</surname>
+            <given-names>Volker</given-names>
+          </name>
+          <xref rid="aff2" ref-type="aff">2</xref>
+          <xref rid="aff3" ref-type="aff">3</xref>
+          <xref rid="fn1" ref-type="author-notes">*</xref>
+        </contrib>
+        <aff id="aff1"><label>1</label><institution>Department of Paediatric Endocrinology</institution>
+          , <addr-line>Royal Victoria Infirmary, Newcastle upon Tyne, UK</addr-line></aff>
+        <aff id="aff2"><label>2</label><institution>Translational and Clinical Research Institute</institution>
+          , <addr-line>Faculty of Medical Sciences, Newcastle University, Newcastle upon Tyne, UK</addr-line></aff>
+        <aff id="aff3"><label>3</label><institution>John Walton Muscular Dystrophy Research Centre</institution>
+          , <addr-line>Newcastle University and Newcastle Hospitals NHS Foundation Trust, Newcastle
+          upon Tyne, UK</addr-line></aff>
+        <aff id="aff4"><label>4</label><institution>MRC Centre for Reproductive Health</institution>
+          , <addr-line>The University of Edinburgh, Queens Medical Research Institute, Edinburgh, UK</addr-line></aff>
+      </contrib-group>
+      <author-notes>
+        <corresp id="cor1">Correspondence should be addressed to C L Wood: <email>
+          claire.wood@ncl.ac.uk</email>
+        </corresp>
+        <fn id="fn1">
+          <p><sup>*</sup>(T D Cheetham and V Straub contributed equally to this work)</p>
+        </fn>
+      </author-notes>
+      <pub-date pub-type="epub">
+        <day>26</day>
+        <month>10</month>
+        <year>2023</year>
+      </pub-date>
+      <pub-date pub-type="epreprint">
+        <day>28</day>
+        <month>9</month>
+        <year>2023</year>
+      </pub-date>
+      <pub-date pub-type="collection">
+        <day>01</day>
+        <month>12</month>
+        <year>2023</year>
+      </pub-date>
+      <volume>12</volume>
+      <issue>12</issue>
+      <elocation-id>e230245</elocation-id>
+      <history>
+        <date date-type="received">
+          <day>16</day>
+          <month>6</month>
+          <year>2023</year>
+        </date>
+        <date date-type="accepted">
+          <day>28</day>
+          <month>9</month>
+          <year>2023</year>
+        </date>
+      </history>
+      <permissions>
+        <copyright-statement>&#x000a9; the author(s)</copyright-statement>
+        <copyright-year>2023</copyright-year>
+        <copyright-holder>the author(s)</copyright-holder>
+        <license>
+          <ali:license_ref xmlns:ali="http://www.niso.org/schemas/ali/1.0/"
+            specific-use="textmining" content-type="ccbylicense">
+            https://creativecommons.org/licenses/by/4.0/</ali:license_ref>
+          <license-p><inline-graphic xlink:href="88x31.jpg" />This work is licensed under a <ext-link
+              ext-link-type="uri" xlink:href="https://creativecommons.org/licenses/by/4.0/">Creative
+            Commons Attribution 4.0 International License.</ext-link></license-p>
+        </license>
+      </permissions>
+      <self-uri content-type="pdf" xlink:href="EC-23-0245.pdf" />
+      <abstract>
+        <p>Glucocorticoids (GCs) reduce inflammation and preserve muscle function in boys with
+          Duchenne muscular dystrophy (DMD) but cause pubertal delay. Pubertal induction with
+          testosterone is recommended but longer-term outcome is unknown.</p>
+        <sec>
+          <title>Objective</title>
+          <p>To assess hypothalamic&#x02013;pituitary&#x02013;gonadal axis, muscle volume and
+            function 5 years after pubertal induction.</p>
+        </sec>
+        <sec>
+          <title>Methods</title>
+          <p>A prospective observational follow-up of a clinical study was conducted. 15 GC-treated
+            males with DMD were treated with incremental testosterone for 2 years (end of regimen +2
+            years) then evaluated at +2.5 years and +5 years (final follow-up ~3 years after last
+            injection). Data collected included testicular volume (TV), gonadotrophin, testosterone,
+            inhibin B, muscle function, and limb muscle MRI.</p>
+        </sec>
+        <sec>
+          <title>Results</title>
+          <p>Participants were 18.7 years (<sc>s.d.</sc> 1.6) at the final follow-up and had been on
+            GC for 11.2 years (<sc>s.d.</sc> 2.2). Testosterone levels were similar at +2.5 years
+            (8.6 nmol/L (<sc>s.d.</sc> 3.4) and 5 years (11.0 nmol/L (<sc>s.d.</sc> 6.1). TV
+            increased from 2.8 mL (<sc>s.d.</sc> 0.9) at +2 years to 7.1 mL (<sc>s.d.</sc> 1.8) then
+            10.6 mL (<sc>s.d.</sc> 3.5) at +2.5 years and +5.0 years (<italic toggle="yes">P</italic>
+            &#x0003c; 0.001). Inhibin B levels increased from 55.6 pg/mL (<sc>s.d.</sc> 47.0) at
+            baseline to 158.2 pg/mL (<sc>s.d.</sc>87.6), <italic toggle="yes">P</italic> =0.004 at 5
+            years but remained lower than reference values (mean 305 pg/mL). Muscle contractile bulk
+            decreased.</p>
+        </sec>
+        <sec>
+          <title>Interpretation</title>
+          <p>Pubertal induction with testosterone in DMD is associated with HPG axis activation and
+            ongoing increases in inhibin B, TV, and testosterone concentrations. Some patients have
+            normal levels which is promising regarding future fertility. Given the beneficial impact
+            of testosterone on bone health, muscle, and well-being, monitoring testosterone levels
+            in this population and supplementation of sub-optimal levels is important.</p>
+        </sec>
+      </abstract>
+      <kwd-group>
+        <title>Key Words</title>
+        <kwd>puberty</kwd>
+        <kwd>Duchenne muscular dystrophy</kwd>
+        <kwd>testosterone</kwd>
+        <kwd>muscle MRI</kwd>
+      </kwd-group>
+    </article-meta>
+  </front>
+  <body>
+    <sec>
+      <title>Introduction</title>
+      <p>Duchenne muscular dystrophy (DMD) is characterised by the absence of dystrophin protein and
+        results in muscle cell fragility, inflammatory change, and the accumulation of fibrotic
+        tissue and fat in skeletal muscles (<xref rid="bib1" ref-type="bibr">1</xref>). Despite
+        intensive research there is no cure for DMD and long-term high dose glucocorticoids (GCs)
+        form the mainstay of treatment. GCs stabilise muscle strength for a period of time and have
+        beneficial effects on the heart, lungs and spine (<xref rid="bib2" ref-type="bibr">2</xref>).
+        Chronic GC use, however, can result in many adverse effects including pubertal delay. Recent
+        work at our centre has shown that incremental monthly testosterone injections can induce
+        puberty in adolescents with DMD and delayed puberty (<xref rid="bib3" ref-type="bibr">3</xref>).
+        The 2-year testosterone regimen had a positive impact on the skeleton and contractile muscle
+        bulk. There was also evidence of a beneficial impact on the underlying disease process, with
+        reduced muscle inflammation as detected by a reduced T2 relaxation time on MR spectroscopy.
+        Consideration for testosterone treatment for the induction of puberty has recently been
+        introduced as part of the International Care Considerations in DMD (<xref rid="bib4"
+          ref-type="bibr">4</xref>). It remains unclear what happens to endogenous testosterone
+        levels once testosterone supplementation is stopped, particularly in the context of ongoing
+        GC therapy. Having shown a beneficial effect of testosterone on muscle, bone, and quality of
+        life, it is important to explore whether these young men benefit from ongoing testosterone
+        supplementation. There are, in addition, no data regarding spermatogenesis and fertility in
+        the adult DMD population, other than anecdotal reports of adults fathering children. This
+        study investigates the longer-term outcome and androgen status after pubertal induction with
+        testosterone administered as part of a clinical trial (NCT02571205).</p>
+    </sec>
+    <sec>
+      <title>Patients and methods</title>
+      <p>Participants were invited to take part in this observational follow-up study if they had
+        been enrolled in the initial single-centre study that followed 15 prepubertal males with DMD
+        who were aged between 12 and 17 years old. All were treated with a 2-year incremental
+        regimen of 4-weekly testosterone injections (NCT02571205). Full details of the clinical
+        trial have been published (<xref rid="bib3" ref-type="bibr">3</xref>, <xref rid="bib5"
+          ref-type="bibr">5</xref>). In this current study, the primary objective was to assess key
+        components of hypothalamo&#x02013;pituitary&#x02013;gonadal (HPG) function following
+        completion of the course of testosterone injections. The outcome measures in this
+        observational follow-up study were therefore clinical and biochemical markers of HPG
+        activity including inhibin B concentrations. The initial intention was to follow the
+        participants on two further occasions, at 1 and 2 years after that visit. However, as a
+        result of the coronavirus disease 2019 (COVID-19) pandemic and patients with DMD being
+        required to shield, these visits could not be completed as planned. They were evaluated at 6
+        months after last injection as part of their clinical care and subsequently attended a final
+        follow-up visit at a mean of 2.8 years (<sc>s.d</sc>. 0.40) after final injection. For the
+        purposes of clarity, these timepoints are as follows:</p>
+      <list list-type="bullet">
+        <list-item>
+          <p>Baseline (0 years, at initiation of testosterone regimen)</p>
+        </list-item>
+        <list-item>
+          <p>End of regimen (after 2 years of testosterone treatment or timepoint +2.0 years)</p>
+        </list-item>
+        <list-item>
+          <p>6 months after testosterone treatment completed (2.5 years from baseline or timepoint
+            +2.5 years)</p>
+        </list-item>
+        <list-item>
+          <p>Final follow-up (3 years after finishing testosterone treatment and 5 years from
+            baseline or timepoint +5.0 years)</p>
+        </list-item>
+      </list>
+      <p>The outcome measures were as follows:</p>
+      <list list-type="bullet">
+        <list-item>
+          <p>Auxological assessment including height, weight, Tanner staging of pubertal status,
+            testicular volumes (reported as mean values)</p>
+        </list-item>
+        <list-item>
+          <p>Biochemical assessment of androgen status</p>
+        </list-item>
+        <list-item>
+          <p>Bone age x-ray (using left wrist)</p>
+        </list-item>
+        <list-item>
+          <p>Muscle cross-sectional area (CSA), contractile cross-sectional area (cCSA), fat
+            fraction (FF), and T2 relaxation time (upper limb only) determined by muscle MRI of
+            upper and lower limbs, motor performance evaluated using North Star Ambulatory
+            Assessment (NSAA) and / or Performance of Upper Limb (PUL 2.0)</p>
+        </list-item>
+        <list-item>
+          <p>Bone mineral adjusted density of the lumbar spine and total body (minus head) and body
+            composition using dual-energy x-ray absorptiometry (DXA)</p>
+        </list-item>
+      </list>
+      <sec>
+        <title>Clinical assessment</title>
+        <p>Height and weight were measured using a stadiometer. Subjects who were unable to stand
+          with their heels flat or who lost standing ability during the course of the follow-up had
+          arm span recorded instead and used as a surrogate for height. For further information,
+          please refer to the published protocol (<xref rid="bib5" ref-type="bibr">5</xref>).
+          Testicular size was assessed using a Prader orchidometer and pubertal staging determined
+          using Tanner staging criteria (<xref rid="bib6" ref-type="bibr">6</xref>). The bilateral
+          testicular volume was calculated using the sum of the left&#x02009;+&#x02009;right
+          volumes.</p>
+      </sec>
+    </sec>
+    <sec>
+      <title>Biochemical gonadal/androgen status</title>
+      <p>Biochemical pubertal status was determined by measuring markers of the following:</p>
+      <list list-type="order">
+        <list-item>
+          <p>Leydig cell function &#x02013; morning (pre-10:00 h) serum testosterone</p>
+        </list-item>
+        <list-item>
+          <p>Sertoli cell function &#x02013; anti-Mullerian hormone (AMH) and inhibin B levels,
+            which were analysed by ELISA after transportation to the Protein Reference Unit in
+            Sheffield</p>
+        </list-item>
+        <list-item>
+          <p>Gonadotrophin function &#x02013; luteinising hormone (LH) and follicle-stimulating
+            hormone (FSH) concentrations as previously described (<xref rid="bib5" ref-type="bibr">5</xref>
+            )</p>
+        </list-item>
+      </list>
+      <sec>
+        <title>Bone age</title>
+        <p>Bone age was assessed using a radiograph of the left wrist that was then reported by a
+          radiologist using the Greulich and Pyle method (<xref rid="bib7" ref-type="bibr">7</xref>
+          ).</p>
+      </sec>
+      <sec>
+        <title>Motor function and muscle strength</title>
+        <p>All participants performed PUL (Version 2.0) for assessing upper limb performance (<xref
+            rid="bib8" ref-type="bibr">8</xref>) and ambulatory patients also undertook the North
+          Star Ambulatory Assessment for DMD (NSAA) (<xref rid="bib9" ref-type="bibr">9</xref>).</p>
+      </sec>
+      <sec>
+        <title>Bone mineral density</title>
+        <p>DXA scans were conducted using a Lunar iDXA (GE Lunar Corp, Madison, WI, USA) to assess
+          lean vs total body mass (lean and fat mass combined) and enable calculation of bone
+          mineral content (BMC), adjusted for age, size, and gender.</p>
+        <p>The patient&#x02019;s height measured in the clinic visit (as detailed above) was used
+          for size adjustment. Predicted lean body mass (LBM) for height was adjusted for sex and
+          estimated Tanner stage. Stepwise linear regression was used with published reference
+          ranges to obtain age, size and sex adjusted adjusted <italic toggle="yes">Z</italic>-scores
+          for total body (minus head) BMC and Lumbar spine (L2-4) BMC for LBM (<xref rid="bib10"
+            ref-type="bibr">10</xref>).</p>
+      </sec>
+      <sec>
+        <title>MRI data acquisition and image processing</title>
+        <p>Imaging was performed on a 3.0 Tesla scanner (for detailed methods, see section on
+          supplementary data given at the end of this article). Briefly, quantitative Dixon FF
+          imaging was collected using fivefold compressed sensing acceleration (<xref rid="bib11"
+            ref-type="bibr">11</xref>, <xref rid="bib12" ref-type="bibr">12</xref>). For the upper
+          limb, quantitative Dixon FF imaging and T2 relaxation time imaging (a surrogate of muscle
+          inflammation (<xref rid="bib13" ref-type="bibr">13</xref>)) were performed and maps
+          processed, modelling for the presence of fat. Regions of interest (ROIs) were defined for
+          the upper and lower limb for multiple image slices and FF and T2 relaxation times were
+          calculated together as area-weighted averages. CSA and cCSA were also calculated to
+          quantify the area of viable muscle tissue remaining (<xref rid="bib14" ref-type="bibr">14</xref>)
+          (see supplementary material). A total FF, CSA, and cCSA was also calculated for the leg
+          and arm of each participant by a weighted average of all the individual muscle groups in
+          that limb. Results are presented by muscle group across all participants. Six healthy male
+          controls, matched by bone age at baseline (as all participants in the trial had delayed
+          puberty and bone age), underwent the same MRI protocol at baseline in the original study;
+          these data were used as an initial comparator in this follow-up study.</p>
+      </sec>
+      <sec>
+        <title>Statistical analysis and approvals</title>
+        <p>This was an observational study and the recruitment target reflected the number of boys
+          who were enrolled in the original clinical trial. All data are presented as mean &#x000b1; <sc>
+          s.d.</sc> unless stated otherwise. Baseline and &#x02018;end of regimen&#x02019; data from
+          the original testosterone study has been used in the longitudinal analysis (<xref
+            rid="bib3" ref-type="bibr">3</xref>). Paired<italic toggle="yes"> t</italic>-tests (or
+          Wilcoxon rank-sum techniques if variables not normally distributed) were used to compare
+          outcome measures during longitudinal analysis. Statistical significance was taken to be <italic
+            toggle="yes">P</italic> &#x0003c; 0.05. Stata v15 was used for statistical analysis
+          (Stata Statistical Software, release 14; StataCorp).</p>
+        <p>The study was approved by the Newcastle upon Tyne Research Ethics Committee. Informed,
+          written consent was obtained from the participants.</p>
+      </sec>
+    </sec>
+    <sec>
+      <title>Results</title>
+      <sec>
+        <title>Baseline characteristics</title>
+        <p>Fifteen participants completed the initial testosterone clinical study (<xref rid="bib3"
+            ref-type="bibr">3</xref>). The last participant&#x02019;s final visit of the original
+          study was February 2019. All participants from the original study consented to take part
+          in the follow-up study. They had been on GC therapy for a mean of 13.1 years (<sc>s.d.</sc>)
+          by the final visit (+5.0 years). The GC regimen remained unchanged during both the regimen
+          and follow-up for all participants. Nine participants were on deflazacort (mean GC dose
+          0.55 mg/kg; <sc>s.d.</sc> 0.13) and 6 on prednisolone (mean 0.47 mg/kg; <sc>s.d.</sc>
+          0.13) (<xref rid="tbl1" ref-type="table">Table 1</xref>). One subject was diagnosed with
+          severe anxiety during the COVID-19 pandemic and as a result felt unable to attend for the
+          full study visit. He had pubertal assessment and bloods taken, the results of which have
+          been included in the analysis. Three participants required aeroplane travel to attend the
+          study centre and so could not have a full assessment performed due to COVID-19
+          restrictions. Remote consultations were carried out for these participants, including
+          pubertal assessment performed by the local doctor, but this did not include bone age
+          x-ray, MRI, or functional measures. <table-wrap position="float" id="tbl1">
+            <label>Table 1</label>
+            <caption>
+              <p>Individual patient characteristics.</p>
+            </caption>
+            <table frame="hsides" rules="groups">
+              <thead>
+                <tr>
+                  <th rowspan="2" align="left" valign="bottom" colspan="1" />
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">Baseline age (years)</th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">Baseline bone age
+          (years)</th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">Final age (years)</th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">Final bone age (years)</th>
+                  <th rowspan="2" align="left" valign="bottom" colspan="1">GC regimen</th>
+                  <th rowspan="2" align="center" valign="bottom" colspan="1">GC daily dose (mg/kg)</th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">Initial NSAA</th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">Final NSAA</th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">Initial PUL</th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">Final PUL</th>
+                </tr>
+                <tr>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">
+                    <bold>T+0y</bold>
+                  </th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">
+                    <bold>T+0y</bold>
+                  </th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">
+                    <bold>T+5y</bold>
+                  </th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">
+                    <bold>T+5y</bold>
+                  </th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">
+                    <bold>T+0y</bold>
+                  </th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">
+                    <bold>T+5y</bold>
+                  </th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">
+                    <bold>T+0y</bold>
+                  </th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">
+                    <bold>T+5y</bold>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">14.8</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">8</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">18.7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">15</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">D daily</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.52</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">2</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">36</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">21</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">2</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">13.3</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">8</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">17.4</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">11</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">P daily</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.67</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">4</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">NA</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">26</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">17</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">4</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">14.8</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">11</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">20.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">15.5</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">P daily</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.59</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">11</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">NA</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">41</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">22</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">5</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">12.4</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">12.5</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">17.6</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">16</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">D daily</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.44</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">NA</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">NA</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">34</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">35</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">6</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">14.5</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">8</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">19.6</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">15.5</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">P daily</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.33</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">NA</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">NA</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">38</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">20</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">16.3</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">11</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">21.4</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">15</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">P daily</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.48</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">NA</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">NA</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">26</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">18</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">8</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">12.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">6</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">17.2</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">
+</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">D daily</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.5</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">16</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">ND</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">40</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">ND</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">9</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">12.3</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">10</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">17.2</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">
+</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">D daily</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.49</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">30</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">ND</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">42</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">42</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">10</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">16.8</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">12</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">21.9</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">
+</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">D daily</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.69</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">4</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">NA</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">20</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">ND</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">11</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">12.8</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">9.5</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">17.7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">
+</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">P 10 on/off</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.38</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">23</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">ND</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">41</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">39</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">12</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">14.2</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">6</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">18.8</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">13.5</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">D daily</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.69</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">13</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">ND</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">28</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">19</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">13</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">14.8</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">10</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">19.5</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">17.5</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">P daily</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.38</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">23</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">16</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">40</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">38</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">14</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">12.3</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">12.5</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">16.8</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">16</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">D daily</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.3</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">1</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">NA</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">31</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">16</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">15</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">13.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">9</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">17.6</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">15</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">D daily</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.62</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">26</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">ND</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">31</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">24</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">16</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">13.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">17.7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">&#x02013;</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">D daily</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.69</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">6</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">5</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">35</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">ND</td>
+                </tr>
+              </tbody>
+            </table>
+            <table-wrap-foot>
+              <fn>
+                <p>D, deflazacort; P, prednisolone; NA, non-ambulant; ND, not done; NSAA, North Star
+          ambulatory assessment; PUL, performance of the upper limb; T, testosterone.</p>
+              </fn>
+              <fn>
+                <p>Baseline (T+0y) denotes time 0 years at start of 2-year testosterone regimen.
+          Final (T+5y) denotes time 5 years at end of extended follow-up, approx. 3 years after
+          cessation of testosterone regimen.</p>
+              </fn>
+            </table-wrap-foot>
+          </table-wrap>
+        </p>
+      </sec>
+      <sec>
+        <title>Pubertal status</title>
+        <p>All subjects were Tanner stage G5, P5 at the final follow-up (timepoint +5.0 years).
+          Bilateral testicular volume significantly increased from 5.6 mL (<sc>s.d.</sc> 0.9) at the
+          end of pubertal induction with testosterone (timepoint +2.0 years) to 13.8 mL (<sc>s.d.</sc>
+          1.8) at 6 months afterwards (timepoint +2.5 years) to 21.2 mL (<sc>s.d.</sc> 3.5) at the
+          final follow-up (timepoint +5.0 years) (<italic toggle="yes">P</italic> &#x0003c; 0.001
+          for difference between end of regimen, +2.0 years, and final follow-up, +5.0 years). At
+          the end of regimen (timepoint +2.0 years), the mean testosterone level was 10.5 nmol (<sc>
+          s.d.</sc> 7.5). Testosterone levels remained similar at 6 months after the last injection
+          (timepoint +2.5 years; 8.6 nmol/L <sc>s.d.</sc> 3.4) and final follow-up at 5.0 years
+          (10.3 nmol/L <sc>s.d.</sc> 6.5, <italic toggle="yes">P</italic>&#x02009;=&#x02009;0.09),
+          but with a wide variability from &#x0003c;1&#x02013;26.7 nmol.</p>
+        <p>LH/FSH levels were suppressed at the end of the 2-year testosterone regimen (median LH
+          &#x0003c; 0.1 IU/L (IQR 0.1&#x02013;0.1), median FSH &#x0003c; 0.1 IU/L (IQR
+          0.1&#x02013;1.2)), but activation of the hypothalamo-pituitary axis was evident during
+          follow-up, with LH and FSH levels increasing to 5.3 IU/L (IQR 3.2&#x02013;5.9) and 7.9
+          IU/L (IQR 5.1&#x02013;10.4) respectively by 6 months after the last injection (timepoint
+          +2.5 years). Gonadotrophins remained similar at the final follow-up; LH was 3.9 IU/L (IQR
+          1.7&#x02013;6.9) and FSH 4.7 IU/L (IQR 2.2&#x02013;7.0, <italic toggle="yes">P</italic>-value
+          for difference between end of regimen, timepoint +2.0 years and final follow-up, timepoint
+          +5.0 years was 0.03 and 0.02, respectively).</p>
+        <p>A significant increase in inhibin B levels occurred from baseline to final follow-up
+          (55.6 pg/mL (<sc>s.d.</sc> 47.0) to 158.2 pg/mL (<sc>s.d.</sc> 87.6), <italic toggle="yes">
+          P</italic>&#x02009;=&#x02009;0.004) but final levels were lower than the age- and
+          sex-matched reference values (mean 305 pg/mL; IQR 240&#x02013;445 pg/mL) (<xref
+            rid="bib15" ref-type="bibr">15</xref>).</p>
+        <p>AMH levels decreased significantly from a median of 437 pmol/L (IQR 185&#x02013;640) at
+          baseline to 77.7 (31.8&#x02013;934) at the final follow-up (<italic toggle="yes">P</italic>-value
+          for difference&#x02009;=&#x02009;0.02), a value that is similar to the median value for
+          18-year-old men reported in a population-based study (median 55.6 pmol/L) (<xref
+            rid="bib16" ref-type="bibr">16</xref>).</p>
+        <p>One participant (highlighted with the letter &#x02018;a&#x02019; in <xref rid="tbl2"
+            ref-type="table">Table 2</xref>) had restarted testosterone supplementation during the
+          final year of follow-up because his testicular volume had not increased, and his
+          testosterone level remained low. He had been given one injection of 1 g testosterone
+          undecanoate (Nebido) by the time of his follow-up study visit and was due an injection;
+          therefore, his data were included in the analysis. <table-wrap position="float" id="tbl2">
+            <label>Table 2</label>
+            <caption>
+              <p>Pubertal characteristics and gonadal function.</p>
+            </caption>
+            <table frame="hsides" rules="groups">
+              <thead>
+                <tr>
+                  <th rowspan="2" align="left" valign="bottom" colspan="1" />
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">T at end of regimen
+          (nmol/L)</th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">T 6 months after end
+          regimen (mL)</th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">T at final F/U (nmol/L)</th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">LH at end of regimen
+          (IU/L)</th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">LH 6m after end regimen
+          (IU/L)</th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">LH at final F/U (IU/L)</th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">FSH at end of regimen
+          (IU/L)</th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">FSH 6 m after end
+          regimen (IU/L)</th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">FSH at final F/U (IU/L)</th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">Testicular vol at end
+          of regimen (mL)</th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">Testicular vol 6 months
+          after end regimen (mL)</th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">Testicular vol at final
+          F/U, L,R (mL)</th>
+                </tr>
+                <tr>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">
+                    <bold>T+2y</bold>
+                  </th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">
+                    <bold>T+2.5y</bold>
+                  </th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">
+                    <bold>T+5y</bold>
+                  </th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">
+                    <bold>T+2y</bold>
+                  </th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">
+                    <bold>T+2.5y</bold>
+                  </th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">
+                    <bold>T+5y</bold>
+                  </th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">
+                    <bold>T+2y</bold>
+                  </th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">
+                    <bold>T+2.5y</bold>
+                  </th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">
+                    <bold>T+5y</bold>
+                  </th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">
+                    <bold>T+2y</bold>
+                  </th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">
+                    <bold>T+2.5y</bold>
+                  </th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">
+                    <bold>T+5y</bold>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">10</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">14.7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">17.5</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">3.2</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">5.9</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">1.4</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">5.5</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">4.7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">3 (1, 2)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">9 (4.5, 5)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">24 (12, 12)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">2</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">18.7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">11.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">15.6</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">3.6</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">1.6</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">2.5</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">2.2</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">5 (2, 3)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">20 (10, 10)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">30 (15, 15)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">4</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">10.3</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">9.7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">26.7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">4.9</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">3.2</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">8.8</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">13.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">11.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">6.8</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">6 (3, 3)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">16 (8, 8)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">16 (8, 8)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">5<sup>a</sup></td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">8.3</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">5.7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">8.0</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">2.6</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.6</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">4</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">1.5</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">6 (3, 3)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">16 (8, 8)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">12 (6, 6)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">6<sup>b</sup></td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">17.9</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">11.7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">6.2</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">13.7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">3.0</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">32.9</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">18.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">8 (4, 4)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">10 (5, 5)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">20 (10, 10)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">5.2</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">5.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">6.8</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.5</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">8.4</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">5.4</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">12.6</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">6.7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">6 (3, 3)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">16 (8, 8)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">18 (8, 10)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">8<sup>b</sup></td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">20.7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">9.7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">&#x0003c;1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">5.9</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">7.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">6.5</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">1.6</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">6 (3, 3)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">8 (4, 4)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">18 (6, 6)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">9</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">5.7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">7.9</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">8.9</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">5.3</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">4.8</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">1.2</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">8.6</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">4.7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">4 (2, 2)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">20 (10, 10)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">30 (15, 15)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">10<sup>b</sup></td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">6.9</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">3.8</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">6.9</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">13.5</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">11.7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">9.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">17.7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">5 (2, 3)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">8 (4,4)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">12 (6, 6)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">11</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">6.8</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">10.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">12.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">5.5</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">6.9</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">8.4</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">6.8</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">6 (3, 3)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">&#x02013;</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">30 (15, 15)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">12</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">8.9</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">9.8</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">10.3</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">4.2</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.9</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">5.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">2.3</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">10 (5, 5)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">10 (5, 5)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">20 (10, 10)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">13<sup>b</sup></td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">7.4</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">8.3</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">6</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">3.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">1.7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">2.0</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">2.2</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">4 (2, 2)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">&#x02013;</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">30 (15, 15)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">14<sup>b</sup></td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">31.4</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">4.9</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">4.4</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">5.7</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">5.3</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">10.4</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">14.4</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">5.5 (2.5, 3)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">&#x02013;</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">12 (6, 6)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">15</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">4</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">4.8</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">8.4</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">2.9</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">3.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">7.8</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">7.0</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">4 (2,2)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">15 (7, 8)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">20 (10, 10)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">16</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">5.2</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">12.8</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">16.1</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">6.4</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">5.3</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">2.8</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">7.2</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">7.9</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">3.4</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">6 (3, 3)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">12 (6, 6)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">24 (12, 12)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">Mean (<sc>s.d.</sc>)/median
+          (IQR)</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">10.5 (7.5)</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">8.6 (3.4)</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">11.0 (6.1)</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">&#x0003c;0.1 (0.1, 0.1)</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">5.3 (3.2, 5.9)</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">3.9 (1.7, 6.9)</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">&#x0003c;0.1 (0.1, 1.2)</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">7.9 (5.1, 10.4)</td>
+                  <td align="center" valign="top" rowspan="1" colspan="1">4.7 (2.2, 7.0)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">5.6 (0.9)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">13.8 (1.8)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">21.2 (3.5)</td>
+                </tr>
+              </tbody>
+            </table>
+            <table-wrap-foot>
+              <fn>
+                <p>FSH, follicle stimulating hormone; LH, luteinising hormone; T, testosterone.</p>
+              </fn>
+              <fn>
+                <p><sup>a</sup>started Nebido supplementation during follow-up; <sup>b</sup>recommended
+          to start testosterone supplementation following final study visit.</p>
+              </fn>
+            </table-wrap-foot>
+          </table-wrap>
+        </p>
+        <p>Following assessment as part of this study, a further five participants were commenced on
+          long-term testosterone supplementation, based on a clinical and biochemical assessment
+          that included suboptimal testosterone values (&#x0003c;8 nmol/L) and a decreasing
+          testosterone level. These are highlighted in <xref rid="tbl2" ref-type="table">Table 2</xref>
+          with the letter &#x02018;b&#x02019;.</p>
+      </sec>
+      <sec>
+        <title>Muscle function</title>
+        <p>At the time of the last testosterone injection, 7/15 participants were still ambulant, by
+          final visit (3 years later) only 4/15 remained ambulant (<xref rid="tbl1" ref-type="table">Table
+          1</xref>). The PUL score did not significantly change from 28.6 (<sc>s.d.</sc> 8.0) at the
+          end of regimen to 25.9 (9.7) at the final follow-up (<italic toggle="yes">P</italic>&#x02009;=&#x02009;0.5),
+          in contrast to natural history data in DMD which shows that PUL 2.0 is sensitive to detect
+          the typical deterioration seen in the decline phase over a 2-year period (<xref
+            rid="bib17" ref-type="bibr">17</xref>).</p>
+      </sec>
+      <sec>
+        <title>Anthropometric variables</title>
+        <p>Height <italic toggle="yes">Z</italic>-scores remained similar throughout, &#x02212;3.2 (<sc>
+          s.d.</sc> 1.3) at baseline, &#x02212;3.4 (<sc>s.d.</sc> 1.1) at the end of regimen at
+          timepoint +2.0 years and &#x02212;3.2 (<sc>s.d.</sc>1.0) at the final follow-up. The mean
+          height gain was 16.7 cm (<sc>s.d.</sc> 9.9) during the overall 5-year period, giving a
+          mean final height of 151.4 cm (<sc>s.d.</sc> 9.1). BMI <italic toggle="yes">Z</italic>-score
+          was 1.6 (<sc>s.d.</sc> 1.4) at the end of the testosterone regimen and significantly lower
+          at 1.5 (<sc>s.d.</sc> 1.4) by final follow-up (<italic toggle="yes">P</italic>-value for
+          difference between baseline and final follow-up&#x02009;=&#x02009;0.04). Fat and lean mass
+          indices remained similar during the course of the studies (<xref rid="tbl3"
+            ref-type="table">Table 3</xref>). <table-wrap position="float" id="tbl3">
+            <label>Table 3</label>
+            <caption>
+              <p>Anthropometric variables. Outcome variables at baseline, after 2-year incremental
+          regimen of intramuscular testosterone and after 3 further years of follow-up.</p>
+            </caption>
+            <table frame="hsides" rules="groups">
+              <thead>
+                <tr>
+                  <th rowspan="2" align="left" valign="bottom" colspan="1" />
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">Baseline</th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">End of regimen mean (<sc>
+          s.d.</sc>)</th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">Final F/U</th>
+                </tr>
+                <tr>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">T+0y</th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">T+2y</th>
+                  <th align="center" valign="bottom" rowspan="1" colspan="1">T+5y</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">Height (cm)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">133.6 (10.7)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">142.4 (7.4)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">151.4 (9.1)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">Height <italic toggle="yes">
+          Z</italic>-score</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">&#x02212;3.17 (1.3)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">&#x02212;3.44 (1.1)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">&#x02212;3.2 (1.0)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">Target height (cm)</td>
+                  <td align="center" valign="top" colspan="3" rowspan="1">183.3 (4.6)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">Weight (kg)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">48.3 (12.4)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">52.8 (12.2)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">59.6 (15.7)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">Weight <italic toggle="yes">
+          Z</italic>-score</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">&#x02212;0.19 (1.6)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">&#x02212;0.94 (1.8)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">&#x02212;1.0 (1.8)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">BMI (kg/m<sup>2</sup>)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">26.8 (4.5)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">26.3 (5.0)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">26.5 (7.8)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">BMI <italic toggle="yes">Z</italic>
+          -score</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">2.16 (0.9)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">1.64 (1.35)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">1.5 (1.4)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">Lean mass index (kg/m<sup>2</sup>
+          )</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">12.4 (2.3)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">12.8 (2.9)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">11.5 (2.7)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">Fat mass index (kg/m<sup>2</sup>
+          )</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">13.6 (4.2)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">12.5 (4.3)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">14.1 (6.1)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">NSAA (if ambulant at both
+          timepoints)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">18 (8.9)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">13 (7.23)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">8 (7.4)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">PUL</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">33.9 (6.7)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">30.9 (8.7)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">25.9 (9.7)</td>
+                </tr>
+                <tr>
+                  <td align="left" valign="top" rowspan="1" colspan="1">LS BMAC <italic toggle="yes">
+          Z</italic>-score</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.2 (2.2)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">0.4 (2.2)</td>
+                  <td align="left" valign="top" rowspan="1" colspan="1">&#x02212;2.3 (1.1)</td>
+                </tr>
+              </tbody>
+            </table>
+          </table-wrap>
+        </p>
+      </sec>
+      <sec>
+        <title>Bone mineral density</title>
+        <p>After 2 years of testosterone treatment (+2.0 years), LS BMC <italic toggle="yes">Z</italic>-score
+          was 0.4 (<sc>s.d.</sc> 2.2, range &#x02212;2.8 to +4.0). By final follow-up (+5.0 years)
+          it was significantly lower at &#x02212;2.3 (<sc>s.d.</sc> 1.0, range &#x02212;3.5 to
+          &#x02212;0.4, <italic toggle="yes">P</italic> &#x0003c; 0.001). Six patients were on
+          bisphosphonates at the beginning of the follow-up period (two were on 6 monthly zoledronic
+          acid infusions, three on weekly risedronate, and one on weekly alendronate, who switched
+          during the study from risedronate to effervescent as unable to swallow tablet. No patients
+          stopped their bisphosphonates during the study follow-up.</p>
+      </sec>
+      <sec>
+        <title>Bone age</title>
+        <p>Bone age advanced in all patients during the extension study period but remained delayed
+          overall. The mean bone age at the final follow-up was 15.0 years (<sc>s.d.</sc>1.7)
+          compared to a chronological age of 18.7 years (<sc>s.d.</sc> 1.6).</p>
+      </sec>
+      <sec>
+        <title>Muscle MRI</title>
+        <sec>
+          <title>Longitudinal analysis of fat fraction in upper and lower limbs</title>
+          <p>Fat fraction (FF) was higher in every muscle group, and for total FF, when comparing
+            healthy controls and participants with DMD at all assessments (<xref rid="tbl4"
+              ref-type="table">Table 4</xref>). A significant increase in total FF of the arms and
+            individually in the upper arm extensor group (UEG) and upper arm flexor group (UFG)
+            groups occurred between the end of regimen (+2.0 years) and final follow-up (+5.0 years)
+            with the largest increase seen in the UFG (11.8%, <italic toggle="yes">P</italic>-value
+            for difference between +2.0 years and +5.0 years &#x022dc; 0.01) (<xref rid="tbl4"
+              ref-type="table">Table 4</xref>). UEG and UFG values were also significantly greater
+            at 5 years compared to baseline (<italic toggle="yes">P</italic> &#x0003c; 0.05). FF
+            also significantly increased in all calf and thigh muscle groups from end of regimen to
+            final follow-up with the greatest increase seen in the biceps femoris long head (13.8%
+            increase, <italic toggle="yes">P</italic> &#x0003c; 0.01). In the calf, the soleus had
+            the biggest percentage change in FF (10.3% increase, <italic toggle="yes">P</italic>
+            &#x0003c; 0.01). <table-wrap position="float" id="tbl4">
+              <label>Table 4</label>
+              <caption>
+                <p>Upper limb MRI.</p>
+              </caption>
+              <table frame="hsides" rules="groups">
+                <thead>
+                  <tr>
+                    <th rowspan="2" align="left" valign="bottom" colspan="1">Muscle group</th>
+                    <th rowspan="2" align="center" valign="bottom" colspan="1">Number</th>
+                    <th align="center" valign="bottom" rowspan="1" colspan="1">DMD baseline</th>
+                    <th align="center" valign="bottom" rowspan="1" colspan="1">DMD end regimen</th>
+                    <th align="center" valign="bottom" rowspan="1" colspan="1">DMD final F/U</th>
+                    <th rowspan="2" align="center" valign="bottom" colspan="1">Control</th>
+                  </tr>
+                  <tr>
+                    <th align="center" valign="bottom" rowspan="1" colspan="1">T+0y</th>
+                    <th align="center" valign="bottom" rowspan="1" colspan="1">T+2y</th>
+                    <th align="center" valign="bottom" rowspan="1" colspan="1">T+5y</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">T2 (ms)</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">&#x02003;FEG</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">9</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">31.2</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">29.6</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">30.4</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">28.3<sup>c</sup></td>
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">&#x02003;UEG</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">10</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">32.8</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">31.4</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">32.5<sup>a</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">29.5<sup>c</sup></td>
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">&#x02003;FFG</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">9</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">31.6</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">29.7</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">31.1<sup>a</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">28.5<sup>c</sup></td>
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">&#x02003;UFG</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">10</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">30.7</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">30.2</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">30.9</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">29.1<sup>b</sup></td>
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">FF (%)</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">&#x02003;FEG</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">10</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">11.3</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">10.5</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">12.4</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">3.9<sup>b</sup></td>
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">&#x02003;UEG</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">10</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">18.3</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">19.9</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">28.5<sup>c,d</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">3.4<sup>c</sup></td>
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">&#x02003;FFG</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">9</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">12.9</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">12.1</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">14.7</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">3.7<sup>b</sup></td>
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">&#x02003;UFG</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">9</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">20.2</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">26.9</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">38.7<sup>c,d</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">3.6<sup>c</sup></td>
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">&#x02003;Total</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">10</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">13.6</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">17.0</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">23.5<sup>b</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">3.6<sup>c</sup></td>
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">CSA (mm<sup>2</sup>)</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">&#x02003;FEG</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">10</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">399.6</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">513.3</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">417.0</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">&#x02003;UEG</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">10</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">874.4</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">975.6</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">914.4</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">&#x02003;FFG</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">10</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">883.1</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">925.1</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">952.2</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">&#x02003;UFG</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">10</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">592.3</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">668.4</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">635.4</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">&#x02003;Total</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">10</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">2581.2</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">3082.5</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">2919.1</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">cCSA (mm<sup>2</sup>)</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">&#x02003;FEG</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">10</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">357.8</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">462.7</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">363.9<sup>b</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">&#x02003;UEG</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">10</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">749.4</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">819.6</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">678.8<sup>c</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">&#x02003;FFG</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">10</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">797.3</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">826.0</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">820.7</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">&#x02003;UFG</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">10</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">499.9</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">513.1</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">396.9<sup>b,d</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">&#x02003;Total</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                    <td align="left" valign="top" rowspan="1" colspan="1">2253.2</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">2621.7</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">2260.4<sup>b</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1" />
+                  </tr>
+                </tbody>
+              </table>
+              <table-wrap-foot>
+                <fn id="fn2">
+                  <p><italic toggle="yes">P</italic>-values with letters &#x02018;a&#x02019;,
+            &#x02018;b&#x02019;, &#x02018;c&#x02019;, and &#x02018;d&#x02019; in DMD 5 years are
+            paired<italic toggle="yes"> t</italic>-tests vs 2 years; <italic toggle="yes">P-</italic>values
+            with letter &#x02018;e&#x02019; in DMD 5 years are paired <italic toggle="yes">t</italic>-tests
+            vs baseline; <italic toggle="yes">P</italic>-values in the Control column are unpaired<italic
+                      toggle="yes"> t</italic>-tests vs DMD 5 years.</p>
+                </fn>
+                <fn>
+                  <p><sup>a</sup><italic toggle="yes">P</italic> &#x0003c; 0.06; <sup>b</sup><italic
+                      toggle="yes">P</italic> &#x0003c; 0.05; <sup>c</sup><italic toggle="yes">P</italic>
+            &#x0003c; 0.01; <sup>d</sup><italic toggle="yes">P</italic> &#x0003c; 0.05.</p>
+                </fn>
+                <fn>
+                  <p>FEG, forearm extensor group; FFC, forearm flexor group; T, testosterone; Total,
+            combined muscle groups; UEG, upper arm extensor group; UFG, upper arm flexor group.</p>
+                </fn>
+              </table-wrap-foot>
+            </table-wrap>
+          </p>
+          <p>When comparing the baseline and 5-year data, an increase in total FF occurred in the
+            leg (31.9&#x02013;43.3%, <italic toggle="yes">P</italic> &#x0003c; 0.05) and
+            individually in 4 out of 5 thigh muscle groups (rectus femoris, vastus lateralis, biceps
+            femoris long head and sartorius, <xref rid="tbl5" ref-type="table">Table 5</xref>) and 2
+            out of the 5 calf muscle groups (medial gastrocnemius, soleus). The FF evolution for
+            individual subjects can be seen in <xref rid="fig2" ref-type="fig">Fig. 2A</xref> (for
+            arm) and <xref rid="fig2" ref-type="fig">Fig. 2C</xref> (for leg). <fig position="float"
+              fig-type="figure" id="fig1">
+              <label>Figure 1</label>
+              <caption>
+                <p>Gonadal function during pubertal induction and follow-up. (A) Testosterone (T)
+            levels during initial study and extension. (B) Gonadotrophin levels during initial study
+            and extension (LH, luteinising hormone; FSH, follicle-stimulating hormone). (C)
+            Testicular volumes during initial study and extension (TV, testicular volume). (D)
+            Inhibin B levels during initial study and extension.</p>
+              </caption>
+              <graphic xlink:href="EC-23-0245fig1" position="float" />
+            </fig>
+<fig
+              position="float" fig-type="figure" id="fig2">
+              <label>Figure 2</label>
+              <caption>
+                <p>A) Arm total fat fraction and B) total cCSA measured by MRI shown for individual
+            participants at baseline, end of regimen, and the final follow-up. C) Leg total fat
+            fraction and D) total cCSA measured by MRI shown for individual participants at
+            baseline, end of regimen, and the final follow-up.</p>
+              </caption>
+              <graphic xlink:href="EC-23-0245fig2" position="float" />
+            </fig>
+<table-wrap
+              position="float" id="tbl5">
+              <label>Table 5</label>
+              <caption>
+                <p>Lower limb MRI.</p>
+              </caption>
+              <table frame="hsides" rules="groups">
+                <thead>
+                  <tr>
+                    <th rowspan="3" align="left" valign="bottom" colspan="1" />
+                    <th rowspan="3" align="center" valign="bottom" colspan="1">Control</th>
+                    <th align="center" valign="bottom" colspan="3" rowspan="1">FF (%) <italic
+                        toggle="yes">n</italic>&#x02009;=&#x02009;10</th>
+                    <th align="center" valign="bottom" colspan="3" rowspan="1">CSA (mm<sup>2</sup>) <italic
+                        toggle="yes">n</italic>&#x02009;=&#x02009;10</th>
+                    <th align="center" valign="bottom" colspan="3" rowspan="1">cCSA (mm<sup>2</sup>) <italic
+                        toggle="yes">n</italic>&#x02009;=&#x02009;10</th>
+                  </tr>
+                  <tr>
+                    <th align="center" valign="bottom" rowspan="1" colspan="1">BL</th>
+                    <th align="center" valign="bottom" rowspan="1" colspan="1">End regimen</th>
+                    <th align="center" valign="bottom" rowspan="1" colspan="1">Final F/U</th>
+                    <th align="center" valign="bottom" rowspan="1" colspan="1">BL</th>
+                    <th align="center" valign="bottom" rowspan="1" colspan="1">End regimen</th>
+                    <th align="center" valign="bottom" rowspan="1" colspan="1">Final F/U</th>
+                    <th align="center" valign="bottom" rowspan="1" colspan="1">BL</th>
+                    <th align="center" valign="bottom" rowspan="1" colspan="1">End regimen</th>
+                    <th align="center" valign="bottom" rowspan="1" colspan="1">Final F/U</th>
+                  </tr>
+                  <tr>
+                    <th align="center" valign="bottom" rowspan="1" colspan="1">T+0y</th>
+                    <th align="center" valign="bottom" rowspan="1" colspan="1">T+2y</th>
+                    <th align="center" valign="bottom" rowspan="1" colspan="1">T+5y</th>
+                    <th align="center" valign="bottom" rowspan="1" colspan="1">T+0y</th>
+                    <th align="center" valign="bottom" rowspan="1" colspan="1">T+2y</th>
+                    <th align="center" valign="bottom" rowspan="1" colspan="1">T+5y</th>
+                    <th align="center" valign="bottom" rowspan="1" colspan="1">T+0y</th>
+                    <th align="center" valign="bottom" rowspan="1" colspan="1">T+2y</th>
+                    <th align="center" valign="bottom" rowspan="1" colspan="1">T+5y</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">TA</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">2.0<sup>a</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">11.6</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">11.0</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">17.4<sup>a</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">313.7</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">414.5</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">304.3</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">281.0</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">374.3</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">255.0<sup>a</sup></td>
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">MG</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">2.8<sup>b</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">22.2</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">20.3</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">29.7<sup>a,d</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">1297.7</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">1493.2</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">1143.4<sup>b</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">1024.5</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">1214.9</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">827.8<sup>b,d</sup></td>
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">LG</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">2.5<sup>b</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">25.2</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">24.0</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">34.1<sup>a</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">561.0</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">676.1</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">540.1</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">391.5</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">485.8</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">348.8<sup>b,d</sup></td>
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">SOL</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">2.4<sup>b</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">17.9</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">18.4</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">28.7<sup>b,d</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">1595.7</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">1662.9</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">1633.1</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">1306.9</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">1372.4</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">1170.6<sup>a</sup></td>
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">RF</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">1.6<sup>c</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">47.5</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">48.3</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">60.0<sup>b,d</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">568.6</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">647.3</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">654.6<sup>a</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">286.2</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">314.4</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">243.0<sup>a</sup></td>
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">VL</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">2.0<sup>c</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">48.1</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">51.4</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">60.4<sup>a,d</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">1069.0</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">1171.2</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">1056.8<sup>b</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">542.2</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">562.3</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">407.6<sup>b,d</sup></td>
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">BFLH</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">2.7<sup>c</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">54.9</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">58.0</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">71.8<sup>b,d</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">857.7</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">908.5</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">872.7<sup>c</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">355.5</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">390.1</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">259.3<sup>c,d</sup></td>
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">ST</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">2.7<sup>b</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">28.2</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">32.0</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">45.3<sup>b</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">554.7</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">678.0</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">601.8<sup>b</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">410.9</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">476.3</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">353.7<sup>b</sup></td>
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">SART</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">5.1<sup>b</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">27.8</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">31.6</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">44.2<sup>a,d</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">235.1</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">271.1</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">253.0<sup>b</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">173.3</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">191.5</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">157.2<sup>b</sup></td>
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" rowspan="1" colspan="1">Total</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">2.4</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">31.9</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">32.5</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">43.3<sup>a,d</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">7052.1</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">7921.9</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">7059.2<sup>a</sup></td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">4771.9</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">5381.8</td>
+                    <td align="left" valign="top" rowspan="1" colspan="1">4023.2<sup>c</sup></td>
+                  </tr>
+                </tbody>
+              </table>
+              <table-wrap-foot>
+                <fn id="fn6">
+                  <p><italic toggle="yes">P</italic>-values with letters &#x02018;a&#x02019;,
+            &#x02018;b&#x02019;, and &#x02018;c&#x02019; in DMD 5 years (T+5y) are paired<italic
+                      toggle="yes"> t</italic>-tests vs end of regimen (T+2y);</p>
+                </fn>
+                <fn id="fn7">
+                  <p><italic toggle="yes">P</italic>-values with letter &#x02018;d&#x02019; in DMD 5
+            years (T+5y) are paired <italic toggle="yes">t</italic>-tests vs baseline (T+0y);</p>
+                </fn>
+                <fn id="fn8">
+                  <p><italic toggle="yes">P</italic>-values in the Control column are unpaired <italic
+                      toggle="yes">t</italic>-tests vs DMD 5 years.</p>
+                </fn>
+                <fn>
+                  <p><sup>a</sup><italic toggle="yes">P</italic> &#x0003c; 0.05; <sup>b</sup><italic
+                      toggle="yes">P</italic> &#x0003c; 0.01; <sup>c</sup><italic toggle="yes">P</italic>
+            &#x0003c; 0.001; <sup>d</sup><italic toggle="yes">P</italic> &#x0003c; 0.05.</p>
+                </fn>
+                <fn>
+                  <p>BFLH, biceps femoris long head; LG, lateral gastrocnemius; MG, medial
+            gastrocnemius; RF, rectus femoris (thigh); SART, sartorius; SOL, soleus; ST,
+            semitendinosus; T, testosterone; TA, tibialis anterior (calf); Total, combined muscle
+            groups; VL, vastus lateralis.</p>
+                </fn>
+              </table-wrap-foot>
+            </table-wrap>
+          </p>
+        </sec>
+        <sec>
+          <title>Longitudinal analysis of cross-sectional area in upper and lower limbs</title>
+          <p>Between the end of regimen and the final follow-up, there was no change in CSA for any
+            of the arm muscle groups, or for the total CSA of the arm. CSA in the calf muscle groups
+            remained stable, with a significant change between end of regimen and final follow-up
+            only seen in medial gastrocnemius (349.8 mm&#x000b2; decrease, <italic toggle="yes">P</italic>
+            &#x0003c; 0.01), whilst significant decreases in CSA were noted from end of regimen to
+            final follow-up in all thigh muscle groups, except for RF where a small increase was
+            noted (<xref rid="tbl5" ref-type="table">Table 5</xref>). The total leg CSA
+            significantly decreased between end of regimen and final follow-up (<italic toggle="yes">
+            P</italic> &#x0003c; 0.05).</p>
+        </sec>
+        <sec>
+          <title>Longitudinal analysis of contractile cross-sectional area in upper and lower limbs</title>
+          <p>There was a significant decrease in total cCSA of the arm between end of regimen and
+            final follow-up (361.3 mm&#x000b2;, <italic toggle="yes">P</italic> &#x0003c; 0.05) and
+            also separately in the forearm extensor group (FEG), UEG and UFG muscle groups; with the
+            largest decrease observed in UEG (140.8 mm&#x000b2;, <italic toggle="yes">P</italic>
+            &#x0003c; 0.01). There was a significant decrease in cCSA in UFG from baseline to final
+            follow-up (<italic toggle="yes">P</italic> &#x0003c; 0.05). In the other arm muscle
+            groups, the final follow-up cCSA values were similar to baseline.</p>
+          <p>A significant reduction in cCSA was also seen in all individual leg muscle groups of
+            both the thigh and calf (<xref rid="tbl5" ref-type="table">Table 5</xref>) contributing
+            to a decrease in total cCSA between end of regimen and final follow-up of 1358.6 mm<sup>
+            2</sup> or 25.2 % (<italic toggle="yes">P</italic> &#x0003c; 0.001, <xref rid="tbl5"
+              ref-type="table">Table 5</xref>). Despite the significant increase that we observed
+            between baseline and end of regimen in total cCSA for the leg (<xref rid="bib3"
+              ref-type="bibr">3</xref>), the final cCSA in lateral and medial gastrocnemius (calf)
+            and vastus lateralis and biceps femoris long head (thigh) groups were significantly less
+            than at baseline (<italic toggle="yes">P</italic> &#x0003c; 0.05 for difference between
+            baseline and final follow-up). The evolution of cCSA for individual subjects can be seen
+            in <xref rid="fig2" ref-type="fig">Fig. 2B</xref> (for arm) and <xref rid="fig2"
+              ref-type="fig">Fig. 2D</xref> (for leg).</p>
+        </sec>
+      </sec>
+      <sec>
+        <title>T2 relaxation time</title>
+        <p>T2 relaxation time data was only collected for arm muscle groups due to time constraints
+          and to ensure patient comfort within the MRI scanner. There was a trend for increase in T2
+          relaxation time for UEG and FFG from the end of regimen visit to final follow-up (<italic
+            toggle="yes">P</italic> &#x0003c; 0.052 and <italic toggle="yes">P</italic> &#x0003c;
+          0.056, indicated in <xref rid="tbl4" ref-type="table">Table 4</xref> as <italic
+            toggle="yes">P</italic> &#x0003c; 0.06).</p>
+      </sec>
+    </sec>
+    <sec>
+      <title>Discussion</title>
+      <p>The newly revised standards of care highlight the importance of the timely recognition and
+        management of pubertal delay in DMD (<xref rid="bib18" ref-type="bibr">18</xref>). This
+        study describes HPG activity in adolescents with DMD following the same 2-year pubertal
+        induction regimen using incremental monthly injections of intramuscular testosterone. Rather
+        than ongoing relative HPG axis inactivity, the testosterone given during the 2-year pubertal
+        induction regimen appeared to promote gonadotrophin release in most participants, despite
+        ongoing GC use. As such, GC does not appear to suppress gonadotrophin production to the
+        extent that it does before puberty. There was ongoing HPG axis activity following
+        testosterone therapy, but the clinical and biochemical parameters were relatively low when
+        compared to age-related norms.</p>
+      <p>By the time of the final follow-up, when the mean age of participants was 18.6 years, one
+        participant had already restarted testosterone supplementation and a further five were
+        advised to restart after their final assessment (subjects marked &#x02018;b&#x02019; in <xref
+          rid="tbl2" ref-type="table">Table 2</xref>). They all had an increase in testosterone
+        levels during follow-up but they had been deemed not to be sufficient (&#x0003c;8 nmol/L).
+        Therefore, just under half of the study cohort required supplementation by 3 years after
+        stopping their incremental regimen. The mean testosterone level at +5.0 years was 10.3
+        nmol/L, within the lower range of normal for a healthy adult male, but considerably lower
+        than age-related normative mean levels of 15.4 nmol/L (<xref rid="bib18" ref-type="bibr">18</xref>).
+        There was also considerable variability with the values ranging from &#x0003c;1nmol/L to
+        26.7 nmol, which does not appear to be mutation specific or related to ambulation status,
+        suggesting that there may be additional factors affecting the HPG axis including
+        inter-individual sensitivity to GC. This highlights the need for ongoing surveillance after
+        pubertal induction and for studies of larger cohorts to better understand the variability
+        between individual responses.</p>
+      <p>The testicular volume of 10.6 mL at the final follow-up was significantly greater than at
+        all other time points during the incremental testosterone regimen but remained considerably
+        lower than mean reference bilateral values for the adult testis of 31 mL (<xref rid="bib19"
+          ref-type="bibr">19</xref>). Semen volume, sperm density, total sperm count, total motile
+        sperm count, and serum FSH, LH, and testosterone levels have all been shown to correlate
+        with testicular volume (<xref rid="bib20" ref-type="bibr">20</xref>), although numbers in
+        this study are too small to demonstrate such a correlation and no semen analysis was
+        undertaken. Inhibin B is secreted from the Sertoli cells in the testis. Inhibin B levels
+        significantly increased from baseline to 158.2 pg/mL (<sc>s.d.</sc> 87.6), but final levels
+        remained lower than age- and sex-matched reference values of 305 pg/mL (IQR 240&#x02013;445
+        pg/mL) (<xref rid="bib15" ref-type="bibr">15</xref>). There was a significant positive
+        correlation between testicular volume and inhibin B level at the final follow-up (T+5y), <italic
+          toggle="yes">r</italic>
+<sup>2</sup>&#x02009;=&#x02009;0.6. Inhibin B, FSH levels and
+        testicular volumes have been shown to positively correlate with spermatogenesis and sperm
+        density and the increase seen in both testicular volume and inhibin B during pubertal
+        induction in this cohort of men with DMD is promising with respect to the prospect of future
+        fertility, although semen analysis would be required to confirm sperm production. A
+        proportion of participants also showed borderline elevation in FSH levels at the final
+        follow-up (median 4.7 IU/L, IGR range 2.2&#x02013;7.0) which may reflect feedback from the
+        testis to pituitary gland and be consistent with sub-optimal spermatogenesis (<xref
+          rid="bib21" ref-type="bibr">21</xref>). Three of the 15 participants had FSH levels
+        greater than 10.4 IU which have been shown to predict azoospermia in patients receiving
+        gonadotoxic therapies (<xref rid="bib22" ref-type="bibr">22</xref>).</p>
+      <p>As the results of this study and individual case reports (<xref rid="bib23" ref-type="bibr">
+        23</xref>, <xref rid="bib24" ref-type="bibr">24</xref>) suggest that spermatogenesis can be
+        preserved in men with DMD following pubertal induction despite long-term, high-dose GC use,
+        it would be important to consider whether a young man with DMD wishes to have children in
+        the future before restarting long-term testosterone supplementation as this could have an
+        impact on their fertility prospects. It may be that testosterone supplementation is
+        appropriate until fertility is being considered and then the use of human chorionic
+        gonadotrophin may be preferred; a technique which is utilised in the treatment of
+        hypogonadotrophic hypogonadism (<xref rid="bib25" ref-type="bibr">25</xref>).</p>
+      <p>The extended nature of this study has highlighted the inevitable decline in muscle function
+        and reduction in lumbar spine bone density that is consistent with the
+        late-ambulant/non-ambulant transition phase in DMD and has been shown in other studies (<xref
+          rid="bib26" ref-type="bibr">26</xref>) Given the known additional advantages of
+        testosterone on bone health (<xref rid="bib27" ref-type="bibr">27</xref>), muscle and
+        well-being, it will be important to continue monitoring testosterone levels in this
+        population and supplement as required if levels become sub-optimal. The British Society for
+        Sexual Medicine guidelines suggest that a testosterone level &#x0003c;8 nmol/L should be
+        treated, although it also depends on the clinical situation (<xref rid="bib28"
+          ref-type="bibr">28</xref>). Once treated it is recommended that a target testosterone
+        level should be 15&#x02013;30 nmol/L. Whilst this is guidance for the healthy population,
+        there are clear advantages for men with DMD to have an optimal testosterone level, as our
+        previous study shows (<xref rid="bib3" ref-type="bibr">3</xref>).</p>
+      <p>Our previous publication identified significant increases in both CSA and cCSA of the total
+        arm and leg muscle groups during the interventional study period (and some individual muscle
+        groups), from baseline to end of regimen (+2 years), suggesting the development of new
+        healthy muscle tissue, whilst FF remained stable in the arms and legs (<xref rid="bib3"
+          ref-type="bibr">3</xref>). In this current study, MRI data demonstrated a clear
+        deterioration in muscle integrity after cessation of the testosterone treatment with
+        increases in FF and either unchanged or reduced CSA leading to overall reductions in cCSA.
+        Total cCSA, representing the residual functional muscle volume, increased during
+        testosterone treatment (<xref rid="bib3" ref-type="bibr">3</xref>) but decreased during the
+        extended follow-up period after the end of the regimen. The MRI findings in this study
+        highlight the importance of prompt intervention with testosterone to treat pubertal delay in
+        DMD. The initial study findings described an unexpected increase in cCSA for arms and legs
+        coupled with a reduction in T2 relaxation time for the arm, and no increases in total limb
+        FF, which suggested that testosterone treatment improved muscle strength and perhaps also
+        ameliorated the underlying inflammatory process in DMD. These findings were in contrast to
+        several natural history MRI studies of DMD that show disease progression with time and an
+        increase in FF with time in adolescents with DMD (<xref rid="bib14" ref-type="bibr">14</xref>
+        , <xref rid="bib29" ref-type="bibr">29</xref>, <xref rid="bib30" ref-type="bibr">30</xref>).
+        It remains unclear whether exogenous testosterone confers an additional benefit in terms of
+        contractile muscle bulk and inflammatory status of muscle in DMD or whether the 2-year
+        incremental regimen was offered early enough to temporarily halt the later muscle decline.
+        We propose to carry out further work in this area.</p>
+      <sec>
+        <title>Limitations of the study</title>
+        <p>Unfortunately, the COVID-19 pandemic had a considerable impact on data collection in this
+          study and so the number of study visits was reduced from two to one. Despite this, all
+          patients agreed to take part and data were collected consistently. The original cohort
+          only contained 15 participants and therefore the size of the follow-up cohort was limited.
+          The cohort is too small, in particular, to draw strong conclusions regarding the
+          trajectory of the bone density data in relation to testosterone use. It is difficult to
+          obtain accurate measures of height, as contractures and then loss of ambulation make
+          standing height impossible, whilst ulnar length can overestimate height. This may have had
+          an impact on the final DEXA <italic toggle="yes">Z</italic>-scores. In order to avoid
+          this, both standing height and ulnar length/arm span were recorded in patients during the
+          decline phase, so that consistent measurement techniques could be maintained.</p>
+      </sec>
+    </sec>
+    <sec>
+      <title>Conclusion</title>
+      <p>Earlier testosterone therapy is associated with ongoing HPG activity. The increase in
+        inhibin B observed in this cohort of men with DMD is promising with respect to future
+        fertility. Testosterone levels and testicular volumes, however, remain lower than adult
+        reference values. Upper and lower limb muscle functional volume increased during the
+        intervention but declined in the years after cessation of supplementation. Given the known
+        additional advantages of testosterone on bone health, muscle, and well-being and the
+        likelihood for a further reduction in HPG function associated with the inevitable health
+        deterioration seen in young adults with DMD, a more proactive approach to ongoing
+        testosterone supplementation may be appropriate following pubertal induction.</p>
+    </sec>
+    <sec sec-type="COI-statement">
+      <title>Declaration of interest</title>
+      <p>Volker Straub is or has been on advisory boards for Astellas Gene Therapies, Biogen,
+        Edgewise Therapeutics, Kate Therapeutics, ML Bio Solutions, Novartis Gene Therapies, Roche,
+        Sanofi, Sarepta Therapeutics, Vertex Pharmaceuticals, and Wave Therapeutics. He received
+        speaker honoraria from Pfizer, Sanofi, and Sarepta Therapeutics. He has research
+        collaborations with Sarepta Therapeutics and Sanofi. Robert Muni Lofra has received speaker
+        honoraria from Biogen and has been recently on advisory boards for Roche and Biogen. Anna
+        Mayhew has served on medical/scientific advisory boards for Regenxbio, Sarepta, Biogen, and
+        Roche and has received fees for consulting and training services from Biogen, Roche,
+        Novartis, Biohaven, PTC, Sarepta, Italfarmaco, Dyne, Pfizer, Summit, Catabasis, Santhera,
+        Vision, Lysogene, Modis, Amicus, Analysis Group, MDUK, and DUK. Michela Guglieri has
+        received speaker honoraria from Sarepta, Novartis, and Italfarmaco and is or has been on
+        advisory boards for PTC Therapeutics, Pfizer, NS Pharma, and Dyne. She has research
+        collaborations with Sarepta and PTC Therapeutics. Kieren Hollingsworth performs commercial
+        work with Astellas Gene Therapies. Claire Wood, Edeina Bokaie, Eric Hughes, Joseph Mcelvery,
+        Rod Mitchell, and Tim Cheetham have no conflicts of interest.</p>
+    </sec>
+    <sec>
+      <title>Funding</title>
+      <p>The study was generously funded by Duchenne UK. CW was funded by the <funding-source>
+          <institution-wrap>
+            <institution>Medical Research Council</institution>
+            <institution-id institution-id-type="doi">
+              http://dx.doi.org/10.13039/501100000265</institution-id>
+          </institution-wrap>
+        </funding-source>/MDUK
+        (MR/N020588/1). RTM is funded by a <funding-source>
+          <institution-wrap>
+            <institution>UK Research and Innovation</institution>
+            <institution-id institution-id-type="doi">
+              http://dx.doi.org/10.13039/100014013</institution-id>
+          </institution-wrap>
+        </funding-source>
+        (UKRI) Future Leaders Fellowship MR/S017151/1.</p>
+    </sec>
+  </body>
+  <back>
+    <ack>
+      <title>Acknowledgements</title>
+      <p>We offer thanks to the participants and their families for providing their time to take
+        part in this study; Meredith James, Dionne Moat, Jas Sodhi, and the nursing staff in the CRF
+        for their help in collecting data; and Tim Hodgson, Dot Wallace, and Louise Ward, senior
+        research radiographers at the Newcastle Magnetic Resonance Centre, for acquiring the MRI
+        data.</p>
+    </ack>
+    <ref-list>
+      <title>References</title>
+      <ref id="bib1">
+        <label>1</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author"><name>
+              <surname>Duan</surname>
+              <given-names>D</given-names>
+            </name><name>
+              <surname>Goemans</surname>
+              <given-names>N</given-names>
+            </name><name>
+              <surname>Takeda</surname>
+              <given-names>S</given-names>
+            </name><name>
+              <surname>Mercuri</surname>
+              <given-names>E</given-names>
+            </name> &#x00026; <name>
+              <surname>Aartsma-Rus</surname>
+              <given-names>A</given-names>
+            </name></person-group>. <article-title>Duchenne
+          muscular dystrophy</article-title>. <source>Nature Reviews. Disease Primers</source><year>
+          2021</year><volume>7</volume><fpage>13</fpage>. (<pub-id pub-id-type="doi">
+          10.1038/s41572-021-00248-3</pub-id>)</mixed-citation>
+      </ref>
+      <ref id="bib2">
+        <label>2</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author"><name>
+              <surname>Matthews</surname>
+              <given-names>E</given-names>
+            </name><name>
+              <surname>Brassington</surname>
+              <given-names>R</given-names>
+            </name><name>
+              <surname>Kuntzer</surname>
+              <given-names>T</given-names>
+            </name><name>
+              <surname>Jichi</surname>
+              <given-names>F</given-names>
+            </name> &#x00026; <name>
+              <surname>Manzur</surname>
+              <given-names>AY</given-names>
+            </name></person-group>. <article-title>Corticosteroids
+          for the treatment of Duchenne muscular dystrophy</article-title>. <source>Cochrane
+          Database of Systematic Reviews</source><year>2016</year><fpage>5 CD003725</fpage>. (<pub-id
+            pub-id-type="doi">10.1002/14651858.CD003725.pub4</pub-id>)</mixed-citation>
+      </ref>
+      <ref id="bib3">
+        <label>3</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author"><name>
+              <surname>Wood</surname>
+              <given-names>CL</given-names>
+            </name><name>
+              <surname>Hollingsworth</surname>
+              <given-names>KG</given-names>
+            </name><name>
+              <surname>Hughes</surname>
+              <given-names>E</given-names>
+            </name><name>
+              <surname>Punniyakodi</surname>
+              <given-names>S</given-names>
+            </name><name>
+              <surname>Muni-Lofra</surname>
+              <given-names>R</given-names>
+            </name><name>
+              <surname>Mayhew</surname>
+              <given-names>A</given-names>
+            </name><name>
+              <surname>Mitchell</surname>
+              <given-names>RT</given-names>
+            </name><name>
+              <surname>Guglieri</surname>
+              <given-names>M</given-names>
+            </name><name>
+              <surname>Cheetham</surname>
+              <given-names>TD</given-names>
+            </name> &#x00026; <name>
+              <surname>Straub</surname>
+              <given-names>V</given-names>
+            </name></person-group>. <article-title>Pubertal
+          induction in adolescents with DMD is associated with high satisfaction, gonadotropin
+          release and increased muscle contractile surface area</article-title>. <source>European
+          Journal of Endocrinology</source><year>2021</year><volume>184</volume><fpage>67</fpage>
+          &#x02013;<lpage>79</lpage>. (<pub-id pub-id-type="doi">10.1530/EJE-20-0709</pub-id>)<pub-id
+            pub-id-type="pmid">33112266</pub-id>
+        </mixed-citation>
+      </ref>
+      <ref id="bib4">
+        <label>4</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author">
+            <name>
+              <surname>Birnkrant</surname>
+              <given-names>DJ</given-names>
+            </name>
+            <name>
+              <surname>Bushby</surname>
+              <given-names>K</given-names>
+            </name>
+            <name>
+              <surname>Bann</surname>
+              <given-names>CM</given-names>
+            </name>
+            <name>
+              <surname>Apkon</surname>
+              <given-names>SD</given-names>
+            </name>
+            <name>
+              <surname>Blackwell</surname>
+              <given-names>A</given-names>
+            </name>
+            <name>
+              <surname>Brumbaugh</surname>
+              <given-names>D</given-names>
+            </name>
+            <name>
+              <surname>Case</surname>
+              <given-names>LE</given-names>
+            </name>
+            <name>
+              <surname>Clemens</surname>
+              <given-names>PR</given-names>
+            </name>
+            <name>
+              <surname>Hadjiyannakis</surname>
+              <given-names>S</given-names>
+            </name>
+            <name>
+              <surname>Pandya</surname>
+              <given-names>S</given-names>
+            </name>
+          </person-group>, <bold>
+            <italic toggle="yes">et al</italic>
+          </bold>. <article-title>Diagnosis and
+          management of Duchenne muscular dystrophy, Part 1: diagnosis, and neuromuscular,
+          rehabilitation, endocrine, and gastrointestinal and nutritional management</article-title>
+          . <source>Lancet. Neurology</source><year>2018</year><volume>17</volume><fpage>251</fpage>
+          &#x02013;<lpage>267</lpage>. (<pub-id pub-id-type="doi">10.1016/S1474-4422(1830024-3</pub-id>
+          )<pub-id pub-id-type="pmid">29395989</pub-id>
+        </mixed-citation>
+      </ref>
+      <ref id="bib5">
+        <label>5</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author"><name>
+              <surname>Wood</surname>
+              <given-names>CL</given-names>
+            </name><name>
+              <surname>Cheetham</surname>
+              <given-names>TD</given-names>
+            </name><name>
+              <surname>Hollingsworth</surname>
+              <given-names>KG</given-names>
+            </name><name>
+              <surname>Guglieri</surname>
+              <given-names>M</given-names>
+            </name><name>
+              <surname>Ailins-Sahun</surname>
+              <given-names>Y</given-names>
+            </name><name>
+              <surname>Punniyakodi</surname>
+              <given-names>S</given-names>
+            </name><name>
+              <surname>Mayhew</surname>
+              <given-names>A</given-names>
+            </name> &#x00026; <name>
+              <surname>Straub</surname>
+              <given-names>V</given-names>
+            </name></person-group>. <article-title>Observational
+          study of clinical outcomes for testosterone treatment of pubertal delay in Duchenne
+          muscular dystrophy</article-title>. <source>BMC Pediatrics</source><year>2019</year><volume>
+          19</volume><fpage>131</fpage>. (<pub-id pub-id-type="doi">10.1186/s12887-019-1503-x</pub-id>
+          )<pub-id pub-id-type="pmid">31023296</pub-id>
+        </mixed-citation>
+      </ref>
+      <ref id="bib6">
+        <label>6</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author"><name>
+              <surname>Marshall</surname>
+              <given-names>WA</given-names>
+            </name> &#x00026; <name>
+              <surname>Tanner</surname>
+              <given-names>JM</given-names>
+            </name></person-group>. <article-title>Variations
+          in the pattern of pubertal changes in boys</article-title>. <source>Archives of Disease in
+          Childhood</source><year>1970</year><volume>45</volume><fpage>13</fpage>&#x02013;<lpage>23</lpage>.
+          (<pub-id pub-id-type="doi">10.1136/adc.45.239.13</pub-id>)<pub-id pub-id-type="pmid">
+          5440182</pub-id>
+        </mixed-citation>
+      </ref>
+      <ref id="bib7">
+        <label>7</label>
+        <mixed-citation publication-type="book"><person-group person-group-type="author"><name>
+              <surname>Greulich</surname>
+              <given-names>WW</given-names>
+            </name> &#x00026; <name>
+              <surname>Pyle</surname>
+              <given-names>SI</given-names>
+            </name></person-group><source>Radiographic
+          Atlas of Skeletal Development of the Hand and Wrist</source>, <edition>2nd ed.</edition>
+          Stanford: <publisher-name>Stanford University Press</publisher-name><year>1959</year>.</mixed-citation>
+      </ref>
+      <ref id="bib8">
+        <label>8</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author">
+            <name>
+              <surname>Mayhew</surname>
+              <given-names>AG</given-names>
+            </name>
+            <name>
+              <surname>Coratti</surname>
+              <given-names>G</given-names>
+            </name>
+            <name>
+              <surname>Mazzone</surname>
+              <given-names>ES</given-names>
+            </name>
+            <name>
+              <surname>Klingels</surname>
+              <given-names>K</given-names>
+            </name>
+            <name>
+              <surname>James</surname>
+              <given-names>M</given-names>
+            </name>
+            <name>
+              <surname>Pane</surname>
+              <given-names>M</given-names>
+            </name>
+            <name>
+              <surname>Straub</surname>
+              <given-names>V</given-names>
+            </name>
+            <name>
+              <surname>Goemans</surname>
+              <given-names>N</given-names>
+            </name>
+            <name>
+              <surname>Mercuri</surname>
+              <given-names>E</given-names>
+            </name>
+            <name>
+              <surname>Ricotti</surname>
+              <given-names>V</given-names>
+            </name>
+          </person-group>, <bold>
+            <italic toggle="yes">et al</italic>
+          </bold>. <article-title>Performance of
+          Upper Limb module for Duchenne muscular dystrophy</article-title>. <source>Developmental
+          Medicine and Child Neurology</source><year>2019</year><volume> 62</volume><fpage>633</fpage>
+          &#x02013;<lpage>639</lpage>. (<pub-id pub-id-type="doi">10.1111/dmcn.14361</pub-id>)<pub-id
+            pub-id-type="pmid">31538331</pub-id>
+        </mixed-citation>
+      </ref>
+      <ref id="bib9">
+        <label>9</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author">
+            <name>
+              <surname>Mayhew</surname>
+              <given-names>AG</given-names>
+            </name>
+            <name>
+              <surname>Cano</surname>
+              <given-names>SJ</given-names>
+            </name>
+            <name>
+              <surname>Scott</surname>
+              <given-names>E</given-names>
+            </name>
+            <name>
+              <surname>Eagle</surname>
+              <given-names>M</given-names>
+            </name>
+            <name>
+              <surname>Bushby</surname>
+              <given-names>K</given-names>
+            </name>
+            <name>
+              <surname>Manzur</surname>
+              <given-names>A</given-names>
+            </name>
+            <name>
+              <surname>Muntoni</surname>
+              <given-names>F</given-names>
+            </name>
+          </person-group> &#x00026; <collab>North
+          Star Clinical Network for Neuromuscular Disease</collab>. <article-title>Detecting
+          meaningful change using the North Star Ambulatory Assessment in Duchenne muscular
+          dystrophy</article-title>. <source>Developmental Medicine and Child Neurology</source><year>
+          2013</year><volume>55</volume><fpage>1046</fpage>&#x02013;<lpage>1052</lpage>. (<pub-id
+            pub-id-type="doi">10.1111/dmcn.12220</pub-id>)<pub-id pub-id-type="pmid">23909763</pub-id>
+        </mixed-citation>
+      </ref>
+      <ref id="bib10">
+        <label>10</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author"><name>
+              <surname>Crabtree</surname>
+              <given-names>NJ</given-names>
+            </name><name>
+              <surname>Kibirige</surname>
+              <given-names>MS</given-names>
+            </name><name>
+              <surname>Fordham</surname>
+              <given-names>JN</given-names>
+            </name><name>
+              <surname>Banks</surname>
+              <given-names>LM</given-names>
+            </name><name>
+              <surname>Muntoni</surname>
+              <given-names>F</given-names>
+            </name><name>
+              <surname>Chinn</surname>
+              <given-names>D</given-names>
+            </name><name>
+              <surname>Boivin</surname>
+              <given-names>CM</given-names>
+            </name> &#x00026; <name>
+              <surname>Shaw</surname>
+              <given-names>NJ</given-names>
+            </name></person-group>. <article-title>The
+          relationship between lean body mass and bone mineral content in paediatric health and
+          disease</article-title>. <source>Bone</source><year>2004</year><volume>35</volume><fpage>
+          965</fpage>&#x02013;<lpage>972</lpage>. (<pub-id pub-id-type="doi">
+          10.1016/j.bone.2004.06.009</pub-id>)<pub-id pub-id-type="pmid">15454104</pub-id>
+        </mixed-citation>
+      </ref>
+      <ref id="bib11">
+        <label>11</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author"><name>
+              <surname>Hollingsworth</surname>
+              <given-names>KG</given-names>
+            </name><name>
+              <surname>Higgins</surname>
+              <given-names>DM</given-names>
+            </name><name>
+              <surname>McCallum</surname>
+              <given-names>M</given-names>
+            </name><name>
+              <surname>Ward</surname>
+              <given-names>L</given-names>
+            </name><name>
+              <surname>Coombs</surname>
+              <given-names>A</given-names>
+            </name> &#x00026; <name>
+              <surname>Straub</surname>
+              <given-names>V</given-names>
+            </name></person-group>. <article-title>Investigating
+          the quantitative fidelity of prospectively undersampled chemical shift imaging in muscular
+          dystrophy with compressed sensing and parallel imaging reconstruction</article-title>. <source>Magnetic
+          Resonance in Medicine</source><year>2014</year><volume>72</volume><fpage>1610</fpage>
+          &#x02013;<lpage>1619</lpage>. (<pub-id pub-id-type="doi">10.1002/mrm.25072</pub-id>)<pub-id
+            pub-id-type="pmid">24347306</pub-id>
+        </mixed-citation>
+      </ref>
+      <ref id="bib12">
+        <label>12</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author"><name>
+              <surname>Loughran</surname>
+              <given-names>T</given-names>
+            </name><name>
+              <surname>Higgins</surname>
+              <given-names>DM</given-names>
+            </name><name>
+              <surname>McCallum</surname>
+              <given-names>M</given-names>
+            </name><name>
+              <surname>Coombs</surname>
+              <given-names>A</given-names>
+            </name><name>
+              <surname>Straub</surname>
+              <given-names>V</given-names>
+            </name> &#x00026; <name>
+              <surname>Hollingsworth</surname>
+              <given-names>KG</given-names>
+            </name></person-group>. <article-title>Improving
+          highly accelerated fat fraction measurements for clinical trials in muscular dystrophy:
+          origin and quantitative effect of R2* changes</article-title>. <source>Radiology</source><year>
+          2015</year><volume>275</volume><fpage>570</fpage>&#x02013;<lpage>578</lpage>. (<pub-id
+            pub-id-type="doi">10.1148/radiol.14141191</pub-id>)<pub-id pub-id-type="pmid">25575118</pub-id>
+        </mixed-citation>
+      </ref>
+      <ref id="bib13">
+        <label>13</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author">
+            <name>
+              <surname>Carlier</surname>
+              <given-names>PG</given-names>
+            </name>
+          </person-group>. <article-title>Global
+          T2 versus water T2 in NMR imaging of fatty infiltrated muscles: different methodology,
+          different information and different implications</article-title>. <source>Neuromuscular
+          Disorders</source><year>2014</year><volume>24</volume><fpage>390</fpage>&#x02013;<lpage>
+          392</lpage>. (<pub-id pub-id-type="doi">10.1016/j.nmd.2014.02.009</pub-id>)<pub-id
+            pub-id-type="pmid">24656605</pub-id>
+        </mixed-citation>
+      </ref>
+      <ref id="bib14">
+        <label>14</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author">
+            <name>
+              <surname>Ricotti</surname>
+              <given-names>V</given-names>
+            </name>
+            <name>
+              <surname>Evans</surname>
+              <given-names>MRB</given-names>
+            </name>
+            <name>
+              <surname>Sinclair</surname>
+              <given-names>CDJ</given-names>
+            </name>
+            <name>
+              <surname>Butler</surname>
+              <given-names>JW</given-names>
+            </name>
+            <name>
+              <surname>Ridout</surname>
+              <given-names>DA</given-names>
+            </name>
+            <name>
+              <surname>Hogrel</surname>
+              <given-names>JY</given-names>
+            </name>
+            <name>
+              <surname>Emira</surname>
+              <given-names>A</given-names>
+            </name>
+            <name>
+              <surname>Morrow</surname>
+              <given-names>JM</given-names>
+            </name>
+            <name>
+              <surname>Reilly</surname>
+              <given-names>MM</given-names>
+            </name>
+            <name>
+              <surname>Hanna</surname>
+              <given-names>MG</given-names>
+            </name>
+          </person-group>, <bold>
+            <italic toggle="yes">et al</italic>
+          </bold>. <article-title>Upper limb
+          evaluation in Duchenne muscular dystrophy: fat-water quantification by MRI, muscle force
+          and function define endpoints for clinical trials</article-title>. <source>PLoS One</source><year>
+          2016</year><volume>11</volume><fpage>e0162542</fpage>. (<pub-id pub-id-type="doi">
+          10.1371/journal.pone.0162542</pub-id>)<pub-id pub-id-type="pmid">27649492</pub-id>
+        </mixed-citation>
+      </ref>
+      <ref id="bib15">
+        <label>15</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author"><name>
+              <surname>Kelsey</surname>
+              <given-names>TW</given-names>
+            </name><name>
+              <surname>Miles</surname>
+              <given-names>A</given-names>
+            </name><name>
+              <surname>Mitchell</surname>
+              <given-names>RT</given-names>
+            </name><name>
+              <surname>Anderson</surname>
+              <given-names>RA</given-names>
+            </name><name>
+              <surname>Hamish</surname>
+              <given-names>WHB</given-names>
+            </name> &#x00026; <name>
+              <surname>Wallace</surname>
+              <given-names>B</given-names>
+            </name></person-group>. <article-title>A
+          normative model of serum inhibin B in young males</article-title>. <source>PLoS One</source><year>
+          2016</year><volume>11</volume><fpage>e0153843</fpage>. (<pub-id pub-id-type="doi">
+          10.1371/journal.pone.0153843</pub-id>)<pub-id pub-id-type="pmid">27077369</pub-id>
+        </mixed-citation>
+      </ref>
+      <ref id="bib16">
+        <label>16</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author"><name>
+              <surname>Jopling</surname>
+              <given-names>H</given-names>
+            </name><name>
+              <surname>Yates</surname>
+              <given-names>A</given-names>
+            </name><name>
+              <surname>Burgoyne</surname>
+              <given-names>N</given-names>
+            </name><name>
+              <surname>Hayden</surname>
+              <given-names>K</given-names>
+            </name><name>
+              <surname>Chaloner</surname>
+              <given-names>C</given-names>
+            </name> &#x00026; <name>
+              <surname>Tetlow</surname>
+              <given-names>L</given-names>
+            </name></person-group>. <article-title>Paediatric
+          anti-M&#x000fc;llerian hormone measurement: male and female reference intervals
+          established using the automated Beckman Coulter Access AMH assay</article-title>. <source>Endocrinology,
+          Diabetes and Metabolism</source><year>2018</year><volume>1</volume><fpage>e00021</fpage>.
+          (<pub-id pub-id-type="doi">10.1002/edm2.21</pub-id>)</mixed-citation>
+      </ref>
+      <ref id="bib17">
+        <label>17</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author">
+            <name>
+              <surname>Mayhew</surname>
+              <given-names>AG</given-names>
+            </name>
+            <name>
+              <surname>Coratti</surname>
+              <given-names>G</given-names>
+            </name>
+            <name>
+              <surname>Mazzone</surname>
+              <given-names>ES</given-names>
+            </name>
+            <name>
+              <surname>Klingels</surname>
+              <given-names>K</given-names>
+            </name>
+            <name>
+              <surname>James</surname>
+              <given-names>M</given-names>
+            </name>
+            <name>
+              <surname>Pane</surname>
+              <given-names>M</given-names>
+            </name>
+            <name>
+              <surname>Straub</surname>
+              <given-names>V</given-names>
+            </name>
+            <name>
+              <surname>Goemans</surname>
+              <given-names>N</given-names>
+            </name>
+            <name>
+              <surname>Mercuri</surname>
+              <given-names>E</given-names>
+            </name>
+          </person-group> &#x00026; <collab>Pul
+          Working Group</collab>. <article-title>Performance of Upper Limb module for Duchenne
+          muscular dystrophy</article-title>. <source>Developmental Medicine and Child Neurology</source><year>
+          2020</year><volume>62</volume><fpage>633</fpage>&#x02013;<lpage>639</lpage>. (<pub-id
+            pub-id-type="doi">10.1111/dmcn.14361</pub-id>)<pub-id pub-id-type="pmid">31538331</pub-id>
+        </mixed-citation>
+      </ref>
+      <ref id="bib18">
+        <label>18</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author"><name>
+              <surname>Kelsey</surname>
+              <given-names>TW</given-names>
+            </name><name>
+              <surname>Li</surname>
+              <given-names>LQ</given-names>
+            </name><name>
+              <surname>Mitchell</surname>
+              <given-names>RT</given-names>
+            </name><name>
+              <surname>Whelan</surname>
+              <given-names>A</given-names>
+            </name><name>
+              <surname>Anderson</surname>
+              <given-names>RA</given-names>
+            </name> &#x00026; <name>
+              <surname>Wallace</surname>
+              <given-names>WHB</given-names>
+            </name></person-group>. <article-title>A
+          validated age-related normative model for male total testosterone shows increasing
+          variance but no decline after age 40 years</article-title>. <source>PLoS One</source><year>
+          2014</year><volume>9</volume><fpage>e109346</fpage>. (<pub-id pub-id-type="doi">
+          10.1371/journal.pone.0109346</pub-id>)<pub-id pub-id-type="pmid">25295520</pub-id>
+        </mixed-citation>
+      </ref>
+      <ref id="bib19">
+        <label>19</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author"><name>
+              <surname>Rundle</surname>
+              <given-names>AT</given-names>
+            </name> &#x00026; <name>
+              <surname>Sylvester</surname>
+              <given-names>PE</given-names>
+            </name></person-group>. <article-title>Measurement
+          of testicular volume. Its application to assessment of maturation, and its use in
+          diagnosis of hypogonadism</article-title>. <source>Archives of Disease in Childhood</source><year>
+          1962</year><volume>37</volume><fpage>514</fpage>&#x02013;<lpage>517</lpage>. (<pub-id
+            pub-id-type="doi">10.1136/adc.37.195.514</pub-id>)<pub-id pub-id-type="pmid">13975542</pub-id>
+        </mixed-citation>
+      </ref>
+      <ref id="bib20">
+        <label>20</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author"><name>
+              <surname>Sakamoto</surname>
+              <given-names>H</given-names>
+            </name><name>
+              <surname>Ogawa</surname>
+              <given-names>Y</given-names>
+            </name> &#x00026; <name>
+              <surname>Yoshida</surname>
+              <given-names>H</given-names>
+            </name></person-group>. <article-title>Relationship
+          between testicular volume and testicular function: comparison of the Prader orchidometric
+          and ultrasonographic measurements in patients with infertility</article-title>. <source>Asian
+          Journal of Andrology</source><year>2008</year><volume>10</volume><fpage>319</fpage>
+          &#x02013;<lpage>324</lpage>. (<pub-id pub-id-type="doi">10.1111/j.1745-7262.2008.00340.x</pub-id>
+          )<pub-id pub-id-type="pmid">18097521</pub-id>
+        </mixed-citation>
+      </ref>
+      <ref id="bib21">
+        <label>21</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author"><name>
+              <surname>Gordetsky</surname>
+              <given-names>J</given-names>
+            </name><name>
+              <surname>Wijngaarden Van</surname>
+              <given-names>E</given-names>
+            </name> &#x00026; <name>
+              <surname>O&#x02019;Brien</surname>
+              <given-names>J</given-names>
+            </name></person-group>. <article-title>Redefining
+          abnormal follicle-stimulating hormone in the male infertility population</article-title>. <source>BJU
+          International</source><year>2012</year><volume>110</volume><fpage>568</fpage>&#x02013;<lpage>
+          572</lpage>. (<pub-id pub-id-type="doi">10.1111/j.1464-410X.2011.10783.x</pub-id>)<pub-id
+            pub-id-type="pmid">22177092</pub-id>
+        </mixed-citation>
+      </ref>
+      <ref id="bib22">
+        <label>22</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author"><name>
+              <surname>Kelsey</surname>
+              <given-names>TW</given-names>
+            </name><name>
+              <surname>McConville</surname>
+              <given-names>L</given-names>
+            </name><name>
+              <surname>Edgar</surname>
+              <given-names>AB</given-names>
+            </name><name>
+              <surname>Ungurianu</surname>
+              <given-names>AI</given-names>
+            </name><name>
+              <surname>Mitchell</surname>
+              <given-names>RT</given-names>
+            </name><name>
+              <surname>Anderson</surname>
+              <given-names>RA</given-names>
+            </name> &#x00026; <name>
+              <surname>Wallace</surname>
+              <given-names>WHB</given-names>
+            </name></person-group>. <article-title>Follicle
+          stimulating hormone is an accurate predictor of azoospermia in childhood cancer survivors</article-title>
+          . <source>PLoS One</source><year>2017</year><volume>12</volume><fpage>e0181377</fpage>. (<pub-id
+            pub-id-type="doi">10.1371/journal.pone.0181377</pub-id>)<pub-id pub-id-type="pmid">
+          28727831</pub-id>
+        </mixed-citation>
+      </ref>
+      <ref id="bib23">
+        <label>23</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author">
+            <collab>Action Duchene</collab>
+          </person-group>. <article-title>Mitch Coles
+          &#x02013; &#x0201c;Living my life the way I want to live it</article-title>&#x0201d;.
+          London, UK: Action Duchenne, <year>2019</year>. (available at: <ext-link
+            xlink:href="https://www.actionduchenne.org/stories/mitch-coles-living-my-life-the-way-i-want-to-live-it/"
+            ext-link-type="uri">
+          https://www.actionduchenne.org/stories/mitch-coles-living-my-life-the-way-i-want-to-live-it/</ext-link>
+          )</mixed-citation>
+      </ref>
+      <ref id="bib24">
+        <label>24</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author">
+            <collab>The Guardian</collab>
+          </person-group>. <article-title>My lifelong
+          desire</article-title>. London, UK: The Guardian, <year>2007</year>. (available at: <ext-link
+            xlink:href="https://www.theguardian.com/society/2007/jan/15/health.socialcare"
+            ext-link-type="uri">https://www.theguardian.com/society/2007/jan/15/health.socialcare</ext-link>
+          )</mixed-citation>
+      </ref>
+      <ref id="bib25">
+        <label>25</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author"><name>
+              <surname>Lee</surname>
+              <given-names>JA</given-names>
+            </name> &#x00026; <name>
+              <surname>Ramasamy</surname>
+              <given-names>R</given-names>
+            </name></person-group>. <article-title>Indications
+          for the use of human chorionic gonadotropic hormone for the management of infertility in
+          hypogonadal men</article-title>. <source>Translational Andrology and Urology</source><year>
+          2018</year><volume>7</volume>(<issue>Supplement 3</issue>) <fpage>S348</fpage>&#x02013;<lpage>
+          S352</lpage>. (<pub-id pub-id-type="doi">10.21037/tau.2018.04.11</pub-id>)<pub-id
+            pub-id-type="pmid">30159241</pub-id>
+        </mixed-citation>
+      </ref>
+      <ref id="bib26">
+        <label>26</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author"><name>
+              <surname>Crabtree</surname>
+              <given-names>NJ</given-names>
+            </name><name>
+              <surname>Roper</surname>
+              <given-names>H</given-names>
+            </name> &#x00026; <name>
+              <surname>Shaw</surname>
+              <given-names>NJ</given-names>
+            </name></person-group>. <article-title>Cessation
+          of ambulation results in a dramatic loss of trabecular bone density in boys with Duchenne
+          muscular dystrophy (DMD)</article-title>. <source>Bone</source><year>2022</year><volume>
+          154</volume><fpage>116248</fpage>. (<pub-id pub-id-type="doi">10.1016/j.bone.2021.116248</pub-id>
+          )<pub-id pub-id-type="pmid">34718220</pub-id>
+        </mixed-citation>
+      </ref>
+      <ref id="bib27">
+        <label>27</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author"><name>
+              <surname>Behre</surname>
+              <given-names>HM</given-names>
+            </name><name>
+              <surname>Kliesch</surname>
+              <given-names>S</given-names>
+            </name><name>
+              <surname>Leifke</surname>
+              <given-names>E</given-names>
+            </name><name>
+              <surname>Link</surname>
+              <given-names>TM</given-names>
+            </name> &#x00026; <name>
+              <surname>Nieschlag</surname>
+              <given-names>E</given-names>
+            </name></person-group>. <article-title>Long-term
+          effect of testosterone therapy on bone mineral density in hypogonadal men</article-title>. <source>Journal
+          of Clinical Endocrinology and Metabolism</source><year>1997</year><volume>82</volume><fpage>
+          2386</fpage>&#x02013;<lpage>2390</lpage>. (<pub-id pub-id-type="doi">
+          10.1210/jcem.82.8.4163</pub-id>)<pub-id pub-id-type="pmid">9253305</pub-id>
+        </mixed-citation>
+      </ref>
+      <ref id="bib28">
+        <label>28</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author"><name>
+              <surname>Hackett</surname>
+              <given-names>G</given-names>
+            </name><name>
+              <surname>Kirby</surname>
+              <given-names>M</given-names>
+            </name><name>
+              <surname>Edwards</surname>
+              <given-names>D</given-names>
+            </name><name>
+              <surname>Jones</surname>
+              <given-names>TH</given-names>
+            </name><name>
+              <surname>Wylie</surname>
+              <given-names>K</given-names>
+            </name><name>
+              <surname>Ossei-Gerning</surname>
+              <given-names>N</given-names>
+            </name><name>
+              <surname>David</surname>
+              <given-names>J</given-names>
+            </name> &#x00026; <name>
+              <surname>Muneer</surname>
+              <given-names>A</given-names>
+            </name></person-group>. <article-title>British
+          society for sexual medicine guidelines on adult testosterone deficiency, with statements
+          for UK practice</article-title>. <source>Journal of Sexual Medicine</source><year>2017</year><volume>
+          14</volume><fpage>1504</fpage>&#x02013;<lpage>1523</lpage>. (<pub-id pub-id-type="doi">
+          10.1016/j.jsxm.2017.10.067</pub-id>)<pub-id pub-id-type="pmid">29198507</pub-id>
+        </mixed-citation>
+      </ref>
+      <ref id="bib29">
+        <label>29</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author"><name>
+              <surname>Wary</surname>
+              <given-names>C</given-names>
+            </name><name>
+              <surname>Azzabou</surname>
+              <given-names>N</given-names>
+            </name><name>
+              <surname>Giraudeau</surname>
+              <given-names>C</given-names>
+            </name><name>
+              <surname>Lou&#x000eb;r Le</surname>
+              <given-names>J</given-names>
+            </name><name>
+              <surname>Montus</surname>
+              <given-names>M</given-names>
+            </name><name>
+              <surname>Voit</surname>
+              <given-names>T</given-names>
+            </name><name>
+              <surname>Servais</surname>
+              <given-names>L</given-names>
+            </name> &#x00026; <name>
+              <surname>Carlier</surname>
+              <given-names>P</given-names>
+            </name></person-group>. <article-title>Quantitative
+          NMRI and NMRS identify augmented disease progression after loss of ambulation in forearms
+          of boys with Duchenne muscular dystrophy</article-title>. <source>NMR in Biomedicine</source><year>
+          2015</year><volume>28</volume><fpage>1150</fpage>&#x02013;<lpage>1162</lpage>. (<pub-id
+            pub-id-type="doi">10.1002/nbm.3352</pub-id>)<pub-id pub-id-type="pmid">26215733</pub-id>
+        </mixed-citation>
+      </ref>
+      <ref id="bib30">
+        <label>30</label>
+        <mixed-citation publication-type="journal"><person-group person-group-type="author">
+            <name>
+              <surname>Hogrel</surname>
+              <given-names>JY</given-names>
+            </name>
+            <name>
+              <surname>Wary</surname>
+              <given-names>C</given-names>
+            </name>
+            <name>
+              <surname>Moraux</surname>
+              <given-names>A</given-names>
+            </name>
+            <name>
+              <surname>Azzabou</surname>
+              <given-names>N</given-names>
+            </name>
+            <name>
+              <surname>Decostre</surname>
+              <given-names>V</given-names>
+            </name>
+            <name>
+              <surname>Ollivier</surname>
+              <given-names>G</given-names>
+            </name>
+            <name>
+              <surname>Canal</surname>
+              <given-names>A</given-names>
+            </name>
+            <name>
+              <surname>Lilien</surname>
+              <given-names>C</given-names>
+            </name>
+            <name>
+              <surname>Ledoux</surname>
+              <given-names>I</given-names>
+            </name>
+            <name>
+              <surname>Annoussamy</surname>
+              <given-names>M</given-names>
+            </name>
+          </person-group>, <bold>
+            <italic toggle="yes">et al</italic>
+          </bold>. <article-title>Longitudinal
+          functional and NMR assessment of upper limbs in Duchenne muscular dystrophy</article-title>
+          . <source>Neurology</source><year>2016</year><volume>86</volume><fpage>1022</fpage>
+          &#x02013;<lpage>1030</lpage>. (<pub-id pub-id-type="doi">10.1212/WNL.0000000000002464</pub-id>
+          )<pub-id pub-id-type="pmid">26888987</pub-id>
+        </mixed-citation>
+      </ref>
+    </ref-list>
+  </back>
+</article>
