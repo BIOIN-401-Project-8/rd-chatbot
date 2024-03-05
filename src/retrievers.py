@@ -162,3 +162,29 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
 
     async def _aget_knowledge_sequence(self, entities: List[str]) -> Tuple[List[str], Optional[Dict[Any, Any]]]:
         return self._get_knowledge_sequence(entities)
+
+    def _get_entities(self, query_str: str) -> List[str]:
+        """Get entities from query string."""
+        entities = self._process_entities(
+            query_str,
+            self._entity_extract_fn,
+            self._entity_extract_template,
+            self._entity_extract_policy,
+            self._max_entities,
+            "DISEASES:",
+        )
+        expanded_entities = self._expand_synonyms(entities)
+        return list(set(entities) | set(expanded_entities))
+
+    async def _aget_entities(self, query_str: str) -> List[str]:
+        """Get entities from query string."""
+        entities = await self._aprocess_entities(
+            query_str,
+            self._entity_extract_fn,
+            self._entity_extract_template,
+            self._entity_extract_policy,
+            self._max_entities,
+            "DISEASES:",
+        )
+        expanded_entities = await self._aexpand_synonyms(entities)
+        return list(set(entities) | set(expanded_entities))

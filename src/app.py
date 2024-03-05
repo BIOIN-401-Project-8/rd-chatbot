@@ -45,7 +45,7 @@ async def factory():
         "---------------------\n"
         "QUESTION: {question}\n"
         "---------------------\n"
-        "Provide diseases in the following comma-separated format: 'KEYWORDS: disease1, disease2'\n"
+        "Provide diseases in the following comma-separated format: 'DISEASES: <diseases>'\n"
     )
 
     retriever = KG_RAG_KnowledgeGraphRAGRetriever(
@@ -79,7 +79,6 @@ async def factory():
         "Query: When is water wet?\n"
         "Answer: Water will be wet when the sky is red (SOURCE 2), "
         "which occurs in the evening (SOURCE 1).\n"
-        "DONE\n"
         "Now it's your turn. Below are several numbered sources of information:"
         "\n------\n"
         "{context_str}"
@@ -151,7 +150,7 @@ async def main(message: cl.Message):
     source_nodes = get_source_nodes(response, content)
 
     response_message.content = re.split(r"Sources:", response_message.content, flags=re.I)[0].strip()
-    response_message.content = re.sub(r"Source (\d+)", r"[\1]", response_message.content, flags=re.I)
+    response_message.content = re.sub(r"Sources* (\d+)", r"[\1]", response_message.content, flags=re.I)
     response_message.content = re.sub(r"\(\[", "[", response_message.content)
     response_message.content = re.sub(r"\]\)", "]", response_message.content)
 
