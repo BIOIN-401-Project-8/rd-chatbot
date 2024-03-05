@@ -11,8 +11,8 @@ from llama_index.schema import NodeWithScore
 
 def format_source(node: NodeWithScore):
     text = node.text
-    source_number = int(text.split(":")[0].removeprefix("Source "))
-    source = node.text.split(":")[1].strip()
+    source_number = int(text.split(":", 1)[0].removeprefix("Source "))
+    source = node.text.split(":", 1)[1].strip().split('\n', 1)[0].strip()
     return f"[{source_number}] {source} ({node.score:.2f})"
 
 
