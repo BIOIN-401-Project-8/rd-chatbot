@@ -12,6 +12,7 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
         url: str,
         database: str = "neo4j",
         node_label: str = "Entity",
+        schema_cache_path: str = "schema_cache.txt",
         **kwargs: Any,
     ) -> None:
         try:
@@ -23,6 +24,7 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
         self._database = database
         self.schema = ""
         self.structured_schema: Dict[str, Any] = {}
+        self.schema_cache_path = schema_cache_path
         # Verify connection
         try:
             self._driver.verify_connectivity()
@@ -223,10 +225,10 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
         """
         from pathlib import Path
 
-        if Path("schema.txt").exists():
-            with open("schema.txt", "r") as f:
+        if Path(self.schema_cache_path).exists():
+            with open(self.schema_cache_path, "r") as f:
                 self.schema = f.read()
         else:
             super().refresh_schema()
-            with open("schema.txt", "w") as f:
+            with open(self.schema_cache_path, "w") as f:
                 f.write(self.schema)
