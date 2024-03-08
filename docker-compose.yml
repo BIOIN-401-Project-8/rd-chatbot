@@ -71,6 +71,22 @@ services:
       - DDNS_PASSWORD=${DDNS_PASSWORD}
     command: wget http://dynamicdns.park-your-domain.com/update?host=${DDNS_HOST}&domain=${DDNS_DOMAIN}&password=${DDNS_PASSWORD}
 
+  rathole-client:
+    build:
+      context: rathole
+    restart: unless-stopped
+    volumes:
+      - ./config/client.toml.tmpl:/app/client.toml.tmpl
+    command: bash -c "sed s/RATHOLE_TOKEN/${RATHOLE_TOKEN}/g client.toml.tmpl > client.toml && ./rathole client.toml"
+
+  rathole-server:
+    build:
+      context: rathole
+    restart: unless-stopped
+    volumes:
+      - ./config/server.toml.tmpl:/app/server.toml.tmpl
+    command: bash -c "sed s/RATHOLE_TOKEN/${RATHOLE_TOKEN}/g server.toml.tmpl > server.toml; ./rathole server.toml"
+
   neo4j:
     image: neo4j:5.16.0
     restart: unless-stopped
