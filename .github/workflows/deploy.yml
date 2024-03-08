@@ -23,3 +23,4 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         password: ${{ secrets.SSH_PASSWORD }}
         script: cd ${{ secrets.SSH_WORKDIR }} && git pull && docker compose up -d app rathole-client neo4j ollama
+        command_timeout: 20m
