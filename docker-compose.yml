@@ -75,6 +75,7 @@ services:
     build:
       context: rathole
     restart: unless-stopped
+    network_mode: host
     volumes:
       - ./config/client.toml.tmpl:/app/client.toml.tmpl
     command: bash -c "sed s/RATHOLE_TOKEN/${RATHOLE_TOKEN}/g client.toml.tmpl > client.toml && ./rathole client.toml"
@@ -83,6 +84,7 @@ services:
     build:
       context: rathole
     restart: unless-stopped
+    network_mode: host
     volumes:
       - ./config/server.toml.tmpl:/app/server.toml.tmpl
     command: bash -c "sed s/RATHOLE_TOKEN/${RATHOLE_TOKEN}/g server.toml.tmpl > server.toml; ./rathole server.toml"
