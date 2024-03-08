@@ -63,6 +63,15 @@ services:
       - ~/Github/bioin-401-project/data/nginx-proxy-manager/data:/data
       - ~/Github/bioin-401-project/data/nginx-proxy-manager/letsencrypt:/etc/letsencrypt
 
+  namecheap-ddns:
+    image: alpine:3.19.1
+    restart: unless-stopped
+    environment:
+      - DDNS_HOST=${DDNS_HOST}
+      - DDNS_DOMAIN=${DDNS_DOMAIN}
+      - DDNS_PASSWORD=${DDNS_PASSWORD}
+    command: wget http://dynamicdns.park-your-domain.com/update?host=${DDNS_HOST}&domain=${DDNS_DOMAIN}&password=${DDNS_PASSWORD}
+
   neo4j:
     image: neo4j:5.16.0
     restart: unless-stopped
