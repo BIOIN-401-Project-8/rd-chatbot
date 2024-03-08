@@ -9,6 +9,11 @@ This chatbot is a BIOIN 401 Project at the University of Alberta.
 docker compose up -d app nginx-proxy-manager neo4j ollama
 ```
 
+Note, to setup Dynamic DNS with Namecheap, add the following line to your crontab with `crontab -e`:
+```bash
+0 * * * * cd ~/Github/bioin-401-project/rgd-chatbot && docker compose run namecheap-ddns
+```
+
 ## People
 Team: [Steven Tang](https://github.com/steventango) and [Robyn Woudstra](https://github.com/rwoudstr)
 
