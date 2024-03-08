@@ -51,18 +51,6 @@ services:
     working_dir: /workspaces/rgd-chatbot
     command: chainlit run -hw src/app.py
 
-
-  nginx-proxy-manager:
-    image: 'docker.io/jc21/nginx-proxy-manager:latest'
-    restart: unless-stopped
-    ports:
-      - '80:80'
-      - '81:81'
-      - '443:443'
-    volumes:
-      - ~/Github/bioin-401-project/data/nginx-proxy-manager/data:/data
-      - ~/Github/bioin-401-project/data/nginx-proxy-manager/letsencrypt:/etc/letsencrypt
-
   neo4j:
     image: neo4j:5.16.0
     restart: unless-stopped
@@ -95,6 +83,40 @@ services:
     tty: true
     restart: unless-stopped
     image: ollama/ollama:latest
+
+  nginx-proxy-manager:
+    image: 'docker.io/jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ~/Github/bioin-401-project/data/nginx-proxy-manager/data:/data
+      - ~/Github/bioin-401-project/data/nginx-proxy-manager/letsencrypt:/etc/letsencrypt
+
+  namecheap-ddns:
+    image: alpine:3.19.1
+    command: wget http://dynamicdns.park-your-domain.com/update?host=${DDNS_HOST}&domain=${DDNS_DOMAIN}&password=${DDNS_PASSWORD}
+
+  rathole-client:
+    build:
+      context: rathole
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./config/client.toml.tmpl:/app/client.toml.tmpl
+    command: bash -c "sed s/RATHOLE_TOKEN/${RATHOLE_TOKEN}/g client.toml.tmpl > client.toml && ./rathole client.toml"
+
+  rathole-server:
+    build:
+      context: rathole
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./config/server.toml.tmpl:/app/server.toml.tmpl
+    command: bash -c "sed s/RATHOLE_TOKEN/${RATHOLE_TOKEN}/g server.toml.tmpl > server.toml && ./rathole server.toml"
+
 
 volumes:
   ollama:
