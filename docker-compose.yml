@@ -65,7 +65,6 @@ services:
 
   namecheap-ddns:
     image: alpine:3.19.1
-    restart: unless-stopped
     environment:
       - DDNS_HOST=${DDNS_HOST}
       - DDNS_DOMAIN=${DDNS_DOMAIN}
