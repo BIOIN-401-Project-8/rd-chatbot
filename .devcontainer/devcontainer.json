@@ -5,7 +5,7 @@
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"dockerComposeFile": "../docker-compose.yml",
 	"service": "devcontainer",
-	"runServices": ["devcontainer", "app", "nginx-proxy-manager", "neo4j", "ollama"],
+	"runServices": ["devcontainer", "app", "nginx-proxy-manager", "neo4j", "ollama", "rathole-server"],
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
