@@ -97,10 +97,6 @@ services:
 
   namecheap-ddns:
     image: alpine:3.19.1
-    environment:
-      - DDNS_HOST=${DDNS_HOST}
-      - DDNS_DOMAIN=${DDNS_DOMAIN}
-      - DDNS_PASSWORD=${DDNS_PASSWORD}
     command: wget http://dynamicdns.park-your-domain.com/update?host=${DDNS_HOST}&domain=${DDNS_DOMAIN}&password=${DDNS_PASSWORD}
 
   rathole-client:
