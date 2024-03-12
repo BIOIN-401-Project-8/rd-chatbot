@@ -15,6 +15,8 @@ services:
               count: 1
               capabilities: [gpu]
     shm_size: 2gb
+    networks:
+      - rgd-chatbot
     volumes:
       - ..:/workspaces:cached
       - /var/run/docker.sock:/var/run/docker.sock
@@ -41,6 +43,8 @@ services:
               count: 1
               capabilities: [gpu]
     shm_size: 2gb
+    networks:
+      - rgd-chatbot
     ports:
       - 8000:8000
     volumes:
@@ -56,10 +60,13 @@ services:
     restart: unless-stopped
     volumes:
       - ~/Github/bioin-401-project/data/neo4j:/data:cached
+    networks:
+      - rgd-chatbot
     ports:
       - 7474:7474
       - 7687:7687
     environment:
+      - NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
       - NEO4J_apoc_export_file_enabled=true
       - NEO4J_apoc_import_file_enabled=true
       - NEO4J_apoc_import_file_use__neo4j__config=true
@@ -74,6 +81,8 @@ services:
               count: all
               capabilities:
                 - gpu
+    networks:
+      - rgd-chatbot
     volumes:
       - ollama:/root/.ollama
     ports:
@@ -117,6 +126,9 @@ services:
       - ./config/server.toml.tmpl:/app/server.toml.tmpl
     command: bash -c "sed s/RATHOLE_TOKEN/${RATHOLE_TOKEN}/g server.toml.tmpl > server.toml && ./rathole server.toml"
 
+networks:
+  rgd-chatbot:
+    name: rgd-chatbot
 
 volumes:
   ollama:
