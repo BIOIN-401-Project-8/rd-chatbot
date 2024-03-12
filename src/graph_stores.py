@@ -3,6 +3,8 @@ from typing import Any, Dict, List
 
 from llama_index.graph_stores.neo4j import Neo4jGraphStore
 
+from textualize import textualize_organization, textualize_prevalence
+
 
 class CustomNeo4jGraphStore(Neo4jGraphStore):
     def __init__(
@@ -12,6 +14,7 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
         url: str,
         database: str = "neo4j",
         node_label: str = "Entity",
+        schema_cache_path: str = "schema_cache.txt",
         **kwargs: Any,
     ) -> None:
         try:
@@ -23,6 +26,7 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
         self._database = database
         self.schema = ""
         self.structured_schema: Dict[str, Any] = {}
+        self.schema_cache_path = schema_cache_path
         # Verify connection
         try:
             self._driver.verify_connectivity()
@@ -82,7 +86,7 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
             f"""{"WHERE apoc.coll.intersection(apoc.convert.toList(n1.N_Name), $subjs)" if subjs else ""} """
             "UNWIND relationships(p) AS rel "
             "WITH n1._N_Name AS subj, p, apoc.coll.flatten(apoc.coll.toSet("
-            "collect([type(rel), rel.name, endNode(rel)._N_Name, endNode(rel)._I_GENE]))) AS flattened_rels "
+            "collect([type(rel), rel.name, endNode(rel)._N_Name, endNode(rel)._I_GENE, rel.value, rel.citations, rel.Reference]))) AS flattened_rels "
             f"RETURN subj, collect(flattened_rels) AS flattened_rels LIMIT {limit}"
         )
 
@@ -137,29 +141,7 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
             return rel_map
 
         for organization in organizations:
-            organization_description = [organization["Name"]]
-            if organization["Address1"] or organization["Address2"]:
-                organization_description.append(f"Address: ")
-                organization_description.append(f"{organization['Address1']}" if organization["Address1"] else "")
-                organization_description.append(f"{organization['Address2']}" if organization["Address2"] else "")
-            if organization["City"]:
-                organization_description.append(f"City: {organization['City']}")
-            if organization["Country"]:
-                organization_description.append(f"Country: {organization['Country']}")
-            if organization["Email"]:
-                organization_description.append(f"Email: {organization['Email']}")
-            if organization["Fax"]:
-                organization_description.append(f"Fax: {organization['Fax']}")
-            if organization["Phone"]:
-                organization_description.append(f"Phone: {organization['Phone']}")
-            if organization["State"]:
-                organization_description.append(f"State: {organization['State']}")
-            if organization["TollFree"]:
-                organization_description.append(f"TollFree: {organization['TollFree']}")
-            if organization["URL"]:
-                organization_description.append(f"URL: {organization['URL']}")
-            if organization["ZipCode"]:
-                organization_description.append(f"ZipCode: {organization['ZipCode']}")
+            organization_description = textualize_organization(organization)
             for obj in organization["_N_Name"].split("|"):
                 if obj not in rel_map:
                     rel_map[obj] = []
@@ -192,20 +174,8 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
             return rel_map
 
         for prevalence in prevalences:
-            prevalence_description = []
-            if prevalence["PrevalenceClass"]:
-                prevalence_description.append(f"PrevalenceClass: {prevalence['PrevalenceClass']}")
-            if prevalence["PrevalenceGeographic"]:
-                prevalence_description.append(f"PrevalenceGeographic: {prevalence['PrevalenceGeographic']}")
-            if prevalence["PrevalenceQualification"]:
-                prevalence_description.append(f"PrevalenceQualification: {prevalence['PrevalenceQualification']}")
-            if prevalence["PrevalenceValidationStatus"]:
-                prevalence_description.append(f"PrevalenceValidationStatus: {prevalence['PrevalenceValidationStatus']}")
-            if prevalence["Source"]:
-                prevalence_description.append(f"Source: {prevalence['Source']}")
-            if prevalence["ValMoy"]:
-                prevalence_description.append(f"ValMoy: {prevalence['ValMoy']}")
-
+            prevalence_description = textualize_prevalence(prevalence)
+            # TODO: unflip the relation
             for obj in prevalence["_N_Name"].split("|"):
                 if obj not in rel_map:
                     rel_map[obj] = []
@@ -223,10 +193,10 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
         """
         from pathlib import Path
 
-        if Path("schema.txt").exists():
-            with open("schema.txt", "r") as f:
+        if Path(self.schema_cache_path).exists():
+            with open(self.schema_cache_path, "r") as f:
                 self.schema = f.read()
         else:
             super().refresh_schema()
-            with open("schema.txt", "w") as f:
+            with open(self.schema_cache_path, "w") as f:
                 f.write(self.schema)

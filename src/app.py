@@ -32,6 +32,7 @@ async def factory():
         url="bolt://neo4j:7687",
         database="neo4j",
         node_label="S_PHENOTYPE",
+        schema_cache_path="/data/rgd-chatbot/schema_cache.txt",
     )
 
     storage_context = StorageContext.from_defaults(
