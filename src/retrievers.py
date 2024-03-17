@@ -1,15 +1,10 @@
 import logging
 from typing import Any, Callable, Dict, List, Optional, Tuple
+
 from llama_index import BasePromptTemplate, ServiceContext, StorageContext
 from llama_index.callbacks.base import CallbackManager
+from llama_index.indices import VectorStoreIndex
 from llama_index.indices.knowledge_graph.retrievers import REL_TEXT_LIMIT
-
-import numpy as np
-from llama_index.indices.query.embedding_utils import (
-    get_top_k_embeddings,
-    get_top_k_embeddings_learner,
-    get_top_k_mmr_embeddings,
-)
 from llama_index.retrievers import KnowledgeGraphRAGRetriever
 from llama_index.schema import NodeWithScore, QueryBundle, TextNode
 
@@ -68,13 +63,9 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
             logger.info("> No knowledge sequence extracted from entities.")
             return []
 
-        metadata_keys = ["subject", "predicate", "object"]
+        metadata_keys = ["subject", "predicate", "object", "citation"]
 
         service_context = self.get_service_context()
-        embed_model = service_context.embed_model
-
-        query_embedding = embed_model.get_query_embedding(query_bundle.query_str)
-
         nodes = [
             TextNode(
                 text=" ".join(knowledge),
@@ -82,24 +73,16 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
                     "subject": knowledge[0],
                     "predicate": knowledge[1],
                     "object": knowledge[2],
+                    "citation": None
                 },
                 excluded_embed_metadata_keys=metadata_keys,
                 excluded_llm_metadata_keys=metadata_keys,
             )
             for knowledge in knowledge_sequence
         ]
-        nodes = embed_model(nodes)
-
-        nodes = [
-            NodeWithScore(
-                node=node,
-                score=float(query_embedding @ np.array(node.embedding)),
-            )
-            for node in nodes
-        ]
-
-        nodes = sorted(nodes, key=lambda x: x.score, reverse=True)
-        nodes = nodes[: self._similarity_top_k]
+        index = VectorStoreIndex(nodes=nodes, service_context=service_context)
+        retriever = index.as_retriever(similarity_top_k=self._similarity_top_k)
+        nodes = retriever.retrieve(query_bundle.query_str)
 
         return nodes
 
