@@ -152,7 +152,7 @@ async def main(message: cl.Message):
 
     source_nodes = get_source_nodes(response, content)
 
-    response_message.content = re.split(r"Sources:", response_message.content, flags=re.I)[0].strip()
+    response_message.content = response_message.content.split("Sources:")[0].strip()
     response_message.content = re.sub(r"Source (\d+)", r"[\1]", response_message.content, flags=re.I)
     response_message.content = re.sub(r"\(\[", "[", response_message.content)
     response_message.content = re.sub(r"\]\)", "]", response_message.content)
