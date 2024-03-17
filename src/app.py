@@ -2,13 +2,13 @@ import logging
 import os
 import re
 import sys
+import time
 
 import chainlit as cl
 from llama_index import StorageContext
 from llama_index.callbacks import CallbackManager
 from llama_index.prompts import PromptTemplate
 from llama_index.prompts.base import PromptType
-from llama_index.query_engine import CitationQueryEngine
 
 from citation import get_formatted_sources, get_source_graph, get_source_nodes
 from graph_stores import CustomNeo4jGraphStore
@@ -132,7 +132,8 @@ async def factory():
 
 @cl.on_message
 async def main(message: cl.Message):
-    query_engine: CitationQueryEngine = cl.user_session.get("query_engine")
+    start = time.time()
+    query_engine: CustomCitationQueryEngine = cl.user_session.get("query_engine")
     content = message.content
 
     detection = await detect_language(content)
@@ -164,5 +165,8 @@ async def main(message: cl.Message):
         filename = get_source_graph(source_nodes)
         elements = [cl.Image(path=filename, display="inline", size="large")]
         response_message.elements = elements
+
+    end = time.time()
+    response_message.content += f"\n\n{end - start:.2f} seconds"
 
     await response_message.send()
