@@ -176,6 +176,7 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
         for prevalence in prevalences:
             prevalence_description = textualize_prevalence(prevalence)
             # TODO: unflip the relation
+            # TODO: first do vector similarity on subjects then, keep the most relevant subject only
             for obj in prevalence["_N_Name"].split("|"):
                 if obj not in rel_map:
                     rel_map[obj] = []
