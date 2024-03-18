@@ -1,12 +1,16 @@
 import logging
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
+import faiss
 from llama_index import BasePromptTemplate, ServiceContext, StorageContext
 from llama_index.callbacks.base import CallbackManager
 from llama_index.indices import VectorStoreIndex
 from llama_index.indices.knowledge_graph.retrievers import REL_TEXT_LIMIT
 from llama_index.retrievers import KnowledgeGraphRAGRetriever
 from llama_index.schema import NodeWithScore, QueryBundle, TextNode
+from llama_index.vector_stores.faiss import FaissVectorStore
+
+from service_context import EMBED_DIM
 
 logger = logging.getLogger(__name__)
 
@@ -80,9 +84,13 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
             )
             for knowledge in knowledge_sequence
         ]
-        index = VectorStoreIndex(nodes=nodes, service_context=service_context)
+
+        faiss_index = faiss.IndexFlatL2(EMBED_DIM)
+        vector_store = FaissVectorStore(faiss_index)
+        storage_context = StorageContext.from_defaults(vector_store=vector_store)
+        index = VectorStoreIndex(nodes=nodes, service_context=service_context, storage_context=storage_context)
         retriever = index.as_retriever(similarity_top_k=self._similarity_top_k)
-        nodes = retriever.retrieve(query_bundle.query_str)
+        nodes = retriever.retrieve(query_bundle)
 
         return nodes
 
