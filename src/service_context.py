@@ -1,17 +1,22 @@
 import httpx
+import torch
 from llama_index import ServiceContext
 from llama_index.callbacks import CallbackManager
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.llms import Ollama
+from llama_index.utils import get_cache_dir
+from transformers import AutoModel
 
-from embeddings import SentenceTransformerEmbeddings
-
+EMBED_MODEL = "michiyasunaga/BioLinkBERT-base"
+EMBED_DIM = 768
 OLLAMA_MODEL = "starling-lm"
 
 
 def get_service_context(callback_manager: CallbackManager = None):
-    embed_model = SentenceTransformerEmbeddings(
-        model_name="intfloat/e5-large-v2",
-        embed_batch_size=1,
+    cache_folder = get_cache_dir()
+    embed_model = HuggingFaceEmbedding(
+        model=AutoModel.from_pretrained(EMBED_MODEL, cache_dir=cache_folder, torch_dtype=torch.float16),
+        embed_batch_size=16,
     )
 
     httpx.post("http://ollama:11434/api/pull", json={"name": OLLAMA_MODEL}, timeout=600.0)
