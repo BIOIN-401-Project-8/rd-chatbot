@@ -133,7 +133,7 @@ class CustomCitationQueryEngine(CitationQueryEngine):
             from llama_index.core.chat_engine import ContextChatEngine
 
             return ContextChatEngine.from_defaults(
-                retriever=self.retriever(**kwargs),
+                retriever=self.retriever,
                 llm=llm,
                 **kwargs,
             )
@@ -142,7 +142,7 @@ class CustomCitationQueryEngine(CitationQueryEngine):
             from llama_index.core.chat_engine import CondensePlusContextChatEngine
 
             return CondensePlusContextChatEngine.from_defaults(
-                retriever=self.retriever(**kwargs),
+                retriever=self.retriever,
                 llm=llm,
                 **kwargs,
             )

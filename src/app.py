@@ -7,7 +7,7 @@ import time
 
 import chainlit as cl
 from llama_index.core.callbacks import CallbackManager
-from llama_index.core.chat_engine.types import BaseChatEngine
+from llama_index.core.chat_engine.types import BaseChatEngine, ChatMode
 from llama_index.core.prompts import PromptTemplate, PromptType
 from llama_index.core.storage import StorageContext
 
@@ -124,7 +124,10 @@ async def factory():
         streaming=True,
         verbose=True,
     )
-    chat_engine = query_engine.as_chat_engine(verbose=True)
+    chat_engine = query_engine.as_chat_engine(
+        chat_mode=ChatMode.REACT,
+        verbose=True,
+    )
     cl.user_session.set("chat_engine", chat_engine)
 
 
