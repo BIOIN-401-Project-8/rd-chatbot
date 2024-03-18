@@ -28,7 +28,7 @@ async def factory():
     callback_manager = CallbackManager([cl.LlamaIndexCallbackHandler()])
     service_context = get_service_context(callback_manager=callback_manager)
 
-    d = 1024
+    d = 768
     faiss_index = faiss.IndexFlatL2(d)
     vector_store = FaissVectorStore(faiss_index)
     graph_store = CustomNeo4jGraphStore(
