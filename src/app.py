@@ -5,10 +5,12 @@ import sys
 import time
 
 import chainlit as cl
+import faiss
 from llama_index import StorageContext
 from llama_index.callbacks import CallbackManager
 from llama_index.prompts import PromptTemplate
 from llama_index.prompts.base import PromptType
+from llama_index.vector_stores.faiss import FaissVectorStore
 
 from citation import get_formatted_sources, get_source_graph, get_source_nodes
 from graph_stores import CustomNeo4jGraphStore
@@ -26,6 +28,9 @@ async def factory():
     callback_manager = CallbackManager([cl.LlamaIndexCallbackHandler()])
     service_context = get_service_context(callback_manager=callback_manager)
 
+    d = 1024
+    faiss_index = faiss.IndexFlatL2(d)
+    vector_store = FaissVectorStore(faiss_index)
     graph_store = CustomNeo4jGraphStore(
         username="neo4j",
         password=os.environ["NEO4J_PASSWORD"],
@@ -36,6 +41,7 @@ async def factory():
     )
 
     storage_context = StorageContext.from_defaults(
+        vector_store=vector_store,
         graph_store=graph_store,
     )
 

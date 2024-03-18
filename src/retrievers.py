@@ -80,7 +80,8 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
             )
             for knowledge in knowledge_sequence
         ]
-        index = VectorStoreIndex(nodes=nodes, service_context=service_context)
+
+        index = VectorStoreIndex(nodes=nodes, service_context=service_context, storage_context=self._storage_context)
         retriever = index.as_retriever(similarity_top_k=self._similarity_top_k)
         nodes = retriever.retrieve(query_bundle.query_str)
 
