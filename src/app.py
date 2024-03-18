@@ -150,7 +150,7 @@ async def main(message: cl.Message):
     if detected_language != "en" and detected_language is not None:
         content = await translate(content, target="en")
 
-    response = await cl.make_async(query)(query_engine, content, profile=True)
+    response = await cl.make_async(query)(query_engine, content, profile=False)
     response_message = cl.Message(content="")
 
     if hasattr(response, "response_gen"):
