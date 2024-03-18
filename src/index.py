@@ -9,7 +9,7 @@ from typing import Sequence
 from llama_index.core import Document, KnowledgeGraphIndex, ServiceContext, SimpleDirectoryReader, VectorStoreIndex
 
 from reader import AbstractCSVReader, FullArticleXMLReader
-from service_context import get_service_context
+from settings import configure_settings
 
 LOG_PATH = Path(f"logs/{Path(__file__).stem}_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log")
 DATA_DIR = "/data/pmc-open-access-subset/6291"
@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 def main():
     logging.basicConfig(
-    level=logging.INFO,
+        level=logging.INFO,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         handlers=[
             logging.FileHandler(LOG_PATH),
@@ -31,19 +31,19 @@ def main():
     LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
     logger.addHandler(logging.FileHandler(LOG_PATH))
     start = time.time()
-    service_context = get_service_context()
+    configure_settings()
 
     vector_store_index_perist_dir = PERSIST_DIR / "vector_store_index"
     if not vector_store_index_perist_dir.exists():
         documents = read_documents()
         logger.info("Generating vector store index")
-        generate_vector_store_index(service_context, documents, vector_store_index_perist_dir)
+        generate_vector_store_index(documents, vector_store_index_perist_dir)
 
     graph_store_index_persist_dir = PERSIST_DIR / "graph_store_index"
     if not graph_store_index_persist_dir.exists():
         documents = read_documents()
         logger.info("Generating graph store index")
-        generate_graph_store_index(service_context, documents, graph_store_index_persist_dir)
+        generate_graph_store_index(documents, graph_store_index_persist_dir)
 
     end = time.time()
     logger.info(f"Total time: {timedelta(seconds=end - start)}")
@@ -67,14 +67,11 @@ def read_documents():
     return documents
 
 
-def generate_graph_store_index(
-    service_context: ServiceContext, documents: Sequence[Document], persist_dir: str | PathLike
-):
+def generate_graph_store_index(documents: Sequence[Document], persist_dir: str | PathLike):
     start = time.time()
     knowledge_graph_index = KnowledgeGraphIndex.from_documents(
         documents,
         max_triplets_per_chunk=2,
-        service_context=service_context,
         include_embeddings=True,
         show_progress=True,
     )
@@ -86,13 +83,10 @@ def generate_graph_store_index(
     logger.info(f"Persisting graph store index took {timedelta(seconds=end - start)}")
 
 
-def generate_vector_store_index(
-    service_context: ServiceContext, documents: Sequence[Document], persist_dir: str | PathLike
-):
+def generate_vector_store_index(documents: Sequence[Document], persist_dir: str | PathLike):
     start = time.time()
     vector_store_index = VectorStoreIndex.from_documents(
         documents,
-        service_context=service_context,
         show_progress=True,
     )
     end = time.time()

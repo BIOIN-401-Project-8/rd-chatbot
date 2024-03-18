@@ -6,16 +6,15 @@ import sys
 import time
 
 import chainlit as cl
-from llama_index.core import StorageContext
 from llama_index.core.callbacks import CallbackManager
-from llama_index.core import PromptTemplate
-from llama_index.core.prompts import PromptType
+from llama_index.core.prompts import PromptTemplate, PromptType
+from llama_index.core.storage import StorageContext
 
 from citation import get_formatted_sources, get_source_graph, get_source_nodes
 from graph_stores import CustomNeo4jGraphStore
 from query_engine import CustomCitationQueryEngine
 from retrievers import KG_RAG_KnowledgeGraphRAGRetriever
-from service_context import get_service_context
+from settings import configure_settings
 from translation import detect_language, translate
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
@@ -25,7 +24,7 @@ logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 @cl.on_chat_start
 async def factory():
     callback_manager = CallbackManager([cl.LlamaIndexCallbackHandler()])
-    service_context = get_service_context(callback_manager=callback_manager)
+    configure_settings(callback_manager=callback_manager)
 
     graph_store = CustomNeo4jGraphStore(
         username="neo4j",
@@ -51,7 +50,6 @@ async def factory():
     retriever = KG_RAG_KnowledgeGraphRAGRetriever(
         storage_context=storage_context,
         verbose=True,
-        service_context=service_context,
         graph_traversal_depth=1,
         max_entities=2,
         max_synonyms=1,
@@ -118,7 +116,6 @@ async def factory():
     )
 
     query_engine = CustomCitationQueryEngine.from_args(
-        service_context,
         retriever=retriever,
         citation_qa_template=CUSTOM_CITATION_QA_TEMPLATE,
         citation_refine_template=CUSTOM_CITATION_REFINE_TEMPLATE,

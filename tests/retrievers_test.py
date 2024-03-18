@@ -1,9 +1,10 @@
 import os
 
 import pytest
-from llama_index import PromptTemplate, StorageContext
-from llama_index.prompts.base import PromptType
+from llama_index.core.prompts.base import PromptTemplate, PromptType
+from llama_index.core.storage import StorageContext
 
+from settings import configure_settings
 from src.graph_stores import CustomNeo4jGraphStore
 from src.retrievers import KG_RAG_KnowledgeGraphRAGRetriever
 from src.service_context import get_service_context
@@ -11,13 +12,14 @@ from src.service_context import get_service_context
 
 @pytest.fixture
 def retriever():
-    service_context = get_service_context()
+    configure_settings()
     graph_store = CustomNeo4jGraphStore(
         username="neo4j",
         password=os.environ["NEO4J_PASSWORD"],
         url="bolt://neo4j:7687",
         database="neo4j",
         node_label="S_PHENOTYPE",
+        schema_cache_path="/data/rgd-chatbot/schema_cache.txt",
     )
 
     storage_context = StorageContext.from_defaults(
@@ -37,7 +39,6 @@ def retriever():
     retriever = KG_RAG_KnowledgeGraphRAGRetriever(
         storage_context=storage_context,
         verbose=True,
-        service_context=service_context,
         graph_traversal_depth=1,
         max_entities=2,
         max_synonyms=0,
