@@ -8,6 +8,7 @@ from llama_index.indices import VectorStoreIndex
 from llama_index.indices.knowledge_graph.retrievers import REL_TEXT_LIMIT
 from llama_index.retrievers import KnowledgeGraphRAGRetriever
 from llama_index.schema import NodeWithScore, QueryBundle, TextNode
+from llama_index.vector_stores.faiss import FaissVectorStore
 
 from service_context import EMBED_DIM
 
