@@ -1,3 +1,4 @@
+import cProfile
 import logging
 import os
 import re
@@ -5,7 +6,6 @@ import sys
 import time
 
 import chainlit as cl
-
 from llama_index import StorageContext
 from llama_index.callbacks import CallbackManager
 from llama_index.prompts import PromptTemplate
@@ -129,6 +129,16 @@ async def factory():
     cl.user_session.set("query_engine", query_engine)
 
 
+def query(query_engine: CustomCitationQueryEngine, content: str, profile: bool = False):
+    if profile:
+        pr = cProfile.Profile()
+        pr.enable()
+    response = query_engine.query(content)
+    if profile:
+        pr.disable()
+        pr.dump_stats("profile.prof")
+    return response
+
 @cl.on_message
 async def main(message: cl.Message):
     start = time.time()
@@ -140,7 +150,7 @@ async def main(message: cl.Message):
     if detected_language != "en" and detected_language is not None:
         content = await translate(content, target="en")
 
-    response = await cl.make_async(query_engine.query)(content)
+    response = await cl.make_async(query)(query_engine, content, profile=True)
     response_message = cl.Message(content="")
 
     if hasattr(response, "response_gen"):
