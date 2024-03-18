@@ -1,26 +1,29 @@
 from typing import Any, List, Optional
 
-from llama_index.core.base_retriever import BaseRetriever
-from llama_index.node_parser import TextSplitter
-from llama_index.postprocessor.types import BaseNodePostprocessor
-from llama_index.prompts.base import BasePromptTemplate
-from llama_index.query_engine import CitationQueryEngine
-from llama_index.query_engine.citation_query_engine import (
+from llama_index.core import BasePromptTemplate, ServiceContext, get_response_synthesizer
+from llama_index.core.indices.base import BaseGPTIndex
+from llama_index.core.llms.llm import LLM
+from llama_index.core.node_parser import TextSplitter
+from llama_index.core.postprocessor.types import BaseNodePostprocessor
+from llama_index.core.query_engine import CitationQueryEngine
+from llama_index.core.query_engine.citation_query_engine import (
     CITATION_QA_TEMPLATE,
     CITATION_REFINE_TEMPLATE,
     DEFAULT_CITATION_CHUNK_OVERLAP,
-    DEFAULT_CITATION_CHUNK_SIZE,
+    DEFAULT_CITATION_CHUNK_SIZE
 )
-from llama_index.response_synthesizers import BaseSynthesizer, ResponseMode, get_response_synthesizer
-from llama_index.schema import MetadataMode
-from llama_index.service_context import ServiceContext
+from llama_index.core.response_synthesizers import BaseSynthesizer, ResponseMode
+from llama_index.core.retrievers import BaseRetriever
+from llama_index.core.schema import MetadataMode
+from llama_index.core.settings import Settings, callback_manager_from_settings_or_context, llm_from_settings_or_context
 
 
 class CustomCitationQueryEngine(CitationQueryEngine):
     @classmethod
     def from_args(
         cls,
-        service_context: ServiceContext,
+        index: BaseGPTIndex | None = None,
+        llm: Optional[LLM] = None,
         response_synthesizer: Optional[BaseSynthesizer] = None,
         citation_chunk_size: int = DEFAULT_CITATION_CHUNK_SIZE,
         citation_chunk_overlap: int = DEFAULT_CITATION_CHUNK_OVERLAP,
@@ -42,6 +45,7 @@ class CustomCitationQueryEngine(CitationQueryEngine):
 
         Args:
             index: (BastGPTIndex): index to use for querying
+            llm: (Optional[LLM]): LLM object to use for response generation.
             citation_chunk_size (int):
                 Size of citation chunks, default=512. Useful for controlling
                 granularity of sources.
@@ -64,8 +68,11 @@ class CustomCitationQueryEngine(CitationQueryEngine):
                 object.
 
         """
+        retriever = retriever or index.as_retriever(**kwargs)
+
         response_synthesizer = response_synthesizer or get_response_synthesizer(
-            service_context=service_context,
+            llm=llm,
+            service_context=index.service_context if index else None,
             text_qa_template=citation_qa_template,
             refine_template=citation_refine_template,
             response_mode=response_mode,
@@ -76,8 +83,11 @@ class CustomCitationQueryEngine(CitationQueryEngine):
 
         return cls(
             retriever=retriever,
+            llm=llm,
             response_synthesizer=response_synthesizer,
-            callback_manager=service_context.callback_manager,
+            callback_manager=callback_manager_from_settings_or_context(
+                Settings, index.service_context if index else None
+            ),
             citation_chunk_size=citation_chunk_size,
             citation_chunk_overlap=citation_chunk_overlap,
             text_splitter=text_splitter,

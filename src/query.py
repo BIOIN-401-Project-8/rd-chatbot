@@ -3,11 +3,11 @@
 import logging
 import sys
 
-from llama_index import StorageContext, load_index_from_storage
-from llama_index.query_engine import CitationQueryEngine
+from llama_index.core import StorageContext, load_index_from_storage
+from llama_index.core.query_engine import CitationQueryEngine
 
 from index import PERSIST_DIR
-from service_context import get_service_context
+from settings import get_service_context
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
@@ -38,6 +38,7 @@ for source_node in response.source_nodes:
 
 # %%
 from pathlib import Path
+
 storage_context = StorageContext.from_defaults(persist_dir=PERSIST_DIR / "graph_store_index")
 
 knowledge_graph_index = load_index_from_storage(
