@@ -199,5 +199,6 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
                 self.schema = f.read()
         else:
             super().refresh_schema()
+            Path(self.schema_cache_path).parent.mkdir(parents=True, exist_ok=True)
             with open(self.schema_cache_path, "w") as f:
                 f.write(self.schema)
