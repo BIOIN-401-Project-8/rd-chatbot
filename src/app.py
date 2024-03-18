@@ -172,6 +172,6 @@ async def main(message: cl.Message):
         response_message.elements = elements
 
     end = time.time()
-    content += f"\n\n{end - start:.2f} seconds"
+    content += f"\n\n<small>{end - start:.2f} seconds</small>"
     response_message.content = content
     await response_message.send()
