@@ -1,13 +1,11 @@
 import httpx
-import torch
 from llama_index.core import Settings
 from llama_index.core.callbacks import CallbackManager
-from llama_index.core.utils import get_cache_dir
-from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.llms.ollama import Ollama
-from transformers import AutoModel
 
-EMBED_MODEL = "michiyasunaga/BioLinkBERT-base"
+from embeddings import SentenceTransformerEmbeddings
+
+EMBED_MODEL = "intfloat/e5-base-v2"
 OLLAMA_MODEL = "starling-lm"
 
 
@@ -21,9 +19,8 @@ def configure_settings(callback_manager: CallbackManager | None = None):
         request_timeout=30.0,
         temperature=0.0,
     )
-    cache_folder = get_cache_dir()
-    Settings.embed_model = HuggingFaceEmbedding(
-        model=AutoModel.from_pretrained(EMBED_MODEL, cache_dir=cache_folder, torch_dtype=torch.float16),
+    Settings.embed_model = SentenceTransformerEmbeddings(
+        model_name_or_path=EMBED_MODEL,
         embed_batch_size=16,
     )
     Settings.num_output = 768
