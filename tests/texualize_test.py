@@ -1,11 +1,10 @@
-import os
-
 from src.textualize import (
     extract_citations,
     lookup_hpo_name,
+    lookup_hpo_names,
     textualize_organization,
     textualize_phenotype,
-    textualize_prevalence,
+    textualize_prevalence
 )
 
 
@@ -17,6 +16,10 @@ class TestTextualize:
     def test_lookup_hpo_name_str(self):
         name = lookup_hpo_name("HP:0040281")
         assert name == "Very frequent"
+
+    def test_lookup_hpo_names(self):
+        names = lookup_hpo_names([40281, "HP:0040281"])
+        assert names == ["Very frequent", "Very frequent"]
 
     def test_texualize_organization_empty(self):
         organization = {

@@ -12,17 +12,23 @@ def lookup_hpo_name(hpo_id: int | str):
     return hpo_term.name
 
 
+def lookup_hpo_names(hpo_ids: List[int | str] | int | str):
+    if not isinstance(hpo_ids, list):
+        hpo_ids = [hpo_ids]
+    return [lookup_hpo_name(hpo_id) for hpo_id in hpo_ids]
+
+
 def textualize_phenotype(phenotype: dict):
     if not phenotype["m__N_Name"]:
         return None
     phenotype_description = []
     phenotype_description.append(phenotype["m__N_Name"])
     if phenotype["r_Frequency"]:
-        frequency = lookup_hpo_name(phenotype["r_Frequency"])
-        phenotype_description.append(f"Frequency: {frequency}")
+        frequencies = lookup_hpo_names(phenotype["r_Frequency"])
+        phenotype_description.append(f"Frequency: {','.join(frequencies)}")
     if phenotype["r_Onset"]:
-        onset = lookup_hpo_name(phenotype["r_Onset"])
-        phenotype_description.append(f"Onset: {onset}")
+        onsets = lookup_hpo_names(phenotype["r_Onset"])
+        phenotype_description.append(f"Onset: {','.join(onsets)}")
     return "\n".join(phenotype_description)
 
 
