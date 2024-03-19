@@ -1,19 +1,42 @@
+import logging
 import re
 from typing import List
 from uuid import uuid4
 
-import networkx as nx
-import plotly.graph_objects as go
 import pydot
 from llama_index.core.base.response.schema import RESPONSE_TYPE
 from llama_index.core.schema import NodeWithScore
+
+logger = logging.getLogger(__name__)
+
+
+def format_citation(citation: str):
+    if citation.startswith("PMID:"):
+        pmid = citation.removeprefix("PMID:")
+        return f"[{citation}](https://pubmed.ncbi.nlm.nih.gov/{pmid})"
+    elif citation.startswith("ORPHA:"):
+        orpha_code = citation.removeprefix("ORPHA:")
+        return f"[{citation}](https://www.orpha.net/consor/cgi-bin/OC_Exp.php?lng=EN&Expert={orpha_code})"
+    elif citation.startswith("OMIM:"):
+        omim_identifier = citation.removeprefix("OMIM:")
+        return f"[{citation}](https://www.omim.org/entry/{omim_identifier})"
+    else:
+        return citation
+
+
+def format_citations(citations: List[str]):
+    citations_formatted = []
+    for citation in citations:
+        citations_formatted.append(format_citation(citation))
+    return ", ".join(citations_formatted)
 
 
 def format_source(node: NodeWithScore):
     text = node.text
     source_number = int(text.split(":")[0].removeprefix("Source "))
     source = node.text.split(":")[1].split("\n")[0].strip()
-    return f"[{source_number}] {source} ({node.score:.2f})"
+    citation = format_citations(node.metadata["citation"])
+    return f"[{source_number}] {citation} {source} ({node.score:.2f})"
 
 
 async def get_formatted_sources(source_nodes: List[NodeWithScore]):
