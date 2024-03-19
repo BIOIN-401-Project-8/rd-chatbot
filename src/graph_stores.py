@@ -3,7 +3,7 @@ from typing import Any, Dict, List
 
 from llama_index.graph_stores.neo4j import Neo4jGraphStore
 
-from textualize import textualize_organization, textualize_prevalence
+from textualize import textualize_organizations, textualize_phenotypes, textualize_prevelances, textualize_rels
 
 
 class CustomNeo4jGraphStore(Neo4jGraphStore):
@@ -74,119 +74,99 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
         # ...
         # +-------------+------------------------------------+
 
-        rel_map: Dict[Any, List[Any]] = {}
+        rel_map: Dict[str, List[List[str]]] = {}
         if subjs is None or len(subjs) == 0:
             # unlike simple graph_store, we don't do get_all here
             return rel_map
 
         subjs = [subj.upper() for subj in subjs]
 
-        query = (
-            f"""MATCH p=(n1:`{self.node_label}`)-[*1..{depth}]->() """
-            f"""{"WHERE apoc.coll.intersection(apoc.convert.toList(n1.N_Name), $subjs)" if subjs else ""} """
-            "UNWIND relationships(p) AS rel "
-            "WITH n1._N_Name AS subj, p, apoc.coll.flatten(apoc.coll.toSet("
-            "collect([type(rel), rel.name, endNode(rel)._N_Name, endNode(rel)._I_GENE, rel.value, rel.citations, rel.Reference]))) AS flattened_rels "
-            f"RETURN subj, collect(flattened_rels) AS flattened_rels LIMIT {limit}"
-        )
-
-        data = list(self.query(query, {"subjs": subjs}))
-        if not data:
-            return rel_map
-
-        for record in data:
-            flattened_rels = list(
-                set(
-                    tuple(
-                        [
-                            (str(flattened_rel[1]) or str(flattened_rel[0])).replace("_", " "),
-                            str(flattened_rel[2]) or str(flattened_rel[3]),
-                        ]
-                    )
-                    for flattened_rel in record["flattened_rels"]
-                )
-            )
-            for subj in record["subj"].split("|"):
-                if subj not in rel_map:
-                    rel_map[subj] = []
-                rel_map[subj] += flattened_rels
-
-        rel_map_organization = self.get_rel_map_organization(subjs, depth, limit)
-        rel_map_prevalence = self.get_rel_map_prevalence(subjs, depth, limit)
-        for subj, rels in chain(rel_map_organization.items(), rel_map_prevalence.items()):
+        rel_map_rel = self.get_rel_map_rel(subjs, depth, limit)
+        rel_map_organization = self.get_rel_map_organization(subjs, limit)
+        rel_map_phenotype = self.get_rel_map_phenotype(subjs, limit)
+        rel_map_prevalence = self.get_rel_map_prevalence(subjs, limit)
+        for subj, rels in chain(
+            rel_map_rel.items(), rel_map_organization.items(), rel_map_phenotype.items(), rel_map_prevalence.items()
+        ):
             if subj in rel_map:
                 rel_map[subj] += rels
             else:
                 rel_map[subj] = rels
         return rel_map
 
-    def get_rel_map_organization(
+    def get_rel_map_rel(
         self, subjs: List[str] | None = None, depth: int = 2, limit: int = 30
     ) -> Dict[str, List[List[str]]]:
-        rel_map: Dict[Any, List[Any]] = {}
         if subjs is None or len(subjs) == 0:
-            return rel_map
+            return {}
+        # TODO: restore depth functionality
+        query = f"""MATCH p=(n:`{self.node_label}`)-[r:R_rel]->(m)
+            {"WHERE apoc.coll.intersection(apoc.convert.toList(n.N_Name), $subjs)" if subjs else ""}
+            RETURN n._N_Name AS n__N_Name, n._I_GENE AS n__I_GENE, m._N_Name AS m__N_Name, m._I_GENE AS m__I_GENE, r.citations AS r_citations, r.interpretation AS r_interpretation, r.name AS r_name, r.value AS r_value
+        """
+
+        rels = list(self.query(query, {"subjs": subjs}))
+        if not rels:
+            return {}
+
+        return textualize_rels(rels)
+
+    def get_rel_map_organization(self, subjs: List[str] | None = None, limit: int = 30) -> Dict[str, List[List[str]]]:
+        if subjs is None or len(subjs) == 0:
+            return {}
 
         subjs = [subj.upper() for subj in subjs]
 
         query = f"""
-            MATCH p=(n1:`{self.node_label}`)<-[:ORGANIZATION*1..{depth}]-(n2)
-            {"WHERE apoc.coll.intersection(apoc.convert.toList(n1.N_Name), $subjs)" if subjs else ""}
-            RETURN n1._N_Name AS _N_Name, n2.Address1 AS Address1, n2.Address2 AS Address2, n2.City AS City, n2.Country AS Country, n2.Email AS Email, n2.Fax as Fax, n2.Name as Name, n2.Phone as Phone, n2.State as State, n2.TollFree as TollFree, n2.URL as URL, n2.ZipCode as ZipCode
+            MATCH p=(m:`{self.node_label}`)<-[:ORGANIZATION]-(n)
+            {"WHERE apoc.coll.intersection(apoc.convert.toList(m.N_Name), $subjs)" if subjs else ""}
+            RETURN m._N_Name AS m__N_Name, n.Address1 AS n_Address1, n.Address2 AS n_Address2, n.City AS n_City, n.Country AS n_Country, n.Email AS n_Email, n.Fax as n_Fax, n.Name as n_Name, n.Phone as n_Phone, n.State as n_State, n.TollFree as n_TollFree, n.URL as n_URL, n.ZipCode as n_ZipCode
             LIMIT {limit}
         """
         organizations = list(self.query(query, {"subjs": subjs}))
 
         if not organizations:
-            return rel_map
+            return {}
 
-        for organization in organizations:
-            organization_description = textualize_organization(organization)
-            for obj in organization["_N_Name"].split("|"):
-                if obj not in rel_map:
-                    rel_map[obj] = []
-                rel_map[obj].append(
-                    (
-                        "has organization",
-                        "\n".join(organization_description),
-                    )
-                )
-        return rel_map
+        return textualize_organizations(organizations)
 
-    def get_rel_map_prevalence(
-        self, subjs: List[str] | None = None, depth: int = 2, limit: int = 30
-    ) -> Dict[str, List[List[str]]]:
-        rel_map: Dict[Any, List[Any]] = {}
+    def get_rel_map_phenotype(self, subjs: List[str] | None = None, limit: int = 30):
         if subjs is None or len(subjs) == 0:
-            return rel_map
+            return {}
 
         subjs = [subj.upper() for subj in subjs]
 
         query = f"""
-            MATCH p=(n1:`{self.node_label}`)<-[:PREVALENCE*1..{depth}]-(n2)
-            {"WHERE apoc.coll.intersection(apoc.convert.toList(n1.N_Name), $subjs)" if subjs else ""}
-            RETURN n1._N_Name AS _N_Name, n2.PrevalenceClass AS PrevalenceClass, n2.PrevalenceGeographic AS PrevalenceGeographic, n2.PrevalenceQualification AS PrevalenceQualification, n2.PrevalenceValidationStatus AS PrevalenceValidationStatus, n2.Source AS Source, n2.ValMoy as ValMoy
+            MATCH p=(n:`{self.node_label}`)-[r:R_hasPhenotype]->(m)
+            {"WHERE apoc.coll.intersection(apoc.convert.toList(n.N_Name), $subjs)" if subjs else ""}
+            RETURN n._N_Name AS n__N_Name, m._N_Name AS m__N_Name, r.Frequency AS r_Frequency, r.Onset AS r_Onset, r.Reference AS r_Reference
+            LIMIT {limit}
+        """
+        phenotypes = list(self.query(query, {"subjs": subjs}))
+
+        if not phenotypes:
+            return {}
+
+        return textualize_phenotypes(phenotypes)
+
+    def get_rel_map_prevalence(self, subjs: List[str] | None = None, limit: int = 30) -> Dict[str, List[List[str]]]:
+        if subjs is None or len(subjs) == 0:
+            return {}
+
+        subjs = [subj.upper() for subj in subjs]
+
+        query = f"""
+            MATCH p=(m:`{self.node_label}`)<-[r:PREVALENCE*1]-(n)
+            {"WHERE apoc.coll.intersection(apoc.convert.toList(m.N_Name), $subjs)" if subjs else ""}
+            RETURN m._N_Name AS m__N_Name, n.PrevalenceClass AS n_PrevalenceClass, n.PrevalenceGeographic AS n_PrevalenceGeographic, n.PrevalenceQualification AS n_PrevalenceQualification, n.PrevalenceValidationStatus AS n_PrevalenceValidationStatus, n.Source AS n_Source, n.ValMoy AS n_ValMoy
             LIMIT {limit}
         """
         prevalences = list(self.query(query, {"subjs": subjs}))
 
         if not prevalences:
-            return rel_map
+            return {}
 
-        for prevalence in prevalences:
-            prevalence_description = textualize_prevalence(prevalence)
-            # TODO: unflip the relation
-            # TODO: first do vector similarity on subjects then, keep the most relevant subject only
-            for obj in prevalence["_N_Name"].split("|"):
-                if obj not in rel_map:
-                    rel_map[obj] = []
-                rel_map[obj].append(
-                    (
-                        "has prevalence",
-                        "\n".join(prevalence_description),
-                    )
-                )
-        return rel_map
+        return textualize_prevelances(prevalences)
 
     def refresh_schema(self) -> None:
         """

@@ -72,16 +72,16 @@ class CustomLlamaIndexCallbackHandler(LlamaIndexCallbackHandler):
                 sources = payload.get(EventPayload.NODES)
                 if sources:
                     source_refs = "\, ".join(
-                    [f"Source {idx}" for idx, _ in enumerate(sources)]
-                )
-                step.elements = [
-                    Text(
-                        name=f"Source {idx}",
-                        content=source.node.get_text() or "Empty node",
+                        [f"Source {idx}" for idx, _ in enumerate(sources)]
                     )
-                    for idx, source in enumerate(sources)
-                ]
-                step.output = f"Retrieved the following sources: {source_refs}"
+                    step.elements = [
+                        Text(
+                            name=f"Source {idx}",
+                            content=source.node.get_text() or "Empty node",
+                        )
+                        for idx, source in enumerate(sources)
+                    ]
+                    step.output = f"Retrieved the following sources: {source_refs}"
                 self.context.loop.create_task(step.update())
 
             if event_type == CBEventType.LLM:

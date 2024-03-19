@@ -5,10 +5,11 @@ import faiss
 from llama_index.core import BasePromptTemplate, QueryBundle, ServiceContext, Settings, StorageContext, VectorStoreIndex
 from llama_index.core.callbacks import CallbackManager
 from llama_index.core.indices.knowledge_graph.retrievers import REL_TEXT_LIMIT
+from llama_index.core.llms.llm import LLM
 from llama_index.core.retrievers import KnowledgeGraphRAGRetriever
 from llama_index.core.schema import NodeWithScore, TextNode
 from llama_index.vector_stores.faiss import FaissVectorStore
-from llama_index.core.llms.llm import LLM
+
 logger = logging.getLogger(__name__)
 
 
@@ -71,12 +72,12 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
 
         nodes = [
             TextNode(
-                text=" ".join(knowledge),
+                text=" ".join(knowledge[:3]),
                 metadata={
                     "subject": knowledge[0],
                     "predicate": knowledge[1],
                     "object": knowledge[2],
-                    "citation": None
+                    "citation": knowledge[3].split("|") if knowledge[3] else [],
                 },
                 excluded_embed_metadata_keys=metadata_keys,
                 excluded_llm_metadata_keys=metadata_keys,
@@ -108,7 +109,7 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
             return []
 
         # Get SubGraph from Graph Store as Knowledge Sequence
-        knowledge_sequence, rel_map = self._get_knowledge_sequence(entities)
+        knowledge_sequence, rel_map = self._get_knowledge_sequence(entities, query_bundle)
 
         return self._build_nodes(knowledge_sequence, rel_map, query_bundle)
 
@@ -127,11 +128,11 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
             return []
 
         # Get SubGraph from Graph Store as Knowledge Sequence
-        knowledge_sequence, rel_map = await self._aget_knowledge_sequence(entities)
+        knowledge_sequence, rel_map = await self._aget_knowledge_sequence(entities, query_bundle)
 
         return self._build_nodes(knowledge_sequence, rel_map, query_bundle)
 
-    def _get_knowledge_sequence(self, entities: List[str]) -> Tuple[List[List[str]], Optional[Dict[Any, Any]]]:
+    def _get_knowledge_sequence(self, entities: List[str], query_bundle: QueryBundle) -> Tuple[List[List[str]], Optional[Dict[Any, Any]]]:
         """Get knowledge sequence from entities."""
         # Get SubGraph from Graph Store as Knowledge Sequence
         rel_map: Optional[Dict] = self._graph_store.get_rel_map(
@@ -143,12 +144,37 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
         knowledge_sequence = []
         if rel_map:
             for rel_key, rel_values in rel_map.items():
-                knowledge_sequence.extend([[rel_key, *rel_obj] for rel_obj in rel_values])
+                subj = self._get_best_rel_item(rel_key, query_bundle)
+                for rel, obj, citation in rel_values:
+                    rel = self._get_best_rel_item(rel, query_bundle)
+                    obj = self._get_best_rel_item(obj, query_bundle)
+                    knowledge_sequence.append((subj, rel, obj, citation))
         else:
             logger.info("> No knowledge sequence extracted from entities.")
             return [], None
 
         return knowledge_sequence, rel_map
 
-    async def _aget_knowledge_sequence(self, entities: List[str]) -> Tuple[List[str], Optional[Dict[Any, Any]]]:
-        return self._get_knowledge_sequence(entities)
+    async def _aget_knowledge_sequence(self, entities: List[str], query_bundle: QueryBundle) -> Tuple[List[str], Optional[Dict[Any, Any]]]:
+        return self._get_knowledge_sequence(entities, query_bundle)
+
+    def _get_best_rel_item(self, rel_items: str, query_bundle: QueryBundle) -> str:
+        """Get best rel key."""
+        rel_items = rel_items.split("|")
+        if len(rel_items) == 1:
+            return rel_items[0]
+
+        nodes = [
+            TextNode(
+                text=rel_item
+            )
+            for rel_item in rel_items
+        ]
+
+        faiss_index = faiss.IndexFlatL2(Settings.num_output)
+        vector_store = FaissVectorStore(faiss_index)
+        storage_context = StorageContext.from_defaults(vector_store=vector_store)
+        index = VectorStoreIndex(nodes=nodes, storage_context=storage_context, callback_manager=CallbackManager())
+        retriever = index.as_retriever(similarity_top_k=1)
+        nodes = retriever.retrieve(query_bundle)
+        return nodes[0].text
