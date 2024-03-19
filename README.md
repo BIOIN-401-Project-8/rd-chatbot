@@ -1,7 +1,7 @@
-# Rare Genetic Diseases Chatbot
+# Rare Diseases Chatbot
 
 A chatbot that can knowledgably extract literature from PubMed and inform people
-about the latest information and updates regarding rare genetic diseases.
+about the latest information and updates regarding rare diseases.
 This chatbot is a BIOIN 401 Project at the University of Alberta.
 
 ## Setup
