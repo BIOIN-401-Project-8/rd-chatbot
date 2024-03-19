@@ -19,6 +19,8 @@ from llama_index.core.retrievers import BaseRetriever
 from llama_index.core.schema import MetadataMode
 from llama_index.core.settings import Settings, callback_manager_from_settings_or_context
 
+from chat_engine.citation_types import CitationChatMode
+from chat_engine.citation_condense_plus_context import CitationCondensePlusContextChatEngine
 
 class CustomCitationQueryEngine(CitationQueryEngine):
     @classmethod
@@ -129,6 +131,7 @@ class CustomCitationQueryEngine(CitationQueryEngine):
                 llm=llm,
                 **kwargs,
             )
+
         elif chat_mode == ChatMode.CONTEXT:
             from llama_index.core.chat_engine import ContextChatEngine
 
@@ -151,6 +154,33 @@ class CustomCitationQueryEngine(CitationQueryEngine):
             from llama_index.core.chat_engine import SimpleChatEngine
 
             return SimpleChatEngine.from_defaults(
+                llm=llm,
+                **kwargs,
+            )
+
+        elif chat_mode == CitationChatMode.CONDENSE_QUESTION:
+            from chat_engine.citation_condense_question import CitationCondenseQuestionChatEngine
+
+            return CitationCondenseQuestionChatEngine.from_defaults(
+                query_engine=self,
+                llm=llm,
+                **kwargs,
+            )
+
+        elif chat_mode == CitationChatMode.CONTEXT:
+            from chat_engine.citation_context import CitationContextChatEngine
+
+            return CitationContextChatEngine.from_defaults(
+                retriever=self.retriever,
+                llm=llm,
+                **kwargs,
+            )
+
+        elif chat_mode == CitationChatMode.CONDENSE_PLUS_CONTEXT:
+            from chat_engine.citation_condense_plus_context import CitationCondensePlusContextChatEngine
+
+            return CitationCondensePlusContextChatEngine.from_defaults(
+                retriever=self.retriever,
                 llm=llm,
                 **kwargs,
             )

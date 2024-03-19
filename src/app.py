@@ -7,10 +7,12 @@ import time
 
 import chainlit as cl
 from llama_index.core.callbacks import CallbackManager
-from llama_index.core.chat_engine.types import BaseChatEngine, ChatMode
+from llama_index.core.chat_engine.types import BaseChatEngine
 from llama_index.core.prompts import PromptTemplate, PromptType
 from llama_index.core.storage import StorageContext
 
+from callbacks import CustomLlamaIndexCallbackHandler
+from chat_engine.citation_types import CitationChatMode
 from citation import get_formatted_sources, get_source_graph, get_source_nodes
 from graph_stores import CustomNeo4jGraphStore
 from query_engine import CustomCitationQueryEngine
@@ -24,7 +26,7 @@ logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
 @cl.on_chat_start
 async def factory():
-    callback_manager = CallbackManager([cl.LlamaIndexCallbackHandler()])
+    callback_manager = CallbackManager([CustomLlamaIndexCallbackHandler()])
     configure_settings(callback_manager=callback_manager)
 
     graph_store = CustomNeo4jGraphStore(
@@ -125,7 +127,7 @@ async def factory():
         verbose=True,
     )
     chat_engine = query_engine.as_chat_engine(
-        chat_mode=ChatMode.REACT,
+        chat_mode=CitationChatMode.CONDENSE_PLUS_CONTEXT,
         verbose=True,
     )
     cl.user_session.set("chat_engine", chat_engine)
