@@ -2,6 +2,7 @@ chainlit==1.0.401
 deep-translator==1.11.4
 faiss-gpu==1.7.2
 hanzidentifier==1.2.0
+hpo3==1.0.3
 lingua-language-detector==2.0.2
 llama-index-core==0.10.20
 llama-index-embeddings-huggingface==0.1.4

@@ -1,3 +1,57 @@
+from typing import Dict, List
+
+from pyhpo import Ontology
+
+Ontology()
+
+
+def lookup_hpo_name(hpo_id: int | str):
+    if isinstance(hpo_id, str):
+        hpo_id = int(hpo_id.split(":")[-1])
+    hpo_term = Ontology[hpo_id]
+    return hpo_term.name
+
+
+def textualize_phenotype(phenotype: dict):
+    if not phenotype["m__N_Name"]:
+        return None
+    phenotype_description = []
+    phenotype_description.append(phenotype["m__N_Name"])
+    if phenotype["r_Frequency"]:
+        frequency = lookup_hpo_name(phenotype["r_Frequency"])
+        phenotype_description.append(f"Frequency: {frequency}")
+    if phenotype["r_Onset"]:
+        onset = lookup_hpo_name(phenotype["r_Onset"])
+        phenotype_description.append(f"Onset: {onset}")
+    return "\n".join(phenotype_description)
+
+
+def extract_phenotype_citations(phenotype: dict):
+    citations = phenotype.get("r_Reference")
+    if not citations:
+        return []
+    citations = citations.split(",")
+    citations[0] = citations[0].removeprefix("[")
+    citations[-1] = citations[-1].removesuffix("]")
+    return citations
+
+
+def textualize_phenotypes(phenotypes: list[dict]):
+    rel_map: Dict[str, List[List[str]]] = {}
+
+    for phenotype in phenotypes:
+        if phenotype["n__N_Name"] not in rel_map:
+            rel_map[phenotype["n__N_Name"]] = []
+        obj = textualize_phenotype(phenotype)
+        if not obj:
+            continue
+        citations = extract_phenotype_citations(phenotype)
+        rel_map[phenotype["n__N_Name"]].append(
+            ("has phenotype", obj, "|".join(citations))
+        )
+    return rel_map
+
+
 def textualize_prevalence(prevalence: dict):
     prevalence_description = []
     if prevalence["PrevalenceClass"]:
