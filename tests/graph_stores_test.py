@@ -38,16 +38,18 @@ class TestCustomNeo4jGraphStore:
 
     def test_get_rel_map_phenotype(self, graph_store: CustomNeo4jGraphStore):
         rel_map = graph_store.get_rel_map_phenotype(["GRACILE SYNDROME"], limit=2)
-        rels = rel_map["GRACILE SYNDROME|FELLMAN DISEASE|FELLMAN SYNDROME|FINNISH LACTIC ACIDOSIS WITH HEPATIC HEMOSIDEROSIS|FINNISH LETHAL NEONATAL METABOLIC SYNDROME|FLNMS|GROWTH DELAY-AMINOACIDURIA-CHOLESTASIS-IRON OVERLOAD-LACTIC ACIDOSIS-EARLY DEATH SYNDROME|GROWTH RESTRICTION-AMINOACIDURIA-CHOLESTASIS-IRON OVERLOAD-LACTIC ACIDOSIS-EARLY DEATH SYNDROME|GROWTH RETARDATION, AMINOACIDURIA, CHOLESTASIS, IRON OVERLOAD, LACTIC ACIDOSIS AND EARLY DEATH"]
+        rels = rel_map[
+            "GRACILE SYNDROME|FELLMAN DISEASE|FELLMAN SYNDROME|FINNISH LACTIC ACIDOSIS WITH HEPATIC HEMOSIDEROSIS|FINNISH LETHAL NEONATAL METABOLIC SYNDROME|FLNMS|GROWTH DELAY-AMINOACIDURIA-CHOLESTASIS-IRON OVERLOAD-LACTIC ACIDOSIS-EARLY DEATH SYNDROME|GROWTH RESTRICTION-AMINOACIDURIA-CHOLESTASIS-IRON OVERLOAD-LACTIC ACIDOSIS-EARLY DEATH SYNDROME|GROWTH RETARDATION, AMINOACIDURIA, CHOLESTASIS, IRON OVERLOAD, LACTIC ACIDOSIS AND EARLY DEATH"
+        ]
         assert rels[0] == (
             "has phenotype",
             "DEATH IN EARLY ADULTHOOD\nFrequency: Frequent",
-            'ORPHA:53693',
+            "ORPHA:53693",
         )
         assert rels[1] == (
             "has phenotype",
             "INCREASED SERUM PYRUVIC ACID|INCREASED SERUM PYRUVATE\nOnset: Neonatal onset",
-            'PMID:12215968',
+            "PMID:12215968",
         )
 
     def test_get_rel_map_prevalence(self, graph_store: CustomNeo4jGraphStore):
@@ -62,4 +64,18 @@ class TestCustomNeo4jGraphStore:
             "has prevalence",
             "PrevalenceClass: <1 / 1 000 000\nPrevalenceGeographic: Finland\nPrevalenceQualification: Class only\nPrevalenceValidationStatus: Not yet validated",
             "PMID:22970607",
+        )
+
+    def test_get_rel_map_rel(self, graph_store: CustomNeo4jGraphStore):
+        rel_map = graph_store.get_rel_map(["GRACILE SYNDROME"], limit=1)
+        rels = rel_map["GRACILE SYNDROME"]
+        assert rels[0] == (
+            "has allelic variant",
+            "BCS1L|GENE:617|HGNC:1020|OMIM:603647\nInterpretation: Conflicting interpretations of pathogenicity",
+            "PMID:17403714|UMLS:C1864002",
+        )
+        assert rels[1] == (
+            "mapped to",
+            "MITOCHONDRIAL METABOLISM DISEASE",
+            "UMLS:C1864002",
         )

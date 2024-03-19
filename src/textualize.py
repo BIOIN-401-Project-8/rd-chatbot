@@ -139,3 +139,38 @@ def textualize_organizations(organizations: list[dict]):
             continue
         rel_map[organization["m__N_Name"]].append(("has organization", organization_description, ""))
     return rel_map
+
+
+def textualize_rel(rel: dict):
+    if not rel["m__N_Name"] and not rel["m__I_GENE"]:
+        return None
+    rel_description = []
+    obj = ""
+    if rel["m__N_Name"]:
+        obj += rel["m__N_Name"]
+    if rel["m__I_GENE"]:
+        if obj:
+            obj += "|"
+        obj += rel["m__I_GENE"]
+    rel_description.append(obj)
+    if rel["r_interpretation"]:
+        rel_description.append(f"Interpretation: {rel['r_interpretation']}")
+    return "\n".join(rel_description)
+
+
+def textualize_rels(rels: list[dict]):
+    rel_map: Dict[str, List[List[str]]] = {}
+    for rel in rels:
+        subj = rel["n__N_Name"] or rel["n__I_GENE"]
+        if subj not in rel_map:
+            rel_map[subj] = []
+        rel_description = textualize_rel(rel)
+        if not rel_description:
+            continue
+        relationships = rel["r_name"]
+        if isinstance(relationships, list):
+            relationships = "|".join(relationships)
+        relationships = relationships.replace("_", " ")
+        citations = extract_citations(rel["r_citations"]) + extract_citations(rel["r_value"])
+        rel_map[subj].append((relationships, rel_description, "|".join(citations)))
+    return rel_map

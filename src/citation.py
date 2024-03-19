@@ -20,6 +20,10 @@ def format_citation(citation: str):
     elif citation.startswith("OMIM:"):
         omim_identifier = citation.removeprefix("OMIM:")
         return f"[{citation}](https://www.omim.org/entry/{omim_identifier})"
+    elif citation.startswith("UMLS:"):
+        umls_identifier = citation.removeprefix("UMLS:")
+        return f"[{citation}](https://uts.nlm.nih.gov/metathesaurus.html#?searchString={umls_identifier})"
+        # TODO: verify this link
     else:
         return citation
 
