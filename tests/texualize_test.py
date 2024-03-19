@@ -17,6 +17,10 @@ class TestTextualize:
         name = lookup_hpo_name("HP:0040281")
         assert name == "Very frequent"
 
+    def test_lookup_hpo_name_invalid(self):
+        name = lookup_hpo_name("31/56")
+        assert name == "31/56"
+
     def test_lookup_hpo_names(self):
         names = lookup_hpo_names([40281, "HP:0040281"])
         assert names == ["Very frequent", "Very frequent"]

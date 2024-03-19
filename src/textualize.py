@@ -1,13 +1,19 @@
+import logging
 from typing import Dict, List
 
 from pyhpo import Ontology
 
 Ontology()
 
+logger = logging.getLogger(__name__)
+
 
 def lookup_hpo_name(hpo_id: int | str):
     if isinstance(hpo_id, str):
-        hpo_id = int(hpo_id.split(":")[-1])
+        if hpo_id.startswith("HP:"):
+            hpo_id = int(hpo_id.split(":")[-1])
+        else:
+            return hpo_id
     hpo_term = Ontology[hpo_id]
     return hpo_term.name
 
