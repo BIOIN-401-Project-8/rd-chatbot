@@ -7,9 +7,12 @@ import time
 
 import chainlit as cl
 from llama_index.core.callbacks import CallbackManager
+from llama_index.core.chat_engine.types import BaseChatEngine
 from llama_index.core.prompts import PromptTemplate, PromptType
 from llama_index.core.storage import StorageContext
 
+from callbacks import CustomLlamaIndexCallbackHandler
+from chat_engine.citation_types import CitationChatMode
 from citation import get_formatted_sources, get_source_graph, get_source_nodes
 from graph_stores import CustomNeo4jGraphStore
 from query_engine import CustomCitationQueryEngine
@@ -23,7 +26,7 @@ logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
 @cl.on_chat_start
 async def factory():
-    callback_manager = CallbackManager([cl.LlamaIndexCallbackHandler()])
+    callback_manager = CallbackManager([CustomLlamaIndexCallbackHandler()])
     configure_settings(callback_manager=callback_manager)
 
     graph_store = CustomNeo4jGraphStore(
@@ -123,23 +126,28 @@ async def factory():
         streaming=True,
         verbose=True,
     )
-    cl.user_session.set("query_engine", query_engine)
+    chat_engine = query_engine.as_chat_engine(
+        chat_mode=CitationChatMode.CONDENSE_PLUS_CONTEXT,
+        verbose=True,
+    )
+    cl.user_session.set("chat_engine", chat_engine)
 
 
-def query(query_engine: CustomCitationQueryEngine, content: str, profile: bool = False):
+def chat(chat_engine: BaseChatEngine, content: str, profile: bool = False):
     if profile:
         pr = cProfile.Profile()
         pr.enable()
-    response = query_engine.query(content)
+    response = chat_engine.chat(content)
     if profile:
         pr.disable()
         pr.dump_stats("profile.prof")
     return response
 
+
 @cl.on_message
 async def main(message: cl.Message):
     start = time.time()
-    query_engine: CustomCitationQueryEngine = cl.user_session.get("query_engine")
+    chat_engine: BaseChatEngine = cl.user_session.get("chat_engine")
     content = message.content
 
     detection = await detect_language(content)
@@ -147,32 +155,28 @@ async def main(message: cl.Message):
     if detected_language != "en" and detected_language is not None:
         content = await translate(content, target="en")
 
-    response = await cl.make_async(query)(query_engine, content, profile=False)
+    response = await cl.make_async(chat)(chat_engine, content, profile=False)
     response_message = cl.Message(content="")
 
-    if hasattr(response, "response_gen"):
-        for token in response.response_gen:
-            await response_message.stream_token(token=token)
-
-    content = response_message.content
+    content = response.response
 
     source_nodes = get_source_nodes(response, content)
 
-    response_message.content = response_message.content.split("Sources:")[0].strip()
-    response_message.content = re.sub(r"Source (\d+)", r"[\1]", response_message.content, flags=re.I)
-    response_message.content = re.sub(r"\(\[", "[", response_message.content)
-    response_message.content = re.sub(r"\]\)", "]", response_message.content)
+    content = content.split("Sources:")[0].strip()
+    content = re.sub(r"Source (\d+)", r"[\1]", content, flags=re.I)
+    content = re.sub(r"\(\[", "[", content)
+    content = re.sub(r"\]\)", "]", content)
 
     if detected_language != "en" and detected_language is not None:
-        response_message.content = await translate(response_message.content, target=detected_language)
+        content = await translate(content, target=detected_language)
 
     if source_nodes:
-        response_message.content += await get_formatted_sources(source_nodes)
+        content += await get_formatted_sources(source_nodes)
         filename = get_source_graph(source_nodes)
         elements = [cl.Image(path=filename, display="inline", size="large")]
         response_message.elements = elements
 
     end = time.time()
-    response_message.content += f"\n\n{end - start:.2f} seconds"
-
+    content += f"\n\n<small>{end - start:.2f} seconds</small>"
+    response_message.content = content
     await response_message.send()

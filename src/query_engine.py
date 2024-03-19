@@ -1,6 +1,8 @@
 from typing import Any, List, Optional
 
-from llama_index.core import BasePromptTemplate, ServiceContext, get_response_synthesizer
+from llama_index.core import BasePromptTemplate, get_response_synthesizer
+from llama_index.core.base.base_retriever import BaseRetriever
+from llama_index.core.chat_engine.types import BaseChatEngine, ChatMode
 from llama_index.core.indices.base import BaseGPTIndex
 from llama_index.core.llms.llm import LLM
 from llama_index.core.node_parser import TextSplitter
@@ -15,8 +17,10 @@ from llama_index.core.query_engine.citation_query_engine import (
 from llama_index.core.response_synthesizers import BaseSynthesizer, ResponseMode
 from llama_index.core.retrievers import BaseRetriever
 from llama_index.core.schema import MetadataMode
-from llama_index.core.settings import Settings, callback_manager_from_settings_or_context, llm_from_settings_or_context
+from llama_index.core.settings import Settings, callback_manager_from_settings_or_context
 
+from chat_engine.citation_types import CitationChatMode
+from chat_engine.citation_condense_plus_context import CitationCondensePlusContextChatEngine
 
 class CustomCitationQueryEngine(CitationQueryEngine):
     @classmethod
@@ -40,7 +44,7 @@ class CustomCitationQueryEngine(CitationQueryEngine):
         # class-specific args
         metadata_mode: MetadataMode = MetadataMode.NONE,
         **kwargs: Any,
-    ) -> "CitationQueryEngine":
+    ) -> "CustomCitationQueryEngine":
         """Initialize a CitationQueryEngine object.".
 
         Args:
@@ -94,3 +98,91 @@ class CustomCitationQueryEngine(CitationQueryEngine):
             node_postprocessors=node_postprocessors,
             metadata_mode=metadata_mode,
         )
+
+    def as_chat_engine(
+        self,
+        chat_mode: ChatMode = ChatMode.BEST,
+        llm: Optional[LLM] = None,
+        **kwargs: Any,
+    ) -> BaseChatEngine:
+        # llama_index.core.indices.base.BaseIndex
+        # resolve chat mode
+        if chat_mode in [ChatMode.REACT, ChatMode.OPENAI, ChatMode.BEST]:
+            # use an agent with query engine tool in these chat modes
+            # NOTE: lazy import
+            from llama_index.core.agent import AgentRunner
+            from llama_index.core.tools.query_engine import QueryEngineTool
+
+            # convert query engine to tool
+            query_engine_tool = QueryEngineTool.from_defaults(query_engine=self)
+
+            return AgentRunner.from_llm(
+                tools=[query_engine_tool],
+                llm=llm,
+                **kwargs,
+            )
+
+        if chat_mode == ChatMode.CONDENSE_QUESTION:
+            # NOTE: lazy import
+            from llama_index.core.chat_engine import CondenseQuestionChatEngine
+
+            return CondenseQuestionChatEngine.from_defaults(
+                query_engine=self,
+                llm=llm,
+                **kwargs,
+            )
+
+        elif chat_mode == ChatMode.CONTEXT:
+            from llama_index.core.chat_engine import ContextChatEngine
+
+            return ContextChatEngine.from_defaults(
+                retriever=self.retriever,
+                llm=llm,
+                **kwargs,
+            )
+
+        elif chat_mode == ChatMode.CONDENSE_PLUS_CONTEXT:
+            from llama_index.core.chat_engine import CondensePlusContextChatEngine
+
+            return CondensePlusContextChatEngine.from_defaults(
+                retriever=self.retriever,
+                llm=llm,
+                **kwargs,
+            )
+
+        elif chat_mode == ChatMode.SIMPLE:
+            from llama_index.core.chat_engine import SimpleChatEngine
+
+            return SimpleChatEngine.from_defaults(
+                llm=llm,
+                **kwargs,
+            )
+
+        elif chat_mode == CitationChatMode.CONDENSE_QUESTION:
+            from chat_engine.citation_condense_question import CitationCondenseQuestionChatEngine
+
+            return CitationCondenseQuestionChatEngine.from_defaults(
+                query_engine=self,
+                llm=llm,
+                **kwargs,
+            )
+
+        elif chat_mode == CitationChatMode.CONTEXT:
+            from chat_engine.citation_context import CitationContextChatEngine
+
+            return CitationContextChatEngine.from_defaults(
+                retriever=self.retriever,
+                llm=llm,
+                **kwargs,
+            )
+
+        elif chat_mode == CitationChatMode.CONDENSE_PLUS_CONTEXT:
+            from chat_engine.citation_condense_plus_context import CitationCondensePlusContextChatEngine
+
+            return CitationCondensePlusContextChatEngine.from_defaults(
+                retriever=self.retriever,
+                llm=llm,
+                **kwargs,
+            )
+        else:
+            raise ValueError(f"Unknown chat mode: {chat_mode}")

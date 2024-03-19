@@ -8,7 +8,7 @@ from settings import configure_settings
 from src.graph_stores import CustomNeo4jGraphStore
 from src.retrievers import KG_RAG_KnowledgeGraphRAGRetriever
 
-GITHUB_ACTIONS = os.environ.get("GITHUB_ACTIONS")
+GITHUB_ACTIONS = bool(os.environ.get("GITHUB_ACTIONS"))
 
 
 @pytest.fixture
