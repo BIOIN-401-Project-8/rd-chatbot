@@ -3,7 +3,7 @@ from typing import Any, Dict, List
 
 from llama_index.graph_stores.neo4j import Neo4jGraphStore
 
-from textualize import textualize_organization, textualize_prevalence, textualize_phenotypes
+from textualize import textualize_organization, textualize_phenotypes, textualize_prevelances
 
 
 class CustomNeo4jGraphStore(Neo4jGraphStore):
@@ -111,15 +111,14 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
         #             rel_map[subj] = []
         #         rel_map[subj] += flattened_rels
 
-        rel_map = self.get_rel_map_phenotype(subjs, limit)
         # rel_map_organization = self.get_rel_map_organization(subjs, depth, limit)
-        # rel_map_prevalence = self.get_rel_map_prevalence(subjs, depth, limit)
-        # for subj, rels in chain(rel_map_organization.items(), rel_map_prevalence.items()):
-        #     if subj in rel_map:
-        #         rel_map[subj] += rels
-        #     else:
-        #         rel_map[subj] = rels
-        # return rel_map
+        rel_map_phenotype = self.get_rel_map_phenotype(subjs, limit)
+        rel_map_prevalence = self.get_rel_map_prevalence(subjs, limit)
+        for subj, rels in chain(rel_map_phenotype.items(), rel_map_prevalence.items()):
+            if subj in rel_map:
+                rel_map[subj] += rels
+            else:
+                rel_map[subj] = rels
         return rel_map
 
     # def get_rel_map_organization(
@@ -163,37 +162,6 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
 
         subjs = [subj.upper() for subj in subjs]
 
-        # I_CODE	[GARD:0000001,OMIM:603358,ORPHA:53693,ORPHANET:53693,UMLS:C1864002]
-        # N_Name	[GRACILE SYNDROME,FELLMAN DISEASE,FELLMAN SYNDROME,FINNISH LACTIC ACIDOSIS WITH HEPATIC HEMOSIDEROSIS,FINNISH LETHAL NEONATAL METABOLIC SYNDROME,FLNMS,… Show all]
-        # R_equivalentClass	http://purl.obolibrary.org/obo/MONDO_0011308
-        # R_hasPhenotype	[HP:0003355,HP:0001511,HP:0004925,HP:0001396,HP:0003281,HP:0003452,HP:0003542,HP:0001319,HP:0000365,HP:0001394,HP:0001397,HP:0001994,HP:0003128,HP:0012… Show all]
-        # R_rel	[UMLS:C1864002,UMLS:C0001125,UMLS:C0008370,UMLS:C0235988,UMLS:C0238621,UMLS:C0441748,UMLS:C1272097,UMLS:C1837902,UMLS:C2749200,UMLS:C3551739,UMLS:C5232… Show all]
-        # _I_CODE	GARD:0000001|OMIM:603358|ORPHA:53693|ORPHANET:53693|UMLS:C1864002
-        # _N_Name	GRACILE SYNDROME|FELLMAN DISEASE|FELLMAN SYNDROME|FINNISH LACTIC ACIDOSIS WITH HEPATIC HEMOSIDEROSIS|FINNISH LETHAL NEONATAL METABOLIC SYNDROME|FLNMS|… Show all
-
-        # Aspect	P
-        # Biocuration	[HPO:probinson[2013-02-18],ORPHA:orphadata[2020-06-08]]
-        # DatabaseID	[OMIM:603358,ORPHA:53693]
-        # DiseaseName	[#603358 GRACILE SYNDROME;;GROWTH RETARDATION, AMINO ACIDURIA, CHOLESTASIS, IRON OVERLOAD, LACTICACIDOSIS, AND EARLY DEATH;;FINNISH LETHAL NEONATAL MET… Show all]
-        # Evidence	[PCS,TAS]
-        # Frequency	HP:0040281
-        # HPO_ID	HP:0003281
-        # Onset	HP:0003623
-        # Reference	[PMID:12215968,ORPHA:53693]
-        # _neo4j_sync_from_id	14652003
-        # created	1607626678882
-        # source	584572e46
-        # value	HP:0003281
-
-        # I_CODE	[UMLS:C0241013,UMLS:C0743912,UMLS:C3854388,HP:0003281]
-        # N_Name	[ELEVATED SERUM FERRITIN,HIGH FERRITIN LEVEL,HYPERFERRITINAEMIA,HYPERFERRITINEMIA,INCREASED FERRITIN,INCREASED PLASMA FERRITIN,INCREASED SERUM FERRITIN… Show all]
-        # R_equivalentClass	f05b0ae0-3977-4491-ad14-c00e2bdf59d2
-        # R_hasPhenotype	[HP:0003281]
-        # R_rel	[UMLS:C1863727,UMLS:C4551514,UMLS:C0268647,UMLS:C0878682,UMLS:C1853733,UMLS:C1858664,UMLS:C1865614,UMLS:C1865616,UMLS:C3469186,UMLS:C4015067,UMLS:C4225… Show all]
-        # R_subClassOf	[http://purl.obolibrary.org/obo/HP_0040133,UMLS:C0241013]
-        # _I_CODE	UMLS:C0241013|UMLS:C0743912|UMLS:C3854388|HP:0003281
-        # _N_Name	ELEVATED SERUM FERRITIN|HIGH FERRITIN LEVEL|HYPERFERRITINAEMIA|HYPERFERRITINEMIA|INCREASED FERRITIN|INCREASED PLASMA FERRITIN|INCREASED SERUM FERRITIN… Show all
-
         query = f"""
             MATCH p=(n:`{self.node_label}`)-[r:R_hasPhenotype]->(m)
             {"WHERE apoc.coll.intersection(apoc.convert.toList(n.N_Name), $subjs)" if subjs else ""}
@@ -207,40 +175,26 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
 
         return textualize_phenotypes(phenotypes)
 
-    # def get_rel_map_prevalence(
-    #     self, subjs: List[str] | None = None, depth: int = 2, limit: int = 30
-    # ) -> Dict[str, List[List[str]]]:
-    #     rel_map: Dict[Any, List[Any]] = {}
-    #     if subjs is None or len(subjs) == 0:
-    #         return rel_map
+    def get_rel_map_prevalence(
+        self, subjs: List[str] | None = None, limit: int = 30
+    ) -> Dict[str, List[List[str]]]:
+        if subjs is None or len(subjs) == 0:
+            return {}
 
-    #     subjs = [subj.upper() for subj in subjs]
+        subjs = [subj.upper() for subj in subjs]
 
-    #     query = f"""
-    #         MATCH p=(n1:`{self.node_label}`)<-[:PREVALENCE*1..{depth}]-(n2)
-    #         {"WHERE apoc.coll.intersection(apoc.convert.toList(n1.N_Name), $subjs)" if subjs else ""}
-    #         RETURN n1._N_Name AS _N_Name, n2.PrevalenceClass AS PrevalenceClass, n2.PrevalenceGeographic AS PrevalenceGeographic, n2.PrevalenceQualification AS PrevalenceQualification, n2.PrevalenceValidationStatus AS PrevalenceValidationStatus, n2.Source AS Source, n2.ValMoy as ValMoy
-    #         LIMIT {limit}
-    #     """
-    #     prevalences = list(self.query(query, {"subjs": subjs}))
+        query = f"""
+            MATCH p=(m:`{self.node_label}`)<-[r:PREVALENCE*1]-(n)
+            {"WHERE apoc.coll.intersection(apoc.convert.toList(m.N_Name), $subjs)" if subjs else ""}
+            RETURN m._N_Name AS m__N_Name, n.PrevalenceClass AS n_PrevalenceClass, n.PrevalenceGeographic AS n_PrevalenceGeographic, n.PrevalenceQualification AS n_PrevalenceQualification, n.PrevalenceValidationStatus AS n_PrevalenceValidationStatus, n.Source AS n_Source, n.ValMoy AS n_ValMoy
+            LIMIT {limit}
+        """
+        prevalences = list(self.query(query, {"subjs": subjs}))
 
-    #     if not prevalences:
-    #         return rel_map
+        if not prevalences:
+            return {}
 
-    #     for prevalence in prevalences:
-    #         prevalence_description = textualize_prevalence(prevalence)
-    #         # TODO: unflip the relation
-    #         # TODO: first do vector similarity on subjects then, keep the most relevant subject only
-    #         for obj in prevalence["_N_Name"].split("|"):
-    #             if obj not in rel_map:
-    #                 rel_map[obj] = []
-    #             rel_map[obj].append(
-    #                 (
-    #                     "has prevalence",
-    #                     "\n".join(prevalence_description),
-    #                 )
-    #             )
-    #     return rel_map
+        return textualize_prevelances(prevalences)
 
     def refresh_schema(self) -> None:
         """

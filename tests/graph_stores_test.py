@@ -34,3 +34,17 @@ class TestCustomNeo4jGraphStore:
             "INCREASED SERUM PYRUVIC ACID|INCREASED SERUM PYRUVATE\nOnset: Neonatal onset",
             'PMID:12215968',
         )
+
+    def test_get_rel_map_prevalence(self, graph_store: CustomNeo4jGraphStore):
+        rel_map = graph_store.get_rel_map_prevalence(["GRACILE SYNDROME"], limit=2)
+        rels = rel_map["GRACILE SYNDROME"]
+        assert rels[0] == (
+            "has prevalence",
+            "PrevalenceClass: 1-9 / 100 000\nPrevalenceGeographic: Finland\nPrevalenceQualification: Value and class\nPrevalenceValidationStatus: Validated\nValMoy: 2.0",
+            "PMID:22970607",
+        )
+        assert rels[1] == (
+            "has prevalence",
+            "PrevalenceClass: <1 / 1 000 000\nPrevalenceGeographic: Finland\nPrevalenceQualification: Class only\nPrevalenceValidationStatus: Not yet validated",
+            "PMID:22970607",
+        )

@@ -26,11 +26,12 @@ def textualize_phenotype(phenotype: dict):
     return "\n".join(phenotype_description)
 
 
-def extract_phenotype_citations(phenotype: dict):
-    citations = phenotype.get("r_Reference")
-    if not citations:
+def extract_citations(text: str | list[str]):
+    if not text:
         return []
-    citations = citations.split(",")
+    if isinstance(text, list):
+        return text
+    citations = text.split(",")
     citations[0] = citations[0].removeprefix("[")
     citations[-1] = citations[-1].removesuffix("]")
     return citations
@@ -45,28 +46,41 @@ def textualize_phenotypes(phenotypes: list[dict]):
         obj = textualize_phenotype(phenotype)
         if not obj:
             continue
-        citations = extract_phenotype_citations(phenotype)
-        rel_map[phenotype["n__N_Name"]].append(
-            ("has phenotype", obj, "|".join(citations))
-        )
+        citations = extract_citations(phenotype["r_Reference"])
+        rel_map[phenotype["n__N_Name"]].append(("has phenotype", obj, "|".join(citations)))
     return rel_map
 
 
 def textualize_prevalence(prevalence: dict):
+    if not prevalence["n_PrevalenceClass"]:
+        return None
     prevalence_description = []
-    if prevalence["PrevalenceClass"]:
-        prevalence_description.append(f"PrevalenceClass: {prevalence['PrevalenceClass']}")
-    if prevalence["PrevalenceGeographic"]:
-        prevalence_description.append(f"PrevalenceGeographic: {prevalence['PrevalenceGeographic']}")
-    if prevalence["PrevalenceQualification"]:
-        prevalence_description.append(f"PrevalenceQualification: {prevalence['PrevalenceQualification']}")
-    if prevalence["PrevalenceValidationStatus"]:
-        prevalence_description.append(f"PrevalenceValidationStatus: {prevalence['PrevalenceValidationStatus']}")
-    if prevalence["Source"]:
-        prevalence_description.append(f"Source: {prevalence['Source']}")
-    if prevalence["ValMoy"]:
-        prevalence_description.append(f"ValMoy: {prevalence['ValMoy']}")
-    return prevalence_description
+    prevalence_description.append(f"PrevalenceClass: {prevalence['n_PrevalenceClass']}")
+    if prevalence["n_PrevalenceGeographic"]:
+        prevalence_description.append(f"PrevalenceGeographic: {prevalence['n_PrevalenceGeographic']}")
+    if prevalence["n_PrevalenceQualification"]:
+        prevalence_description.append(f"PrevalenceQualification: {prevalence['n_PrevalenceQualification']}")
+    if prevalence["n_PrevalenceValidationStatus"]:
+        prevalence_description.append(f"PrevalenceValidationStatus: {prevalence['n_PrevalenceValidationStatus']}")
+    if prevalence["n_ValMoy"]:
+        prevalence_description.append(f"ValMoy: {prevalence['n_ValMoy']}")
+    return "\n".join(prevalence_description)
+
+
+def textualize_prevelances(prevalences: list[dict]):
+    rel_map: Dict[str, List[List[str]]] = {}
+    for prevalence in prevalences:
+        if prevalence["m__N_Name"] not in rel_map:
+            rel_map[prevalence["m__N_Name"]] = []
+        citations = extract_citations(prevalence["n_Source"])
+        rel_map[prevalence["m__N_Name"]].append(
+            (
+                "has prevalence",
+                textualize_prevalence(prevalence),
+                "|".join(citations),
+            )
+        )
+    return rel_map
 
 
 def textualize_organization(organization: dict):
