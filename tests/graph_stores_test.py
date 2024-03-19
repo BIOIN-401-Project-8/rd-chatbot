@@ -21,6 +21,21 @@ def graph_store():
 
 @pytest.mark.skipif(GITHUB_ACTIONS, reason="This test won't run in Github Actions")
 class TestCustomNeo4jGraphStore:
+
+    def test_get_rel_map_organization(self, graph_store: CustomNeo4jGraphStore):
+        rel_map = graph_store.get_rel_map_organization(["CAT EYE SYNDROME"], limit=2)
+        rels = rel_map["CAT EYE SYNDROME|CES|CHROMOSOME 22 PARTIAL TETRASOMY|INV DUP(22)(Q11)|SCHMID-FRACCARO SYNDROME"]
+        assert rels[0] == (
+            "has organization",
+            "Chromosome 22 Central - US Office\nAddress: \n7108 Partinwood Drive\nCity: Fuquay-Varina\nCountry: United States\nEmail: usinfo@c22c.org\nPhone: 919-567-8167\nState: NC\nURL: http://www.c22c.org\nZipCode: 27526",
+            "",
+        )
+        assert rels[1] == (
+            "has organization",
+            "Unique – Rare Chromosome Disorder Support Group\nAddress: \nG1, The Stables\nStation Road West\nCountry: United Kingdom\nEmail: info@rarechromo.org\nPhone: +44 (0)1883 723356\nURL: https://www.rarechromo.org/",
+            "",
+        )
+
     def test_get_rel_map_phenotype(self, graph_store: CustomNeo4jGraphStore):
         rel_map = graph_store.get_rel_map_phenotype(["GRACILE SYNDROME"], limit=2)
         rels = rel_map["GRACILE SYNDROME|FELLMAN DISEASE|FELLMAN SYNDROME|FINNISH LACTIC ACIDOSIS WITH HEPATIC HEMOSIDEROSIS|FINNISH LETHAL NEONATAL METABOLIC SYNDROME|FLNMS|GROWTH DELAY-AMINOACIDURIA-CHOLESTASIS-IRON OVERLOAD-LACTIC ACIDOSIS-EARLY DEATH SYNDROME|GROWTH RESTRICTION-AMINOACIDURIA-CHOLESTASIS-IRON OVERLOAD-LACTIC ACIDOSIS-EARLY DEATH SYNDROME|GROWTH RETARDATION, AMINOACIDURIA, CHOLESTASIS, IRON OVERLOAD, LACTIC ACIDOSIS AND EARLY DEATH"]

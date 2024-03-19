@@ -3,7 +3,7 @@ from typing import Any, Dict, List
 
 from llama_index.graph_stores.neo4j import Neo4jGraphStore
 
-from textualize import textualize_organization, textualize_phenotypes, textualize_prevelances
+from textualize import textualize_organizations, textualize_phenotypes, textualize_prevelances
 
 
 class CustomNeo4jGraphStore(Neo4jGraphStore):
@@ -111,48 +111,36 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
         #             rel_map[subj] = []
         #         rel_map[subj] += flattened_rels
 
-        # rel_map_organization = self.get_rel_map_organization(subjs, depth, limit)
+        rel_map_organization = self.get_rel_map_organization(subjs, limit)
         rel_map_phenotype = self.get_rel_map_phenotype(subjs, limit)
         rel_map_prevalence = self.get_rel_map_prevalence(subjs, limit)
-        for subj, rels in chain(rel_map_phenotype.items(), rel_map_prevalence.items()):
+        for subj, rels in chain(rel_map_organization.items(), rel_map_phenotype.items(), rel_map_prevalence.items()):
             if subj in rel_map:
                 rel_map[subj] += rels
             else:
                 rel_map[subj] = rels
         return rel_map
 
-    # def get_rel_map_organization(
-    #     self, subjs: List[str] | None = None, depth: int = 2, limit: int = 30
-    # ) -> Dict[str, List[List[str]]]:
-    #     rel_map: Dict[Any, List[Any]] = {}
-    #     if subjs is None or len(subjs) == 0:
-    #         return rel_map
+    def get_rel_map_organization(
+        self, subjs: List[str] | None = None, limit: int = 30
+    ) -> Dict[str, List[List[str]]]:
+        if subjs is None or len(subjs) == 0:
+            return {}
 
-    #     subjs = [subj.upper() for subj in subjs]
+        subjs = [subj.upper() for subj in subjs]
 
-    #     query = f"""
-    #         MATCH p=(n1:`{self.node_label}`)<-[:ORGANIZATION*1..{depth}]-(n2)
-    #         {"WHERE apoc.coll.intersection(apoc.convert.toList(n1.N_Name), $subjs)" if subjs else ""}
-    #         RETURN n1._N_Name AS _N_Name, n2.Address1 AS Address1, n2.Address2 AS Address2, n2.City AS City, n2.Country AS Country, n2.Email AS Email, n2.Fax as Fax, n2.Name as Name, n2.Phone as Phone, n2.State as State, n2.TollFree as TollFree, n2.URL as URL, n2.ZipCode as ZipCode
-    #         LIMIT {limit}
-    #     """
-    #     organizations = list(self.query(query, {"subjs": subjs}))
+        query = f"""
+            MATCH p=(m:`{self.node_label}`)<-[:ORGANIZATION]-(n)
+            {"WHERE apoc.coll.intersection(apoc.convert.toList(m.N_Name), $subjs)" if subjs else ""}
+            RETURN m._N_Name AS m__N_Name, n.Address1 AS n_Address1, n.Address2 AS n_Address2, n.City AS n_City, n.Country AS n_Country, n.Email AS n_Email, n.Fax as n_Fax, n.Name as n_Name, n.Phone as n_Phone, n.State as n_State, n.TollFree as n_TollFree, n.URL as n_URL, n.ZipCode as n_ZipCode
+            LIMIT {limit}
+        """
+        organizations = list(self.query(query, {"subjs": subjs}))
 
-    #     if not organizations:
-    #         return rel_map
+        if not organizations:
+            return {}
 
-    #     for organization in organizations:
-    #         organization_description = textualize_organization(organization)
-    #         for obj in organization["_N_Name"].split("|"):
-    #             if obj not in rel_map:
-    #                 rel_map[obj] = []
-    #             rel_map[obj].append(
-    #                 (
-    #                     "has organization",
-    #                     "\n".join(organization_description),
-    #                 )
-    #             )
-    #     return rel_map
+        return textualize_organizations(organizations)
 
     def get_rel_map_phenotype(
         self, subjs: List[str] | None = None, limit: int = 30

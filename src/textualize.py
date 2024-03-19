@@ -43,11 +43,11 @@ def textualize_phenotypes(phenotypes: list[dict]):
     for phenotype in phenotypes:
         if phenotype["n__N_Name"] not in rel_map:
             rel_map[phenotype["n__N_Name"]] = []
-        obj = textualize_phenotype(phenotype)
-        if not obj:
+        phenotype_description = textualize_phenotype(phenotype)
+        if not phenotype_description:
             continue
         citations = extract_citations(phenotype["r_Reference"])
-        rel_map[phenotype["n__N_Name"]].append(("has phenotype", obj, "|".join(citations)))
+        rel_map[phenotype["n__N_Name"]].append(("has phenotype", phenotype_description, "|".join(citations)))
     return rel_map
 
 
@@ -72,11 +72,14 @@ def textualize_prevelances(prevalences: list[dict]):
     for prevalence in prevalences:
         if prevalence["m__N_Name"] not in rel_map:
             rel_map[prevalence["m__N_Name"]] = []
+        prevalence_description = textualize_prevalence(prevalence)
+        if not prevalence_description:
+            continue
         citations = extract_citations(prevalence["n_Source"])
         rel_map[prevalence["m__N_Name"]].append(
             (
                 "has prevalence",
-                textualize_prevalence(prevalence),
+                prevalence_description,
                 "|".join(citations),
             )
         )
@@ -84,27 +87,43 @@ def textualize_prevelances(prevalences: list[dict]):
 
 
 def textualize_organization(organization: dict):
-    organization_description = [organization["Name"]]
-    if organization["Address1"] or organization["Address2"]:
+    if not organization["n_Name"]:
+        return None
+    organization_description = [organization["n_Name"]]
+    if organization["n_Address1"] or organization["n_Address2"]:
         organization_description.append(f"Address: ")
-        organization_description.append(f"{organization['Address1']}" if organization["Address1"] else "")
-        organization_description.append(f"{organization['Address2']}" if organization["Address2"] else "")
-    if organization["City"]:
-        organization_description.append(f"City: {organization['City']}")
-    if organization["Country"]:
-        organization_description.append(f"Country: {organization['Country']}")
-    if organization["Email"]:
-        organization_description.append(f"Email: {organization['Email']}")
-    if organization["Fax"]:
-        organization_description.append(f"Fax: {organization['Fax']}")
-    if organization["Phone"]:
-        organization_description.append(f"Phone: {organization['Phone']}")
-    if organization["State"]:
-        organization_description.append(f"State: {organization['State']}")
-    if organization["TollFree"]:
-        organization_description.append(f"TollFree: {organization['TollFree']}")
-    if organization["URL"]:
-        organization_description.append(f"URL: {organization['URL']}")
-    if organization["ZipCode"]:
-        organization_description.append(f"ZipCode: {organization['ZipCode']}")
-    return organization_description
+        if organization["n_Address1"]:
+            organization_description.append(f"{organization['n_Address1']}")
+        if organization["n_Address2"]:
+            organization_description.append(f"{organization['n_Address2']}")
+    if organization["n_City"]:
+        organization_description.append(f"City: {organization['n_City']}")
+    if organization["n_Country"]:
+        organization_description.append(f"Country: {organization['n_Country']}")
+    if organization["n_Email"]:
+        organization_description.append(f"Email: {organization['n_Email']}")
+    if organization["n_Fax"]:
+        organization_description.append(f"Fax: {organization['n_Fax']}")
+    if organization["n_Phone"]:
+        organization_description.append(f"Phone: {organization['n_Phone']}")
+    if organization["n_State"]:
+        organization_description.append(f"State: {organization['n_State']}")
+    if organization["n_TollFree"]:
+        organization_description.append(f"TollFree: {organization['n_TollFree']}")
+    if organization["n_URL"]:
+        organization_description.append(f"URL: {organization['n_URL']}")
+    if organization["n_ZipCode"]:
+        organization_description.append(f"ZipCode: {organization['n_ZipCode'].strip()}")
+    return "\n".join(organization_description)
+
+
+def textualize_organizations(organizations: list[dict]):
+    rel_map: Dict[str, List[List[str]]] = {}
+    for organization in organizations:
+        if organization["m__N_Name"] not in rel_map:
+            rel_map[organization["m__N_Name"]] = []
+        organization_description = textualize_organization(organization)
+        if not organization_description:
+            continue
+        rel_map[organization["m__N_Name"]].append(("has organization", organization_description, ""))
+    return rel_map
