@@ -16,21 +16,30 @@ df = pd.read_csv(
 )
 
 def parse_response(response: str):
+    if not isinstance(response, str):
+        return None
+    response = "{" + response.split("{", 1)[-1]
+    response = response.split("}", 1)[0] + "}"
+    answer = None
     try:
-        if not isinstance(response, str):
-            return None
-        response = "{" + response.split("{", 1)[-1]
-        response = response.split("}", 1)[0] + "}"
-        answer = json.loads(response)["answer"]
-        if answer.lower() == "false":
-            return False
-        elif answer.lower() == "true":
-            return True
-        else:
-            logger.error(f"Failed to parse response {response}")
+        answer = json.loads(response)["answer"].upper()
     except Exception:
         logger.exception(f"Failed to parse response {response}")
-    return None
+    if answer == "FALSE":
+        return False
+    elif answer == "TRUE":
+        return True
+    else:
+        # note that parsing error
+        response = response.upper()
+        true_index = response.find("TRUE")
+        false_index = response.find("FALSE")
+        if true_index > -1 and (false_index == -1 or true_index < false_index):
+            return True
+        elif false_index > -1 and (true_index == -1 or false_index < true_index):
+            return False
+        else:
+            return None
 
 
 for column in df.columns:
@@ -61,11 +70,35 @@ g.set_xlabel("Model")
 g.set_xticks(range(len(model_names)))
 g.set_xticklabels(model_names, rotation=45, horizontalalignment='right')
 g.set(ylim=(0, 1))
-
-ax.tick_params(axis='x', labelrotation=45)
-
+g.yaxis.set_major_locator(plt.MaxNLocator(11))
+g.yaxis.grid(True)
 
 plt.savefig(
     "/workspaces/rgd-chatbot/eval/results/KG_RAG/one_hop_true_false_v2_df.v2.png",
     bbox_inches="tight",
 )
+
+time_columns = [column for column in df.columns if "time_" in column]
+for time_column in time_columns:
+    df[time_column + "_seconds"] = df[time_column].apply(lambda x: pd.to_timedelta(x).total_seconds())
+
+fig, ax = plt.subplots(figsize=(12, 6))
+g = sns.barplot(
+    data=df[[column + "_seconds" for column in time_columns]],
+    errorbar=("ci", 95),
+    capsize=.15,
+    ax=ax,
+)
+g.set_title(f"Time to predict on (n = {n}) True/False Questions")
+g.set_ylabel("Time (s)")
+g.set_xlabel("Model")
+g.set_xticks(range(len(model_names)))
+g.set_xticklabels(model_names, rotation=45, horizontalalignment='right')
+g.yaxis.set_major_locator(plt.MaxNLocator(11))
+g.yaxis.grid(True)
+
+plt.savefig(
+    "/workspaces/rgd-chatbot/eval/results/KG_RAG/one_hop_true_false_v2_df_time.v2.png",
+    bbox_inches="tight",
+)
+
