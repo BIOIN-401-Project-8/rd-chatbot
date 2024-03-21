@@ -64,7 +64,10 @@ if Path(output_file).exists():
     df = pd.read_csv(output_file)
 
 for model in models:
+    df_view = df
     if f"response_{slugify(model)}" in df.columns:
+        df_view = df[df[f"error_{slugify(model)}"] == True]
+    if len(df_view) == 0:
         continue
     try:
         logger.info(f"Loading model {model}")
@@ -72,7 +75,7 @@ for model in models:
         Settings.llm = Ollama(
             model=model,
             base_url="http://ollama:11434",
-            request_timeout=60.0,
+            request_timeout=300.0,
             temperature=0.0,
         )
     except:
@@ -91,7 +94,7 @@ OR
 {question}'''
     )
 
-    for index, row in tqdm(df.iterrows(), total=len(df)):
+    for index, row in tqdm(df_view.iterrows(), total=len(df_view)):
         slug = slugify(model)
         error = False
         start = time.time()
@@ -103,7 +106,8 @@ OR
             error = True
         end = time.time()
 
-        df.loc[index, f"response_{slug}"] = response
-        df.loc[index, f"time_{slug}"] = timedelta(seconds=end - start)
-        df.loc[index, f"error_{slug}"] = error
-    df.to_csv(output_file, index=False)
+        df_view.loc[index, f"response_{slug}"] = response
+        df_view.loc[index, f"time_{slug}"] = timedelta(seconds=end - start)
+        df_view.loc[index, f"error_{slug}"] = error
+        df.loc[df_view.index, df_view.columns] = df_view
+        df.to_csv(output_file, index=False)
