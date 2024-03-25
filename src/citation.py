@@ -40,7 +40,7 @@ def format_source(node: NodeWithScore):
     source_number = int(text.split(":")[0].removeprefix("Source "))
     source = node.text.split(":")[1].split("\n")[0].strip()
     citation = format_citations(node.metadata["citation"])
-    return f"[{source_number}] {citation} {source} ({node.score:.2f})"
+    return f"[{source_number}] {citation} {source}"
 
 
 async def get_formatted_sources(source_nodes: List[NodeWithScore]):
