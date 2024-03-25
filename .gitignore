@@ -161,3 +161,4 @@ cython_debug/
 
 .chainlit/translations/
 .files/
+eval/results
