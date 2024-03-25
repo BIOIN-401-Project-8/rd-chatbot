@@ -38,7 +38,7 @@ def textualize_phenotype(phenotype: dict):
     return "\n".join(phenotype_description)
 
 
-def extract_citations(text: str | list[str]):
+def get_list(text: str | list[str]):
     if not text:
         return []
     if isinstance(text, list):
@@ -58,7 +58,7 @@ def textualize_phenotypes(phenotypes: list[dict]):
         phenotype_description = textualize_phenotype(phenotype)
         if not phenotype_description:
             continue
-        citations = extract_citations(phenotype["r_Reference"])
+        citations = get_list(phenotype["r_Reference"])
         rel_map[phenotype["n__N_Name"]].append(("has phenotype", phenotype_description, "|".join(citations)))
     return rel_map
 
@@ -87,7 +87,7 @@ def textualize_prevelances(prevalences: list[dict]):
         prevalence_description = textualize_prevalence(prevalence)
         if not prevalence_description:
             continue
-        citations = extract_citations(prevalence["n_Source"])
+        citations = get_list(prevalence["n_Source"])
         rel_map[prevalence["m__N_Name"]].append(
             (
                 "has prevalence",
@@ -171,6 +171,6 @@ def textualize_rels(rels: list[dict]):
         if isinstance(relationships, list):
             relationships = "|".join(relationships)
         relationships = relationships.replace("_", " ")
-        citations = extract_citations(rel["r_citations"]) + extract_citations(rel["r_value"])
+        citations = get_list(rel["r_citations"]) + get_list(rel["r_value"])
         rel_map[subj].append((relationships, rel_description, "|".join(citations)))
     return rel_map

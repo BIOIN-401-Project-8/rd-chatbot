@@ -1,5 +1,5 @@
 from src.textualize import (
-    extract_citations,
+    get_list,
     lookup_hpo_name,
     lookup_hpo_names,
     textualize_organization,
@@ -135,20 +135,20 @@ class TestTextualize:
             == "PrevalenceClass: 1-9 / 100 000\nPrevalenceGeographic: Finland\nPrevalenceQualification: Value and class\nPrevalenceValidationStatus: Validated\nValMoy: 2.0"
         )
 
-    def test_extract_citations_empty(self):
-        citations = extract_citations("")
+    def test_get_list_empty(self):
+        citations = get_list("")
         assert citations == []
 
-    def test_extract_citations_single(self):
-        citations = extract_citations("[PMID:12215968]")
+    def test_get_list_single(self):
+        citations = get_list("[PMID:12215968]")
         assert citations == ["PMID:12215968"]
 
-        citations = extract_citations("PMID:12215968")
+        citations = get_list("PMID:12215968")
         assert citations == ["PMID:12215968"]
 
-        citations = extract_citations(["PMID:12215968"])
+        citations = get_list(["PMID:12215968"])
         assert citations == ["PMID:12215968"]
 
-    def test_extract_citations_multiple(self):
-        citations = extract_citations("[PMID:12215968,ORPHA:53693]")
+    def test_get_list_multiple(self):
+        citations = get_list("[PMID:12215968,ORPHA:53693]")
         assert citations == ["PMID:12215968", "ORPHA:53693"]
