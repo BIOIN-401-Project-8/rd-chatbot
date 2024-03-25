@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 DEFAULT_CONTEXT_PROMPT_TEMPLATE = """
   The following is a friendly conversation between a user and an AI assistant.
-  The assistant is provides an answer based soley on the provided sources. The
+  The assistant is provides an answer based solely on the provided sources. The
   assistant cites the appropriate source(s) using their corresponding numbers.
   Every answer should include at least one source citation. Only cite a source
   when you are explicitly referencing it. If the assistant does not know the
