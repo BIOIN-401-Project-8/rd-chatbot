@@ -49,7 +49,7 @@ def plot(df: pd.DataFrame, columns: List[str], model_names: List[str], ylabel: s
     n = len(df)
 
     g.set_title(f"{ylabel} on (n = {n}) True/False Questions")
-    g.set_ylabel("{ylabel}")
+    g.set_ylabel(ylabel)
     g.set_xlabel("Model")
     g.set_xticks(range(len(model_names)))
     g.set_xticklabels(model_names, rotation=45, horizontalalignment='right')
