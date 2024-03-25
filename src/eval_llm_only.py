@@ -45,16 +45,10 @@ models = [
     "mistral:7b-instruct-v0.2-q8_0",
     "mistral:7b-instruct-v0.2-fp16",
     "starling-lm:7b-alpha-q4_0",
-    "gemma:7b-instruct-q4_0",
-    "llama2:7b-chat-q4_0",
-    "llama2:13b-chat-q4_0",
-    "llama2:70b-chat-q4_0",
-    "medllama2:7b-q4_0",
-    "cniongolo/biomistral:latest",
-    "mixtral:8x7b-instruct-v0.1-q4_0",
-]
 
-output_file = "/workspaces/rgd-chatbot/eval/results/KG_RAG/test_questions_one_hop_true_false_v2.csv"
+v = 3
+
+output_file = f"/workspaces/rgd-chatbot/eval/results/KG_RAG/test_questions_one_hop_true_false_v{v}.csv"
 
 df = pd.read_csv(
     "/workspaces/rgd-chatbot/eval/data/KG_RAG/test_questions_one_hop_true_false_v2.csv"
@@ -82,7 +76,7 @@ for model in models:
         logger.exception(f"Failed to load model {model}")
         continue
 
-    prompt = PromptTemplate(
+    prompt_v2 = PromptTemplate(
 '''You are an expert biomedical researcher. Please provide your answer in the following JSON format for the Question asked:
 {{
 "answer": "True"
@@ -94,12 +88,20 @@ OR
 {question}'''
     )
 
+    prompt_v3 = PromptTemplate(
+'''You are an expert biomedical researcher. Please provide your answer in the following format:
+Answer: True
+OR
+Answer: False
+Question: True or False {question}?
+Answer: '''
+    )
     for index, row in tqdm(df_view.iterrows(), total=len(df_view)):
         slug = slugify(model)
         error = False
         start = time.time()
         try:
-            response = Settings.llm.predict(prompt, question=row["text"])
+            response = Settings.llm.predict(prompt_v3, question=row["text"])
         except Exception as e:
             logger.exception(f"Failed to get response for {row['text']}")
             response = str(e)
