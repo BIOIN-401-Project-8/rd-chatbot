@@ -48,11 +48,7 @@ async def get_formatted_sources(source_nodes: List[NodeWithScore]):
     references += "\n".join(
         [
             format_source(node)
-            for node in sorted(
-                source_nodes,
-                key=lambda x: x.score,
-                reverse=True,
-            )
+            for node in source_nodes
         ]
     )
     return references
