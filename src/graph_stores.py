@@ -3,7 +3,13 @@ from typing import Any, Dict, List
 
 from llama_index.graph_stores.neo4j import Neo4jGraphStore
 
-from textualize import textualize_organizations, textualize_phenotypes, textualize_prevelances, textualize_rels
+from textualize import (
+    textualize_organizations,
+    textualize_phenotypes,
+    textualize_prevelances,
+    textualize_pubtator3s,
+    textualize_rels
+)
 
 
 class CustomNeo4jGraphStore(Neo4jGraphStore):
@@ -79,14 +85,15 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
             # unlike simple graph_store, we don't do get_all here
             return rel_map
 
-        subjs = [subj.upper() for subj in subjs]
+        subjs_upper = [subj.upper() for subj in subjs]
 
-        rel_map_rel = self.get_rel_map_rel(subjs, depth, limit)
-        rel_map_organization = self.get_rel_map_organization(subjs, limit)
-        rel_map_phenotype = self.get_rel_map_phenotype(subjs, limit)
-        rel_map_prevalence = self.get_rel_map_prevalence(subjs, limit)
+        rel_map_rel = self.get_rel_map_rel(subjs_upper, depth, limit)
+        rel_map_organization = self.get_rel_map_organization(subjs_upper, limit)
+        rel_map_phenotype = self.get_rel_map_phenotype(subjs_upper, limit)
+        rel_map_prevalence = self.get_rel_map_prevalence(subjs_upper, limit)
+        rel_map_pubtator3 = self.get_rel_map_pubtator3(subjs, limit)
         for subj, rels in chain(
-            rel_map_rel.items(), rel_map_organization.items(), rel_map_phenotype.items(), rel_map_prevalence.items()
+            rel_map_rel.items(), rel_map_organization.items(), rel_map_phenotype.items(), rel_map_prevalence.items(), rel_map_pubtator3.items()
         ):
             if subj in rel_map:
                 rel_map[subj] += rels
@@ -167,6 +174,24 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
             return {}
 
         return textualize_prevelances(prevalences)
+
+    def get_rel_map_pubtator3(self, subjs: List[str] | None = None, limit: int = 30) -> Dict[str, List[List[str]]]:
+        if subjs is None or len(subjs) == 0:
+            return {}
+
+        query = f"""
+            MATCH p=(n:PubTator3:Disease)-[r:`associate_PubTator3`|`cause_PubTator3`|`compare_PubTator3`|`cotreat_PubTator3`|`drug_interact_PubTator3`|`inhibit_PubTator3`|`interact_PubTator3`|`negative_correlate_PubTator3`|`positive_correlate_PubTator3`|`prevent_PubTator3`|`stimulate_PubTator3`|`treat_PubTator3`]->(m:PubTator3)
+            {"WHERE apoc.coll.intersection(apoc.convert.fromJsonList(n.Mentions), $subjs)" if subjs else ""}
+            RETURN apoc.convert.fromJsonList(n.Mentions) AS n_Mentions, apoc.convert.fromJsonList(m.Mentions) AS m_Mentions, r.PMID AS r_PMID, type(r) as r_type
+            LIMIT {limit}
+        """
+        pubtator3 = list(self.query(query, {"subjs": subjs}))
+
+        if not pubtator3:
+            return {}
+
+        return textualize_pubtator3s(pubtator3)
+
 
     def refresh_schema(self) -> None:
         """

@@ -161,6 +161,7 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
     def _get_best_rel_item(self, rel_items: str, query_bundle: QueryBundle) -> str:
         """Get best rel key."""
         rel_items = rel_items.split("|")
+        rel_items = [rel_item for rel_item in rel_items if rel_item]
         if len(rel_items) == 1:
             return rel_items[0]
 
