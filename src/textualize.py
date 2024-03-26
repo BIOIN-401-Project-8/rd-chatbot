@@ -1,9 +1,11 @@
 import logging
 from typing import Dict, List
 
+from gard import GARD
 from pyhpo import Ontology
 
 Ontology()
+gard = GARD()
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +40,7 @@ def textualize_phenotype(phenotype: dict):
     return "\n".join(phenotype_description)
 
 
-def extract_citations(text: str | list[str]):
+def get_list(text: str | list[str]):
     if not text:
         return []
     if isinstance(text, list):
@@ -58,7 +60,7 @@ def textualize_phenotypes(phenotypes: list[dict]):
         phenotype_description = textualize_phenotype(phenotype)
         if not phenotype_description:
             continue
-        citations = extract_citations(phenotype["r_Reference"])
+        citations = get_list(phenotype["r_Reference"])
         rel_map[phenotype["n__N_Name"]].append(("has phenotype", phenotype_description, "|".join(citations)))
     return rel_map
 
@@ -87,7 +89,7 @@ def textualize_prevelances(prevalences: list[dict]):
         prevalence_description = textualize_prevalence(prevalence)
         if not prevalence_description:
             continue
-        citations = extract_citations(prevalence["n_Source"])
+        citations = get_list(prevalence["n_Source"])
         rel_map[prevalence["m__N_Name"]].append(
             (
                 "has prevalence",
@@ -129,6 +131,17 @@ def textualize_organization(organization: dict):
     return "\n".join(organization_description)
 
 
+def cite_organization(organization: dict):
+    gard_urls = []
+    if organization["m__I_CODE"]:
+        for i_code in organization["m__I_CODE"].split("|"):
+            if i_code.startswith("GARD:"):
+                gard_id = i_code.split(":")[-1]
+                gard_url = gard.get_url(gard_id) + "#:~:text=our%20About%20page.-,Patient%20Organizations,-Filter%3A"
+                gard_urls.append(gard_url)
+    return "|".join(gard_urls)
+
+
 def textualize_organizations(organizations: list[dict]):
     rel_map: Dict[str, List[List[str]]] = {}
     for organization in organizations:
@@ -137,7 +150,8 @@ def textualize_organizations(organizations: list[dict]):
         organization_description = textualize_organization(organization)
         if not organization_description:
             continue
-        rel_map[organization["m__N_Name"]].append(("has organization", organization_description, ""))
+        citation = cite_organization(organization)
+        rel_map[organization["m__N_Name"]].append(("has organization", organization_description, citation))
     return rel_map
 
 
@@ -171,7 +185,7 @@ def textualize_rels(rels: list[dict]):
         if isinstance(relationships, list):
             relationships = "|".join(relationships)
         relationships = relationships.replace("_", " ")
-        citations = extract_citations(rel["r_citations"]) + extract_citations(rel["r_value"])
+        citations = get_list(rel["r_citations"]) + get_list(rel["r_value"])
         rel_map[subj].append((relationships, obj, "|".join(citations)))
     return rel_map
 

@@ -1,6 +1,7 @@
 chainlit==1.0.401
 deep-translator==1.11.4
 faiss-gpu==1.7.2
+gard==0.0.3
 hanzidentifier==1.2.0
 hpo3==1.0.3
 lingua-language-detector==2.0.2

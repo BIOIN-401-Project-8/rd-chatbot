@@ -28,12 +28,12 @@ class TestCustomNeo4jGraphStore:
         assert rels[0] == (
             "has organization",
             "Chromosome 22 Central - US Office\nAddress: \n7108 Partinwood Drive\nCity: Fuquay-Varina\nCountry: United States\nEmail: usinfo@c22c.org\nPhone: 919-567-8167\nState: NC\nURL: http://www.c22c.org\nZipCode: 27526",
-            "",
+            "https://rarediseases.info.nih.gov/diseases/26/cat-eye-syndrome#:~:text=our%20About%20page.-,Patient%20Organizations,-Filter%3A",
         )
         assert rels[1] == (
             "has organization",
             "Unique – Rare Chromosome Disorder Support Group\nAddress: \nG1, The Stables\nStation Road West\nCountry: United Kingdom\nEmail: info@rarechromo.org\nPhone: +44 (0)1883 723356\nURL: https://www.rarechromo.org/",
-            "",
+            "https://rarediseases.info.nih.gov/diseases/26/cat-eye-syndrome#:~:text=our%20About%20page.-,Patient%20Organizations,-Filter%3A",
         )
 
     def test_get_rel_map_phenotype(self, graph_store: CustomNeo4jGraphStore):

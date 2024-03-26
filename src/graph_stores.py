@@ -127,7 +127,7 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
         query = f"""
             MATCH p=(m:`{self.node_label}`)<-[:ORGANIZATION]-(n)
             {"WHERE apoc.coll.intersection(apoc.convert.toList(m.N_Name), $subjs)" if subjs else ""}
-            RETURN m._N_Name AS m__N_Name, n.Address1 AS n_Address1, n.Address2 AS n_Address2, n.City AS n_City, n.Country AS n_Country, n.Email AS n_Email, n.Fax as n_Fax, n.Name as n_Name, n.Phone as n_Phone, n.State as n_State, n.TollFree as n_TollFree, n.URL as n_URL, n.ZipCode as n_ZipCode
+            RETURN m._N_Name AS m__N_Name, m._I_CODE AS m__I_CODE, n.Address1 AS n_Address1, n.Address2 AS n_Address2, n.City AS n_City, n.Country AS n_Country, n.Email AS n_Email, n.Fax as n_Fax, n.Name as n_Name, n.Phone as n_Phone, n.State as n_State, n.TollFree as n_TollFree, n.URL as n_URL, n.ZipCode as n_ZipCode
             LIMIT {limit}
         """
         organizations = list(self.query(query, {"subjs": subjs}))
