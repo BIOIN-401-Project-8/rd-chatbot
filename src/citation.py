@@ -4,11 +4,12 @@ from typing import List
 from uuid import uuid4
 
 import pydot
+from gard import GARD
 from llama_index.core.base.response.schema import RESPONSE_TYPE
 from llama_index.core.schema import NodeWithScore
 
 logger = logging.getLogger(__name__)
-
+gard = GARD()
 
 def format_citation(citation: str):
     if citation.startswith("PMID:"):
@@ -23,7 +24,9 @@ def format_citation(citation: str):
     elif citation.startswith("UMLS:"):
         umls_identifier = citation.removeprefix("UMLS:")
         return f"[{citation}](https://uts.nlm.nih.gov/metathesaurus.html#?searchString={umls_identifier})"
-        # TODO: verify this link
+    elif citation.startswith("GARD:"):
+        gard_identifier = citation.removeprefix("GARD:")
+        return f"[{citation}]({gard.get_url(gard_identifier)})"
     else:
         return citation
 
