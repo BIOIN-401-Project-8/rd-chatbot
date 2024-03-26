@@ -26,6 +26,7 @@ logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
 @cl.on_chat_start
 async def main():
+    factory()
     # display intro message and disclaimer
     descr = 'Hello! Welcome to Rare Disease Chatbot!'
     subhead = "I'm a chatbot designed to help you stay informed about the latest findings in rare diseases. I can access and understand research articles from PubMed, a large database of scientific publications.\n\nTo learn more, checkout the Readme page."
