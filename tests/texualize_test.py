@@ -1,4 +1,5 @@
 from src.textualize import (
+    cite_organization,
     get_list,
     lookup_hpo_name,
     lookup_hpo_names,
@@ -27,6 +28,7 @@ class TestTextualize:
 
     def test_texualize_organization_empty(self):
         organization = {
+            "m__I_CODE": "",
             "n_Name": "",
             "n_URL": "",
             "n_Email": "",
@@ -45,6 +47,7 @@ class TestTextualize:
 
     def test_texualize_organization_name_only(self):
         organization = {
+            "m__I_CODE": "",
             "n_Address1": "",
             "n_Address2": "",
             "n_City": "",
@@ -63,6 +66,7 @@ class TestTextualize:
 
     def test_texualize_organization(self):
         organization = {
+            "m__I_CODE": "GARD:0000026|OMIM:115470|ORPHA:195|ORPHANET:195|UMLS:C0265493",
             "n_Address1": "7108 Partinwood Drive",
             "n_Address2": "",
             "n_City": "Fuquay-Varina",
@@ -78,6 +82,13 @@ class TestTextualize:
         }
         description = textualize_organization(organization)
         assert description == "Chromosome 22 Central - US Office\nAddress: \n7108 Partinwood Drive\nCity: Fuquay-Varina\nCountry: United States\nEmail: usinfo@c22c.org\nPhone: 919-567-8167\nState: NC\nURL: http://www.c22c.org\nZipCode: 27526"
+
+    def test_cite_organization(self):
+        organization = {
+            "m__I_CODE": "GARD:0000026|OMIM:115470|ORPHA:195|ORPHANET:195|UMLS:C0265493",
+        }
+        citation = cite_organization(organization)
+        assert citation == 'https://rarediseases.info.nih.gov/diseases/26/cat-eye-syndrome#:~:text=our%20About%20page.-,Patient%20Organizations,-Filter%3A'
 
     def test_texualize_phenotype_empty(self):
         phenotype = {"m__N_Name": "", "r_Frequency": "", "r_Onset": ""}

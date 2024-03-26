@@ -1,9 +1,11 @@
 import logging
 from typing import Dict, List
 
+from gard import GARD
 from pyhpo import Ontology
 
 Ontology()
+gard = GARD()
 
 logger = logging.getLogger(__name__)
 
@@ -129,6 +131,17 @@ def textualize_organization(organization: dict):
     return "\n".join(organization_description)
 
 
+def cite_organization(organization: dict):
+    gard_urls = []
+    if organization["m__I_CODE"]:
+        for i_code in organization["m__I_CODE"].split("|"):
+            if i_code.startswith("GARD:"):
+                gard_id = i_code.split(":")[-1]
+                gard_url = gard.get_url(gard_id) + "#:~:text=our%20About%20page.-,Patient%20Organizations,-Filter%3A"
+                gard_urls.append(gard_url)
+    return "|".join(gard_urls)
+
+
 def textualize_organizations(organizations: list[dict]):
     rel_map: Dict[str, List[List[str]]] = {}
     for organization in organizations:
@@ -137,7 +150,8 @@ def textualize_organizations(organizations: list[dict]):
         organization_description = textualize_organization(organization)
         if not organization_description:
             continue
-        rel_map[organization["m__N_Name"]].append(("has organization", organization_description, ""))
+        citation = cite_organization(organization)
+        rel_map[organization["m__N_Name"]].append(("has organization", organization_description, citation))
     return rel_map
 
 
