@@ -42,7 +42,7 @@ multi_modal = true
 name = "Rare Diseases Chatbot"
 
 # Show the readme while the thread is empty.
-show_readme_as_default = true
+show_readme_as_default = false
 
 # Description of the app and chatbot. This is used for HTML tags.
 # description = ""
