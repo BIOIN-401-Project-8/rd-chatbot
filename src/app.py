@@ -5,13 +5,15 @@ import sys
 import time
 
 import chainlit as cl
+from lingua import LanguageDetector
 from llama_index.core.callbacks import CallbackManager
 from llama_index.core.chat_engine.types import BaseChatEngine
 
 from callbacks import CustomLlamaIndexCallbackHandler
 from citation import get_formatted_sources, get_source_graph, get_source_nodes
+from lingua_iso_codes import IsoCode639_1
 from pipelines import get_pipeline
-from translation import detect_language, translate
+from translation import BaseTranslator, detect_language, get_language_detector, get_translator, translate
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
@@ -55,11 +57,39 @@ async def on_chat_start(accepted: bool = False):
                 content = "You must agree to the terms of service to continue."
             ).send()
 
-    await cl.Message(
-        content="Welcome! Ask me anything about rare diseases, and I'll do my best to find you the most relevant and up-to-date information."
+    translator: BaseTranslator = get_translator()
+    cl.user_session.set("translator", translator)
+
+    language_actions = [
+        cl.Action(name="Detect language", value="auto", label="Detect language", description="Detect language"),
+    ] + [
+        cl.Action(name=language.title(), value=code, label=language.title(), description=language.title())
+        for language, code in translator.get_supported_languages(as_dict=True).items()
+    ]
+
+    language_res = await cl.AskActionMessage(
+        content="Please select your preferred language:", actions=language_actions, timeout=30
     ).send()
+    language = language_res.get("value")
+    cl.user_session.set("language", language)
+
+    content = "Welcome! Ask me anything about rare diseases, and I'll do my best to find you the most relevant and up-to-date information."
+
+    if language and language not in {"auto", "en"}:
+        content = await translate(translator, content, source="en", target=language)
+
+    await cl.Message(content=content).send()
     chat_engine = await chat_engine_coroutine
     cl.user_session.set("chat_engine", chat_engine)
+
+    if not language or language == "auto":
+        iso_codes = [
+            IsoCode639_1[code.upper()].value
+            for code in translator.get_supported_languages(as_dict=True).values()
+            if code.upper() in IsoCode639_1._member_names_
+        ]
+        detector = get_language_detector(*iso_codes)
+        cl.user_session.set("detector", detector)
 
 
 def chat(chat_engine: BaseChatEngine, content: str, profile: bool = False):
@@ -77,12 +107,16 @@ def chat(chat_engine: BaseChatEngine, content: str, profile: bool = False):
 async def on_message(message: cl.Message):
     start = time.time()
     chat_engine: BaseChatEngine = cl.user_session.get("chat_engine")
+    detector: LanguageDetector = cl.user_session.get("detector")
+    translator: BaseTranslator = cl.user_session.get("translator")
     content = message.content
 
-    detection = await detect_language(content)
-    detected_language = detection["language"]
-    if detected_language != "en" and detected_language is not None:
-        content = await translate(content, target="en")
+    language = cl.user_session.get("language")
+    if not language or language == "auto":
+        detection = await detect_language(detector, content)
+        language = detection["language"]
+    if language != "en" and language is not None:
+        content = await translate(translator, content, source=language, target="en")
 
     response = await cl.make_async(chat)(chat_engine, content, profile=False)
     response_message = cl.Message(content="")
@@ -96,8 +130,8 @@ async def on_message(message: cl.Message):
     content = re.sub(r"\(\[", "[", content)
     content = re.sub(r"\]\)", "]", content)
 
-    if detected_language != "en" and detected_language is not None:
-        content = await translate(content, target=detected_language)
+    if language != "en" and language is not None:
+        content = await translate(translator, content, source="en", target=language)
 
     if source_nodes:
         content += await get_formatted_sources(source_nodes)
