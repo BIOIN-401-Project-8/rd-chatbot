@@ -97,11 +97,11 @@ class TestOpusMTTranslator:
         assert translation == "What is Duchenne's muscular dystrophy?"
 
     def test_translate_zh_CN_en(self, opusmt_translator):
-        translation = _translate(opusmt_translator, "什么是杜氏肌营养不良症？", source="zh", target="en")
+        translation = _translate(opusmt_translator, "什么是杜氏肌营养不良症？", source="zh-CN", target="en")
         assert translation == "What's Dow's malnourishment?"
 
     def test_translate_zh_TW_en(self, opusmt_translator):
-        translation = _translate(opusmt_translator, "什麼是杜氏肌肉營養不良症？", source="zh", target="en")
+        translation = _translate(opusmt_translator, "什麼是杜氏肌肉營養不良症？", source="zh-TW", target="en")
         assert translation == "What's Dow's muscle nutrients?"
 
     def test_translate_en_fr(self, opusmt_translator):

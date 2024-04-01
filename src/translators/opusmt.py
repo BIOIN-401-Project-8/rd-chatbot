@@ -85,6 +85,8 @@ class OpusMTTranslator(BaseTranslator):
 
     @lru_cache(maxsize=2)
     def get_model_tokenizer(self, source: str = "fr", target: str = "en"):
+        if source.startswith("zh"):
+            source = "zh"
         if target.startswith("zh"):
             target = "zh"
         model_name = f"Helsinki-NLP/opus-mt-{source}-{target}"
