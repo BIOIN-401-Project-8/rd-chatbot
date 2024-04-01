@@ -1,16 +1,17 @@
-import time
-from datetime import timedelta
-import httpx
-from llama_index.core import Settings
-from llama_index.llms.ollama import Ollama
 import logging
+import re
+import time
+import unicodedata
+from datetime import timedelta
+from pathlib import Path
+
 import pandas as pd
 from llama_index.core import Settings
 from llama_index.core.prompts import PromptTemplate
 from tqdm import tqdm
-import re
-import unicodedata
-from pathlib import Path
+
+from pipelines import get_llm
+
 
 def slugify(value, allow_unicode=False):
     """
@@ -23,11 +24,11 @@ def slugify(value, allow_unicode=False):
     value = str(value)
     value = value.replace(":", "_")
     if allow_unicode:
-        value = unicodedata.normalize('NFKC', value)
+        value = unicodedata.normalize("NFKC", value)
     else:
-        value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
-    value = re.sub(r'[^\w\s-]', '', value.lower())
-    return re.sub(r'[-\s]+', '-', value).strip('-_')
+        value = unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode("ascii")
+    value = re.sub(r"[^\w\s-]", "", value.lower())
+    return re.sub(r"[-\s]+", "-", value).strip("-_")
 
 
 logger = logging.getLogger(__name__)
@@ -45,39 +46,31 @@ models = [
     "mistral:7b-instruct-v0.2-q8_0",
     "mistral:7b-instruct-v0.2-fp16",
     "starling-lm:7b-alpha-q4_0",
-
+]
 v = 3
 
 output_file = f"/workspaces/rgd-chatbot/eval/results/KG_RAG/test_questions_one_hop_true_false_v{v}.csv"
 
-df = pd.read_csv(
-    "/workspaces/rgd-chatbot/eval/data/KG_RAG/test_questions_one_hop_true_false_v2.csv"
-)
+df = pd.read_csv("/workspaces/rgd-chatbot/eval/data/KG_RAG/test_questions_one_hop_true_false_v2.csv")
 
 if Path(output_file).exists():
     df = pd.read_csv(output_file)
 
-for model in models:
+for model_name in models:
     df_view = df
-    if f"response_{slugify(model)}" in df.columns:
-        df_view = df[df[f"error_{slugify(model)}"] == True]
+    if f"response_{slugify(model_name)}" in df.columns:
+        df_view = df[df[f"error_{slugify(model_name)}"] == True]
     if len(df_view) == 0:
         continue
     try:
-        logger.info(f"Loading model {model}")
-        httpx.post("http://ollama:11434/api/pull", json={"name": model}, timeout=600.0)
-        Settings.llm = Ollama(
-            model=model,
-            base_url="http://ollama:11434",
-            request_timeout=300.0,
-            temperature=0.0,
-        )
+        logger.info(f"Loading model {model_name}")
+        Settings.llm = get_llm(model_name)
     except:
-        logger.exception(f"Failed to load model {model}")
+        logger.exception(f"Failed to load model {model_name}")
         continue
 
     prompt_v2 = PromptTemplate(
-'''You are an expert biomedical researcher. Please provide your answer in the following JSON format for the Question asked:
+        """You are an expert biomedical researcher. Please provide your answer in the following JSON format for the Question asked:
 {{
 "answer": "True"
 }}
@@ -85,19 +78,19 @@ OR
 {{
 "answer": "False"
 }}
-{question}'''
+{question}"""
     )
 
     prompt_v3 = PromptTemplate(
-'''You are an expert biomedical researcher. Please provide your answer in the following format:
+        """You are an expert biomedical researcher. Please provide your answer in the following format:
 Answer: True
 OR
 Answer: False
 Question: True or False {question}?
-Answer: '''
+Answer: """
     )
     for index, row in tqdm(df_view.iterrows(), total=len(df_view)):
-        slug = slugify(model)
+        slug = slugify(model_name)
         error = False
         start = time.time()
         try:
