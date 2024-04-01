@@ -21,6 +21,21 @@ logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
 @cl.on_chat_start
 async def on_chat_start(accepted: bool = False):
+    translator: BaseTranslator = get_translator()
+    cl.user_session.set("translator", translator)
+    initial_language_value = "Detect language"
+    language_values = [initial_language_value] + [language.title() for language in translator.get_supported_languages(as_dict=True).keys()]
+    await cl.ChatSettings(
+        [
+            cl.input_widget.Select(
+                id="language",
+                label="Language",
+                values=language_values,
+                initial_value=initial_language_value,
+            )
+        ]
+    ).send()
+
     callback_manager = CallbackManager([CustomLlamaIndexCallbackHandler()])
 
     chat_engine_coroutine = cl.make_async(get_pipeline)(callback_manager=callback_manager)
@@ -57,39 +72,19 @@ async def on_chat_start(accepted: bool = False):
                 content = "You must agree to the terms of service to continue."
             ).send()
 
-    translator: BaseTranslator = get_translator()
-    cl.user_session.set("translator", translator)
+    welcome = "Welcome! Ask me anything about rare diseases, and I'll do my best to find you the most relevant and up-to-date information."
 
-    language_actions = [
-        cl.Action(name="Detect language", value="auto", label="Detect language", description="Detect language"),
-    ] + [
-        cl.Action(name=language.title(), value=code, label=language.title(), description=language.title())
-        for language, code in translator.get_supported_languages(as_dict=True).items()
-    ]
-
-    language_res = await cl.AskActionMessage(
-        content="Please select your preferred language:", actions=language_actions, timeout=30
-    ).send()
-    language = language_res.get("value")
-    cl.user_session.set("language", language)
-
-    content = "Welcome! Ask me anything about rare diseases, and I'll do my best to find you the most relevant and up-to-date information."
-
-    if language and language not in {"auto", "en"}:
-        content = await translate(translator, content, source="en", target=language)
-
-    await cl.Message(content=content).send()
+    await cl.Message(content=welcome).send()
     chat_engine = await chat_engine_coroutine
     cl.user_session.set("chat_engine", chat_engine)
 
-    if not language or language == "auto":
-        iso_codes = [
-            IsoCode639_1[code.upper()].value
-            for code in translator.get_supported_languages(as_dict=True).values()
-            if code.upper() in IsoCode639_1._member_names_
-        ]
-        detector = get_language_detector(*iso_codes)
-        cl.user_session.set("detector", detector)
+    iso_codes = [
+        IsoCode639_1[code.upper()].value
+        for code in translator.get_supported_languages(as_dict=True).values()
+        if code.upper() in IsoCode639_1._member_names_
+    ]
+    detector = get_language_detector(*iso_codes)
+    cl.user_session.set("detector", detector)
 
 
 def chat(chat_engine: BaseChatEngine, content: str, profile: bool = False):
@@ -143,3 +138,14 @@ async def on_message(message: cl.Message):
     content += f"\n\n<small>{end - start:.2f} seconds</small>"
     response_message.content = content
     await response_message.send()
+
+
+@cl.on_settings_update
+def on_settings_update(settings: dict):
+    language = settings["language"]
+    translator: BaseTranslator = cl.user_session.get("translator")
+    if language == "Detect language":
+        language = "auto"
+    else:
+        language = translator.get_supported_languages(as_dict=True).get(language.lower())
+    cl.user_session.set("language", language)
