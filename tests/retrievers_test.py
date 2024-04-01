@@ -1,56 +1,15 @@
 import os
 
 import pytest
-from llama_index.core.prompts.base import PromptTemplate, PromptType
-from llama_index.core.storage import StorageContext
 
-from settings import configure_settings
-from src.graph_stores import CustomNeo4jGraphStore
-from src.retrievers import KG_RAG_KnowledgeGraphRAGRetriever
+from pipelines import get_retriever_pipeline
 
 GITHUB_ACTIONS = bool(os.environ.get("GITHUB_ACTIONS"))
 
 
 @pytest.fixture
 def retriever():
-    configure_settings()
-    graph_store = CustomNeo4jGraphStore(
-        username="neo4j",
-        password=os.environ["NEO4J_PASSWORD"],
-        url="bolt://neo4j:7687",
-        database="neo4j",
-        node_label="S_PHENOTYPE",
-        schema_cache_path="/data/rgd-chatbot/schema_cache.txt",
-    )
-
-    storage_context = StorageContext.from_defaults(
-        graph_store=graph_store,
-    )
-
-    CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL = (
-        "A question is provided below. Given the question, extract up to {max_keywords} "
-        "diseases from the text. Focus on extracting the diseases that we can use "
-        "to best lookup answers to the question. Avoid stopwords.\n"
-        "---------------------\n"
-        "QUESTION: {question}\n"
-        "---------------------\n"
-        "Provide diseases in the following comma-separated format: 'KEYWORDS: <diseases>'\n"
-    )
-
-    retriever = KG_RAG_KnowledgeGraphRAGRetriever(
-        storage_context=storage_context,
-        verbose=True,
-        graph_traversal_depth=1,
-        max_entities=2,
-        max_synonyms=0,
-        similarity_top_k=10,
-        max_knowledge_sequence=1000,
-        entity_extract_template=PromptTemplate(
-            CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL,
-            prompt_type=PromptType.QUERY_KEYWORD_EXTRACT,
-        ),
-    )
-    return retriever
+    return get_retriever_pipeline()
 
 
 class TestKG_RAG_KnowledgeGraphRAGRetriever:
