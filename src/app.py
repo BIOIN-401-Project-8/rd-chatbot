@@ -18,7 +18,7 @@ logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
 
 @cl.on_chat_start
-async def main():
+async def on_chat_start(accepted: bool = False):
     callback_manager = CallbackManager([CustomLlamaIndexCallbackHandler()])
 
     chat_engine_coroutine = cl.make_async(get_pipeline)(callback_manager=callback_manager)
@@ -38,17 +38,19 @@ async def main():
 
     res = {}
     # continue prompting until user selects 'I understand'
-    while res.get("value") != "continue":
+    while not accepted:
         res = await cl.AskActionMessage(
             content='Do you understand the purpose and limitations of Rare Disease Chatbot?',
             actions = [
-                cl.Action(name='I understand', value='continue', label='I Understand', description='Agree and continue'),
-                cl.Action(name='Disagree', value='disagree', label='Disagree', description='Disagree to terms of service')
+                cl.Action(name='I understand', value="continue", label='I Understand', description='Agree and continue'),
+                cl.Action(name='Disagree', value="disagree", label='Disagree', description='Disagree to terms of service')
             ],
             timeout = 300  # five minutes
         ).send()
 
-        if res.get("value") == "disagree":
+        accepted = res.get("value") == "continue"
+
+        if not accepted:
             await cl.Message(
                 content = "You must agree to the terms of service to continue."
             ).send()
@@ -72,7 +74,7 @@ def chat(chat_engine: BaseChatEngine, content: str, profile: bool = False):
 
 
 @cl.on_message
-async def main(message: cl.Message):
+async def on_message(message: cl.Message):
     start = time.time()
     chat_engine: BaseChatEngine = cl.user_session.get("chat_engine")
     content = message.content
