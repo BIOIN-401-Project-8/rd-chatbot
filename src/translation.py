@@ -1,3 +1,4 @@
+import os
 from functools import cache
 
 import chainlit as cl
@@ -5,7 +6,9 @@ import hanzidentifier
 from deep_translator import GoogleTranslator
 from deep_translator.base import BaseTranslator
 from lingua import IsoCode639_1, Language, LanguageDetector, LanguageDetectorBuilder
+from llama_index.llms.groq import Groq
 
+from translators.llm import LLMTranslator
 from translators.opusmt import OpusMTTranslator
 from translators.seamlessm4tv2 import SeamlessM4Tv2Translator
 
@@ -23,7 +26,37 @@ def get_translator(translator: str = "opusmt"):
         return OpusMTTranslator(source="fr", target="en")
     elif translator == "seamlessm4tv2":
         return SeamlessM4Tv2Translator(source="fr", target="en")
-
+    elif translator == "mixtral8x7b":
+        os.environ["OPENAI_API_KEY"] = "None"
+        llm = Groq(
+            model="mixtral-8x7b-32768",
+            api_key=os.environ["GROQ_API_KEY"],
+        )
+        languages = {
+            "english": "en",
+            "french": "fr",
+            "german": "de",
+            "italian": "it",
+            "spanish": "es",
+        }
+        return LLMTranslator(llm, languages, source="fr", target="en")
+    elif translator == "mixtral_8x7b-instruct-v0.1-q4_0":
+        os.environ["OPENAI_API_KEY"] = "None"
+        from llama_index.llms.ollama import Ollama
+        llm = Ollama(
+            model="mixtral:8x7b-instruct-v0.1-q4_0",
+            base_url="http://ollama:11434",
+            request_timeout=30.0,
+            temperature=0.0,
+        )
+        languages = {
+            "english": "en",
+            "french": "fr",
+            "german": "de",
+            "italian": "it",
+            "spanish": "es",
+        }
+        return LLMTranslator(llm, languages, source="fr", target="en")
 
 def _detect_language(detector: LanguageDetector, content: str, threshold: float = 0.5):
     confidence_values = detector.compute_language_confidence_values(content)

@@ -1,8 +1,12 @@
+import os
+
 import pytest
 from deep_translator import GoogleTranslator
 from lingua import IsoCode639_1
+from llama_index.llms.groq import Groq
 
 from src.translation import _detect_language, _translate, get_language_detector
+from translators.llm import LLMTranslator
 from translators.opusmt import OpusMTTranslator
 from translators.seamlessm4tv2 import SeamlessM4Tv2Translator
 
@@ -50,6 +54,24 @@ def opusmt_translator():
 def seamlessm4tv2_translator():
     return SeamlessM4Tv2Translator(source="fr", target="en")
 
+
+@pytest.fixture
+def mixtral8x7b_translator():
+    os.environ["OPENAI_API_KEY"] = "None"
+    llm = Groq(
+        model="mixtral-8x7b-32768",
+        api_key=os.environ["GROQ_API_KEY"],
+    )
+    languages = {
+        "english": "en",
+        "french": "fr",
+        "german": "de",
+        "italian": "it",
+        "spanish": "es",
+        "chinese (simplified)": "zh-CN",
+        "chinese (traditional)": "zh-TW",
+    }
+    return LLMTranslator(llm, languages, source="fr", target="en")
 
 class TestGoogleTranslator:
     def test_translate_fr_en(self, google_translator):
@@ -169,5 +191,51 @@ class TestSeamlessM4Tv2Translator:
     def test_translate_en_zh_TW(self, seamlessm4tv2_translator):
         translation = _translate(
             seamlessm4tv2_translator, "What is Duchenne Muscular Dystrophy?", source="en", target="zh-TW"
+        )
+        assert translation == "杜<unk>肌肉萎缩是什么?"
+
+
+class TestMixtral8x7bTranslator:
+    def test_translate_fr_en(self, mixtral8x7b_translator):
+        translation = _translate(
+            mixtral8x7b_translator, "Qu'est-ce que la dystrophie musculaire de Duchenne?", source="fr", target="en"
+        )
+        assert translation == "What is Duchenne muscular dystrophy?"
+
+    def test_translate_it_en(self, mixtral8x7b_translator):
+        translation = _translate(
+            mixtral8x7b_translator, "Cos'è la distrofia muscolare di Duchenne?", source="it", target="en"
+        )
+        assert translation == "What is Duchenne muscular dystrophy?"
+
+    def test_translate_zh_CN_en(self, mixtral8x7b_translator):
+        translation = _translate(mixtral8x7b_translator, "什么是杜氏肌营养不良症？", source="zh-CN", target="en")
+        assert translation == "What is Duchenne muscular dystrophy (DMD)?"
+
+    # def test_translate_zh_TW_en(self, mixtral8x7b_translator):
+    #     translation = _translate(mixtral8x7b_translator, "什麼是杜氏肌肉營養不良症？", source="zh-TW", target="en")
+    #     assert translation == "What is Duchenne muscular dystrophy (DMD)?"
+
+    def test_translate_en_fr(self, mixtral8x7b_translator):
+        translation = _translate(
+            mixtral8x7b_translator, "What is Duchenne Muscular Dystrophy?", source="en", target="fr"
+        )
+        assert translation == "Qu'est-ce que la Dystrophie Musculaire de Duchenne ?"
+
+    def test_translate_en_it(self, mixtral8x7b_translator):
+        translation = _translate(
+            mixtral8x7b_translator, "What is Duchenne Muscular Dystrophy?", source="en", target="it"
+        )
+        assert translation == "Che cos'è la distrofia muscolare di Duchenne?"
+
+    def test_translate_en_zh_CN(self, mixtral8x7b_translator):
+        translation = _translate(
+            mixtral8x7b_translator, "What is Duchenne Muscular Dystrophy?", source="en", target="zh-CN"
+        )
+        assert translation == "杜<unk>肌肉萎缩是什么?"
+
+    def test_translate_en_zh_TW(self, mixtral8x7b_translator):
+        translation = _translate(
+            mixtral8x7b_translator, "What is Duchenne Muscular Dystrophy?", source="en", target="zh-TW"
         )
         assert translation == "杜<unk>肌肉萎缩是什么?"

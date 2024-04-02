@@ -104,9 +104,8 @@ def eval_llm():
 
 
 def eval_translation(df: pd.DataFrame):
-    methods = ["google", "opusmt", "seamlessm4tv2"]
-    # TODO: eval mixtral
-    columns = df.columns
+    methods = ["google", "opusmt", "seamlessm4tv2", "mixtral8x7b", "mixtral_8x7b-instruct-v0.1-q4_0"]
+    columns = ["text"]
     for method in methods:
         translator = get_translator(method)
         for target in ["fr", "it"]:
@@ -123,6 +122,8 @@ def eval_one_translation(
 ):
     output_file = f"/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_translation.csv"
     for index, row in tqdm(df.iterrows(), total=len(df)):
+        if slug in row and pd.notna(row[slug]):
+            continue
         error = False
         start = time.time()
         try:
@@ -141,7 +142,10 @@ def eval_one_translation(
 
 def main():
     # df = eval_llm()
-    df = pd.read_csv("/workspaces/rgd-chatbot/eval/data/RD/gard_corpus.csv")
+    if Path(f"/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_translation.csv").exists():
+        df = pd.read_csv("/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_translation.csv")
+    else:
+        df = pd.read_csv("/workspaces/rgd-chatbot/eval/data/RD/gard_corpus.csv")
     df = df.head(100)
     df = eval_translation(df)
 

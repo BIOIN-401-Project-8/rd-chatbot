@@ -9,7 +9,16 @@ class LLMTranslator(BaseTranslator):
         @param target: target language to translate to
         """
         super().__init__(languages=languages, source=source, target=target, **kwargs)
-        self._llm = llm
+        self.llm = llm
+        self.reverse_languages = {v: k.title() for k, v in languages.items()}
 
     def translate(self, text: str, **kwargs) -> str:
-        return self.llm.complete(text).text
+        source = self.reverse_languages[self.source]
+        target = self.reverse_languages[self.target]
+
+        response = self.llm.complete(
+            f"Translate the {source} text to {target}. \nText: {text}\nTranslation: "
+        )
+        text = response.text
+        text = text.removeprefix(f"{target}: ")
+        return text
