@@ -7,6 +7,7 @@ from deep_translator.base import BaseTranslator
 from lingua import IsoCode639_1, Language, LanguageDetector, LanguageDetectorBuilder
 
 from translators.opusmt import OpusMTTranslator
+from translators.seamlessm4tv2 import SeamlessM4Tv2Translator
 
 
 @cache
@@ -20,6 +21,8 @@ def get_translator(translator: str = "opusmt"):
         return GoogleTranslator(source="auto", target="en")
     elif translator == "opusmt":
         return OpusMTTranslator(source="fr", target="en")
+    elif translator == "seamlessm4tv2":
+        return SeamlessM4Tv2Translator(source="fr", target="en")
 
 
 def _detect_language(detector: LanguageDetector, content: str, threshold: float = 0.5):

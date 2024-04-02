@@ -4,6 +4,7 @@ from lingua import IsoCode639_1
 
 from src.translation import _detect_language, _translate, get_language_detector
 from translators.opusmt import OpusMTTranslator
+from translators.seamlessm4tv2 import SeamlessM4Tv2Translator
 
 
 @pytest.fixture
@@ -43,6 +44,11 @@ def google_translator():
 @pytest.fixture
 def opusmt_translator():
     return OpusMTTranslator(source="fr", target="en")
+
+
+@pytest.fixture
+def seamlessm4tv2_translator():
+    return SeamlessM4Tv2Translator(source="fr", target="en")
 
 
 class TestGoogleTranslator:
@@ -119,3 +125,49 @@ class TestOpusMTTranslator:
     def test_translate_en_zh_TW(self, opusmt_translator):
         translation = _translate(opusmt_translator, "What is Duchenne Muscular Dystrophy?", source="en", target="zh-TW")
         assert translation == "什麼是杜尚尼亞肌肉萎縮癥?"
+
+
+class TestSeamlessM4Tv2Translator:
+    def test_translate_fr_en(self, seamlessm4tv2_translator):
+        translation = _translate(
+            seamlessm4tv2_translator, "Qu'est-ce que la dystrophie musculaire de Duchenne?", source="fr", target="en"
+        )
+        assert translation == "What is Duchenne muscular dystrophy?"
+
+    def test_translate_it_en(self, seamlessm4tv2_translator):
+        translation = _translate(
+            seamlessm4tv2_translator, "Cos'è la distrofia muscolare di Duchenne?", source="it", target="en"
+        )
+        assert translation == "What is Duchenne muscular dystrophy?"
+
+    def test_translate_zh_CN_en(self, seamlessm4tv2_translator):
+        translation = _translate(seamlessm4tv2_translator, "什么是杜氏肌营养不良症？", source="zh-CN", target="en")
+        assert translation == "What is Duchenne muscular malnutrition?"
+
+    def test_translate_zh_TW_en(self, seamlessm4tv2_translator):
+        translation = _translate(seamlessm4tv2_translator, "什麼是杜氏肌肉營養不良症？", source="zh-TW", target="en")
+        assert translation == "What is Duchenne muscular malnutrition?"
+
+    def test_translate_en_fr(self, seamlessm4tv2_translator):
+        translation = _translate(
+            seamlessm4tv2_translator, "What is Duchenne Muscular Dystrophy?", source="en", target="fr"
+        )
+        assert translation == "Qu'est ce que la dystrophie musculaire de Duchenne?"
+
+    def test_translate_en_it(self, seamlessm4tv2_translator):
+        translation = _translate(
+            seamlessm4tv2_translator, "What is Duchenne Muscular Dystrophy?", source="en", target="it"
+        )
+        assert translation == "Che cos'è la distrofia muscolare di Duchenne?"
+
+    def test_translate_en_zh_CN(self, seamlessm4tv2_translator):
+        translation = _translate(
+            seamlessm4tv2_translator, "What is Duchenne Muscular Dystrophy?", source="en", target="zh-CN"
+        )
+        assert translation == "杜<unk>肌肉萎缩是什么?"
+
+    def test_translate_en_zh_TW(self, seamlessm4tv2_translator):
+        translation = _translate(
+            seamlessm4tv2_translator, "What is Duchenne Muscular Dystrophy?", source="en", target="zh-TW"
+        )
+        assert translation == "杜<unk>肌肉萎缩是什么?"
