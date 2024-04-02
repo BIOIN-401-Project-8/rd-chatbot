@@ -1,4 +1,6 @@
-# Hello!
+<img src="\public\logo_light.png" alt="Rare Disease Chatbot" width="100"/>
+
+
 # Welcome to Rare Disease Chatbot 
 
 I'm a chatbot designed to help you stay informed about the latest findings in rare diseases. I can access and understand research articles from PubMed, a large database of scientific publications.
