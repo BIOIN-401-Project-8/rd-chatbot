@@ -24,7 +24,8 @@ async def on_chat_start(accepted: bool = False):
     translator: BaseTranslator = get_translator()
     cl.user_session.set("translator", translator)
     initial_language_value = "Detect language"
-    language_values = [initial_language_value] + [language.title() for language in translator.get_supported_languages(as_dict=True).keys()]
+    languages_to_iso_codes = translator.get_supported_languages(as_dict=True)
+    language_values = [initial_language_value] + [language.title() for language in languages_to_iso_codes.keys()]
     await cl.ChatSettings(
         [
             cl.input_widget.Select(
@@ -147,5 +148,6 @@ def on_settings_update(settings: dict):
     if language == "Detect language":
         language = "auto"
     else:
-        language = translator.get_supported_languages(as_dict=True).get(language.lower())
+        languages_to_iso_codes = translator.get_supported_languages(as_dict=True)
+        language = languages_to_iso_codes.get(language.lower())
     cl.user_session.set("language", language)
