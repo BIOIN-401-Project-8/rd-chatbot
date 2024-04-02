@@ -1,8 +1,8 @@
-
 import json
 import logging
 from typing import List, Tuple
 
+import evaluate
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
@@ -37,34 +37,43 @@ def parse_response(response: str):
             return None
 
 
-def plot(df: pd.DataFrame, columns: List[str], model_names: List[str], ylabel: str, ylim: Tuple[int, int] | None = None):
+def plot(
+    df: pd.DataFrame,
+    columns: List[str],
+    model_names: List[str],
+    ylabel: str,
+    ylim: Tuple[int, int] | None = None,
+    fname: str | None = None,
+    title: str = "True/False Questions",
+):
     fig, ax = plt.subplots(figsize=(12, 6))
 
     g = sns.barplot(
         data=df[columns],
         errorbar=("ci", 95),
-        capsize=.15,
+        capsize=0.15,
         ax=ax,
     )
     n = len(df)
-
-    g.set_title(f"{ylabel} on (n = {n}) True/False Questions")
+    if title != "True/False Questions":
+        g.set_title(f"{title} (n = {n})")
+    else:
+        g.set_title(f"{ylabel} on (n = {n}) {title}")
     g.set_ylabel(ylabel)
     g.set_xlabel("Model")
     g.set_xticks(range(len(model_names)))
-    g.set_xticklabels(model_names, rotation=45, horizontalalignment='right')
+    g.set_xticklabels(model_names, rotation=45, horizontalalignment="right")
     g.set(ylim=ylim)
     g.yaxis.set_major_locator(plt.MaxNLocator(11))
     g.yaxis.grid(True)
 
-    plt.savefig(
-        f"/workspaces/rgd-chatbot/eval/results/KG_RAG/one_hop_true_false_v2_df_{ylabel.lower()}.v2.png",
-        bbox_inches="tight",
-    )
+    if fname is None:
+        fname = f"/workspaces/rgd-chatbot/eval/results/KG_RAG/one_hop_true_false_v2_df_{ylabel.lower()}.v2.png"
+
+    plt.savefig(fname, bbox_inches="tight")
 
 
-
-def main():
+def metrics_llm():
     fh = logging.FileHandler("metrics.log")
     fh.setLevel(logging.DEBUG)
     logger.addHandler(fh)
@@ -83,7 +92,7 @@ def main():
     df.to_csv(output_csv)
 
     correct_columns = [column for column in df.columns if "correct_" in column]
-    model_names = [column.replace("correct_", "") for column in correct_columns]
+    model_names = cols,
 
     plot(df, correct_columns, model_names, "Accuracy", (0, 1))
 
@@ -94,6 +103,114 @@ def main():
     time_seconds_columns = [column + "_seconds" for column in time_columns]
 
     plot(df, time_seconds_columns, model_names, "Time")
+
+
+def metrics_translation():
+    input_csv = "/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_translation.csv"
+    output_csv = input_csv.replace(".csv", "_metrics.csv")
+
+    df = pd.read_csv(input_csv)
+    columns = []
+    for column in df.columns:
+        if column.startswith("translation_"):
+            break
+        columns.append(column)
+
+    for column in df.columns:
+        if "error_" in column:
+            assert not df[column].any()
+
+    bleu = evaluate.load("bleu")
+
+    column = columns[-1]
+
+    methods = ["google", "opusmt", "seamlessm4tv2"]
+    df_out = pd.DataFrame()
+
+    for target in ["fr", "it"]:
+        for method in methods:
+            outputs = []
+            outputs2 = []
+            for i in range(len(df)):
+                # calculate bleu scores using google translate as reference
+                output = bleu.compute(
+                    predictions=[
+                        df[f"translation_{column}_{method}_en_{target}"][i],
+                    ],
+                    references=[
+                        df[f"translation_{column}_google_en_{target}"][i],
+                    ],
+                )
+                outputs.append(output["bleu"])
+                output2 = bleu.compute(
+                    predictions=[
+                        df[f"back_translation_{column}_{method}_en_{target}"][i],
+                    ],
+                    references=[
+                        df[column][i],
+                    ],
+                )
+                outputs2.append(output2["bleu"])
+            df_out[f"translation_bleu_{method}_{target}"] = outputs
+            df_out[f"back_translation_bleu_{method}_{target}"] = outputs2
+
+    df_out.to_csv(output_csv)
+
+    bleu_columns = [
+        column for column in df_out.columns if "translation_bleu_" in column and "back_translation" not in column
+    ]
+    bleu_columns_fr = [column for column in bleu_columns if "_fr" in column]
+    cols = [
+        "Google Translate",
+        "OpusMT",
+        "SeamlessM4Tv2",
+    ]
+    plot(
+        df_out,
+        bleu_columns_fr,
+        cols,
+        "BLEU",
+        (0, 1),
+        "/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_translation_bleu_fr.png",
+        title="French Translation",
+    )
+    bleu_columns_it = [column for column in bleu_columns if "_it" in column]
+    plot(
+        df_out,
+        bleu_columns_it,
+        cols,
+        "BLEU",
+        (0, 1),
+        "/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_translation_bleu_it.png",
+        title="Italian Translation",
+    )
+
+    bleu_back_columns = [column for column in df_out.columns if "back_translation_bleu_" in column]
+    bleu_back_columns_fr = [column for column in bleu_back_columns if "_fr" in column]
+    plot(
+        df_out,
+        bleu_back_columns_fr,
+        cols,
+        "BLEU",
+        (0, 1),
+        "/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_back_translation_bleu_fr.png",
+        title="French Back Translation",
+    )
+    bleu_back_columns_it = [column for column in bleu_back_columns if "_it" in column]
+    plot(
+        df_out,
+        bleu_back_columns_it,
+        cols,
+        "BLEU",
+        (0, 1),
+        "/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_back_translation_bleu_it.png",
+        title="Italian Back Translation",
+    )
+
+
+def main():
+    # metrics_llm()
+    metrics_translation()
 
 
 if __name__ == "__main__":
