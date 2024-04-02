@@ -5,13 +5,15 @@ import sys
 import time
 
 import chainlit as cl
+from lingua import LanguageDetector
 from llama_index.core.callbacks import CallbackManager
 from llama_index.core.chat_engine.types import BaseChatEngine
 
 from callbacks import CustomLlamaIndexCallbackHandler
 from citation import get_formatted_sources, get_source_graph, get_source_nodes
+from lingua_iso_codes import IsoCode639_1
 from pipelines import get_pipeline
-from translation import detect_language, translate
+from translation import BaseTranslator, detect_language, get_language_detector, get_translator, translate
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
@@ -19,6 +21,22 @@ logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
 @cl.on_chat_start
 async def on_chat_start(accepted: bool = False):
+    translator: BaseTranslator = get_translator()
+    cl.user_session.set("translator", translator)
+    initial_language_value = "Detect language"
+    languages_to_iso_codes = translator.get_supported_languages(as_dict=True)
+    language_values = [initial_language_value] + [language.title() for language in languages_to_iso_codes.keys()]
+    await cl.ChatSettings(
+        [
+            cl.input_widget.Select(
+                id="language",
+                label="Language",
+                values=language_values,
+                initial_value=initial_language_value,
+            )
+        ]
+    ).send()
+
     callback_manager = CallbackManager([CustomLlamaIndexCallbackHandler()])
 
     chat_engine_coroutine = cl.make_async(get_pipeline)(callback_manager=callback_manager)
@@ -55,11 +73,19 @@ async def on_chat_start(accepted: bool = False):
                 content = "You must agree to the terms of service to continue."
             ).send()
 
-    await cl.Message(
-        content="Welcome! Ask me anything about rare diseases, and I'll do my best to find you the most relevant and up-to-date information."
-    ).send()
+    welcome = "Welcome! Ask me anything about rare diseases, and I'll do my best to find you the most relevant and up-to-date information."
+
+    await cl.Message(content=welcome).send()
     chat_engine = await chat_engine_coroutine
     cl.user_session.set("chat_engine", chat_engine)
+
+    iso_codes = [
+        IsoCode639_1[code.upper()].value
+        for code in translator.get_supported_languages(as_dict=True).values()
+        if code.upper() in IsoCode639_1._member_names_
+    ]
+    detector = get_language_detector(*iso_codes)
+    cl.user_session.set("detector", detector)
 
 
 def chat(chat_engine: BaseChatEngine, content: str, profile: bool = False):
@@ -77,12 +103,16 @@ def chat(chat_engine: BaseChatEngine, content: str, profile: bool = False):
 async def on_message(message: cl.Message):
     start = time.time()
     chat_engine: BaseChatEngine = cl.user_session.get("chat_engine")
+    detector: LanguageDetector = cl.user_session.get("detector")
+    translator: BaseTranslator = cl.user_session.get("translator")
     content = message.content
 
-    detection = await detect_language(content)
-    detected_language = detection["language"]
-    if detected_language != "en" and detected_language is not None:
-        content = await translate(content, target="en")
+    language = cl.user_session.get("language")
+    if not language or language == "auto":
+        detection = await detect_language(detector, content)
+        language = detection["language"]
+    if language != "en" and language is not None:
+        content = await translate(translator, content, source=language, target="en")
 
     response = await cl.make_async(chat)(chat_engine, content, profile=False)
     response_message = cl.Message(content="")
@@ -96,8 +126,8 @@ async def on_message(message: cl.Message):
     content = re.sub(r"\(\[", "[", content)
     content = re.sub(r"\]\)", "]", content)
 
-    if detected_language != "en" and detected_language is not None:
-        content = await translate(content, target=detected_language)
+    if language != "en" and language is not None:
+        content = await translate(translator, content, source="en", target=language)
 
     if source_nodes:
         content += await get_formatted_sources(source_nodes)
@@ -109,3 +139,15 @@ async def on_message(message: cl.Message):
     content += f"\n\n<small>{end - start:.2f} seconds</small>"
     response_message.content = content
     await response_message.send()
+
+
+@cl.on_settings_update
+def on_settings_update(settings: dict):
+    language = settings["language"]
+    translator: BaseTranslator = cl.user_session.get("translator")
+    if language == "Detect language":
+        language = "auto"
+    else:
+        languages_to_iso_codes = translator.get_supported_languages(as_dict=True)
+        language = languages_to_iso_codes.get(language.lower())
+    cl.user_session.set("language", language)
