@@ -1,5 +1,6 @@
 chainlit==1.0.401
 deep-translator==1.11.4
+evaluate==0.4.1  # eval
 faiss-gpu==1.7.2
 gard==0.0.3
 hanziconv==0.3.2
@@ -16,6 +17,8 @@ llama-index==0.10.20
 neo4j==5.18.0
 plotly==5.19.0
 pydot==2.0.0
+sacremoses==0.1.1
+seaborn==0.13.2  #eval
 sentence_transformers==2.5.1
 sentencepiece==0.2.0
 transformers==4.37.2
