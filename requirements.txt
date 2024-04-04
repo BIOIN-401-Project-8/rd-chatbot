@@ -1,4 +1,5 @@
 chainlit==1.0.401
+datetime==5.5
 deep-translator==1.11.4
 evaluate==0.4.1  # eval
 faiss-gpu==1.7.2
