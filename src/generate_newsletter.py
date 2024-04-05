@@ -1,11 +1,16 @@
 '''
-This module generates a newsletter based on the disease provided by the user.
-Newsletters contain citations and short summaries of PubMed articles related
-to the specified disease, that have been published within a 30 day window.
+This module contains functions to generate a newsletter based on a disease provided by the user.
+Newsletters contain citations and short summaries of PubMed articles related to the specified disease, 
+that have been published within a 30 day window.
 '''
 
 from datetime import date, timedelta
-#from llama_index.core.prompts import PromptTemplate
+from llama_index.core.prompts import PromptTemplate, PromptType
+import re
+
+from graph_stores import CustomNeo4jGraphStore
+from pipelines import get_graph_store
+
 
 
 def makeNewsletter(query:str, offline:bool):
@@ -26,11 +31,13 @@ def makeNewsletter(query:str, offline:bool):
     start_date = end_date - timedelta(days=30)
 
     # EXTRACT DISEASE
-    disease = extractDisease(query)
+    #diseases = extractDisease(query)
+    disease = re.sub(r"[^A-Za-z0-9\s/\()\[\]\.-]+", '', query)
     output += f"#Recent Articles On {disease}\n {start_date} - {end_date}\n\n"
 
     # GET RELEVANT PMIDs
-    pmids = getPMIDs(disease, (start_date, end_date))
+    graph_store = get_graph_store()
+    pmids = getPMIDs(graph_store, disease, (start_date, end_date))
 
     # if no new articles in knowledge graph
     if len(pmids) == 0:
@@ -45,39 +52,62 @@ def makeNewsletter(query:str, offline:bool):
         # get & display full citations  
         else:
             output += onlineFullCitations(pmids, disease)
-
     return output
 
 
 def extractDisease(query:str)->str:
     '''
-    Attempts to extract a disease from a user query.
+    Attempts to extract a disease name and its
+    synonyms from a user query.
 
     Args:
         query(str): user input
     Returns:
-        disease(str): extracted disease name
+        disease(str): extracted disease names
     '''
-    # LLM?
-    # lookup in csv?
-    disease = ''
-    return disease
+    diseases = []
+    # clean text, keep only ()[].-/
+    query = re.sub(r"[^A-Za-z0-9\s/\()\[\]\.-]+", '', query)
+    # get disease synonyms from LLM
+    SYNONYMS_TEMPLATE = PromptTemplate(
+        "A disease name is provided below. "
+        "Find synonyms for the disease name. "
+        "---------------------\n"
+        "DISEASE NAME: {query}\n"
+        "---------------------\n"
+        "Provide synonyms in the following comma-separated format: 'SYNONYMS: synonym1, synonym2'\n"
+    )
+    # query_words = '+'.join(query.split())
+    # url = f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/espell.fcgi?term={query_words}&db=pmc"
+    return diseases
 
 
-def getPMIDs(disease:str, date_range:tuple)->list:
+def getPMIDs(graph_store:CustomNeo4jGraphStore, disease:str, date_range:tuple)->list:
     '''
-    Get a list of PMIDs of recent disease articles
-    from knowledge graph.
+    Get a list of PMIDs of recent disease articles from knowledge graph.
     
     Args:
+        graph_store(CustomNeo4jGraphStore): Neo4j knowledge graph to query
         disease(str): disease name
         date_range(tuple): start and end date
     Returns:
         pmids(list): PMIDs of articles about disease, 
                      within date window
     '''
+    assert len(date_range) == 2 and date_range[0] < date_range[1], "Invalid date range."
     pmids = []
+    cypher = f'''
+    MATCH (n)
+    WHERE n.name CONTAINS {disease} AND n.date >= {date_range[0]} AND n.date <= {date_range[1]}
+    RETURN n
+    '''
+    # n.date >= date('2024-03-01')
+    nodes = graph_store.query(cypher)
+    for n in nodes:
+        # assert PMIDs are numeric & 8 digits
+        pmids.append(n['pmid'])
     return pmids
+
 
 def onlineFullCitations(pmids:list, disease:str):
     '''
@@ -98,6 +128,8 @@ def onlineFullCitations(pmids:list, disease:str):
     for pmid in pmids:
         # search for article
         # extract title
+        title = ''
+        citations += f"Title: {title}"
         # extract authors
         # extract journal
         # extract abstract
@@ -117,13 +149,28 @@ def summarize(abstract:str, disease:str)->str:
     Returns:
         summary(str): 2 sentence summary of abstract
     '''
-    SUMMARIZE_TEMPLATE = (
+    SUMMARIZE_TEMPLATE = PromptTemplate(
         "A scientific paragraph about {disease} is provided below. "
-        "Summarize the paragraph for a human teenager. "
+        "Summarize the paragraph for a 20 year old human. "
+        "Include specific details like names and methods. "
         "Limit your response to 50 words. "
         "---------------------\n"
         "PARAGRAPH: {abstract}\n"
         "---------------------\n"
+    )
+
+    SUMMARIZE_REFINE_TEMPLATE = PromptTemplate(
+        "Here is a short paragraph about {disease}: "
+        "---------------------\n"
+        "{summary}\n"
+        "---------------------\n"
+        "Use the information provided below to revise the paragraph. "
+        "The revised paragraph should be readable by a 20 year old human. "
+        "Do not increase the length of the paragraph. "
+        "---------------------\n"
+        "{context_msg}\n"
+        "---------------------\n"
+        "If the provided information is not informative, return the original paragraph."
     )
 
     summary = ''
