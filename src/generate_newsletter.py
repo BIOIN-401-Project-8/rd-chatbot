@@ -6,6 +6,7 @@ that have been published within a 30 day window.
 
 from datetime import date, timedelta
 from llama_index.core.prompts import PromptTemplate, PromptType
+from metapub import PubMedFetcher
 import re
 
 from graph_stores import CustomNeo4jGraphStore
@@ -33,7 +34,7 @@ def makeNewsletter(query:str, offline:bool):
     # EXTRACT DISEASE
     #diseases = extractDisease(query)
     disease = re.sub(r"[^A-Za-z0-9\s/\()\[\]\.-]+", '', query)
-    output += f"#Recent Articles On {disease}\n {start_date} - {end_date}\n\n"
+    output += f"Recent Articles On {disease}\n{start_date} - {end_date}\n\n"
 
     # GET RELEVANT PMIDs
     graph_store = get_graph_store()
@@ -96,23 +97,24 @@ def getPMIDs(graph_store:CustomNeo4jGraphStore, disease:str, date_range:tuple)->
     '''
     assert len(date_range) == 2 and date_range[0] < date_range[1], "Invalid date range."
     pmids = []
+    # TODO: check format of nodes
+    # DATE FORMAT??? n.date >= date('2024-03-01')
     cypher = f'''
     MATCH (n)
     WHERE n.name CONTAINS {disease} AND n.date >= {date_range[0]} AND n.date <= {date_range[1]}
     RETURN n
     '''
-    # n.date >= date('2024-03-01')
     nodes = graph_store.query(cypher)
     for n in nodes:
-        # assert PMIDs are numeric & 8 digits
+        # TODO: assert PMIDs are numeric & 8 digits
         pmids.append(n['pmid'])
     return pmids
 
 
 def onlineFullCitations(pmids:list, disease:str):
     '''
-    Search PMC for PMIDs. Get article title, authors, 
-    journal and abstract.
+    Search PMC by PMID. Get article title, authors, 
+    journal and abstract. (max 3 req per second w/out API, 10 with)
 
     Args:
         pmids(list): list of PMIDs to create citations for
@@ -120,21 +122,23 @@ def onlineFullCitations(pmids:list, disease:str):
     Returns:
         citations(str): formatted citations
     '''
+    # https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id={pmid}
     citations = ''
-
-    base = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/'
-    add = f"{disease}[mesh]+AND+2009[pdat]"
+    fetch = PubMedFetcher()
 
     for pmid in pmids:
-        # search for article
-        # extract title
-        title = ''
-        citations += f"Title: {title}"
-        # extract authors
-        # extract journal
-        # extract abstract
-        abstract = ''
-        summary = summarize(abstract, disease)
+        try:
+            article = fetch.article_by_pmid(pmid)
+        except:
+            continue
+        # extract metadata
+        citations += article.title + '\n' + '*' * 30
+        citations += f"\nJOURNAL: {article.journal}, {article.year}\nAUTHORS: {', '.join(article.authors)}\n"
+        # add link
+        citations += f"https://pubmed.ncbi.nlm.nih.gov/{pmid}\n"
+        # extract & summarize abstract
+        summary = summarize(article.abstract, disease)
+        citations += summary + '\n\n'
     return citations
 
 
