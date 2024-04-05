@@ -16,6 +16,7 @@ llama-index-llms-huggingface==0.1.4
 llama-index-llms-ollama==0.1.2
 llama-index-vector-stores-faiss==0.1.2
 llama-index==0.10.20
+metapub==0.5.5
 neo4j==5.18.0
 plotly==5.19.0
 pydot==2.0.0
