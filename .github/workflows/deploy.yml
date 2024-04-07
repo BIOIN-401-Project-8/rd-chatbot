@@ -20,5 +20,5 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         username: ${{ secrets.SSH_USERNAME }}
         password: ${{ secrets.SSH_PASSWORD }}
-        script: cd ${{ secrets.SSH_WORKDIR }} && git pull && docker compose up -d --build app neo4j ollama
+        script: cd ${{ secrets.SSH_WORKDIR }} && git add src/lingua_iso_codes.py src/translators/llm.py src/translators/opusmt.py src/translators/seamlessm4tv2.py && git stash && git pull && docker compose up -d --build app neo4j ollama
         command_timeout: 20m
