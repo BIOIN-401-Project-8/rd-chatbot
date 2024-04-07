@@ -131,9 +131,10 @@ async def on_message(message: cl.Message):
 
     if source_nodes:
         content += await get_formatted_sources(source_nodes)
-        filename = get_source_graph(source_nodes)
-        elements = [cl.Image(path=filename, display="inline", size="large")]
-        response_message.elements = elements
+        ### uncomment following code to display source graph picture in chat
+        # filename = get_source_graph(source_nodes)
+        # elements = [cl.Image(path=filename, display="inline", size="large")]
+        # response_message.elements = elements
 
     end = time.time()
     content += f"\n\n<small>{end - start:.2f} seconds</small>"
