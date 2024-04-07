@@ -76,8 +76,7 @@ async def on_chat_start(accepted: bool = False):
     welcome = "Welcome! Ask me anything about rare diseases, and I'll do my best to find you the most relevant and up-to-date information."
 
     await cl.Message(content=welcome).send()
-    chat_engine = await chat_engine_coroutine
-    cl.user_session.set("chat_engine", chat_engine)
+    cl.user_session.set("chat_engine_coroutine", chat_engine_coroutine)
 
     iso_codes = [
         IsoCode639_1[code.upper()].value
@@ -102,7 +101,6 @@ def chat(chat_engine: BaseChatEngine, content: str, profile: bool = False):
 @cl.on_message
 async def on_message(message: cl.Message):
     start = time.time()
-    chat_engine: BaseChatEngine = cl.user_session.get("chat_engine")
     detector: LanguageDetector = cl.user_session.get("detector")
     translator: BaseTranslator = cl.user_session.get("translator")
     content = message.content
@@ -114,6 +112,7 @@ async def on_message(message: cl.Message):
     if language != "en" and language is not None:
         content = await translate(translator, content, source=language, target="en")
 
+    chat_engine: BaseChatEngine = await cl.user_session.get("chat_engine_coroutine")
     response = await cl.make_async(chat)(chat_engine, content, profile=False)
     response_message = cl.Message(content="")
 
