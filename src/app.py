@@ -14,6 +14,7 @@ from citation import get_formatted_sources, get_source_graph, get_source_nodes
 from lingua_iso_codes import IsoCode639_1
 from pipelines import get_pipeline
 from translation import BaseTranslator, detect_language, get_language_detector, get_translator, translate
+from generate_newsletter import makeNewsletter
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
@@ -26,18 +27,27 @@ async def on_chat_start(accepted: bool = False):
     initial_language_value = "Detect language"
     languages_to_iso_codes = translator.get_supported_languages(as_dict=True)
     language_values = [initial_language_value] + [language.title() for language in languages_to_iso_codes.keys()]
-    options = await cl.ChatSettings(
+    await cl.ChatSettings(
         [
+            # language selection drop-down
             cl.input_widget.Select(
                 id="language",
                 label="Language",
                 values=language_values,
                 initial_value=initial_language_value,
             ),
-            cl.input_widget.Switch(
+            # newsletter disease name input field
+            cl.input_widget.TextInput(
                 id='newsletter',
-                label='Generate a newsletter?',
+                label='Enter a Disease Name to generate a newsletter',
+                initial='',
                 tooltip='A newsletter is a summary of recent PubMed articles'
+            ),
+            # toggle for online vs offline citations
+            cl.input_widget.Switch(
+                id='offline',
+                label='Run server offline?',
+                initial=True
             )
         ]
     ).send()
@@ -147,7 +157,7 @@ async def on_message(message: cl.Message):
 
 
 @cl.on_settings_update
-def on_settings_update(settings: dict):
+async def on_settings_update(settings: dict):
     language = settings["language"]
     translator: BaseTranslator = cl.user_session.get("translator")
     if language == "Detect language":
@@ -156,3 +166,14 @@ def on_settings_update(settings: dict):
         languages_to_iso_codes = translator.get_supported_languages(as_dict=True)
         language = languages_to_iso_codes.get(language.lower())
     cl.user_session.set("language", language)
+
+    # flag for generating citations/newsletters offline or online
+    offline = settings['offline']
+
+    # check if disease name has been entered for newsletter
+    make_newsletter = settings['newsletter']
+    if make_newsletter != '':
+        newsletter_content = makeNewsletter(make_newsletter, offline)
+        await cl.Message(
+            content = newsletter_content
+        ).send()

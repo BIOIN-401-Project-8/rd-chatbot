@@ -33,12 +33,13 @@ def makeNewsletter(query:str, offline:bool):
 
     # EXTRACT DISEASE
     #diseases = extractDisease(query)
-    disease = re.sub(r"[^A-Za-z0-9\s/\()\[\]\.-]+", '', query)
+    disease = re.sub(r"[^A-Za-z0-9\s/\()\[\]\.-]+", '', query.lower())
     output += f"Recent Articles On {disease}\n{start_date} - {end_date}\n\n"
 
     # GET RELEVANT PMIDs
-    graph_store = get_graph_store()
-    pmids = getPMIDs(graph_store, disease, (start_date, end_date))
+    #graph_store = get_graph_store()
+    #pmids = getPMIDs(graph_store, disease, (start_date, end_date))
+    pmids = ['33602943', '32717791', '25752877', '35165856']
 
     # if no new articles in knowledge graph
     if len(pmids) < 1:
@@ -57,6 +58,8 @@ def makeNewsletter(query:str, offline:bool):
 
 
 def extractDisease(query:str)->str:
+    # waste of time maybe???
+    # use LLM, csv file, or API?
     '''
     Attempts to extract a disease name and its
     synonyms from a user query.
@@ -68,7 +71,7 @@ def extractDisease(query:str)->str:
     '''
     diseases = []
     # clean text, keep only ()[].-/
-    query = re.sub(r"[^A-Za-z0-9\s/\()\[\]\.-]+", '', query)
+    query = re.sub(r"[^A-Za-z0-9\s/\()\[\]\.-]+", '', query.lower())
     # get disease synonyms from LLM
     SYNONYMS_TEMPLATE = PromptTemplate(
         "A disease name is provided below. "
@@ -137,7 +140,8 @@ def onlineFullCitations(pmids:list, disease:str):
         # add link
         citations += f"https://pubmed.ncbi.nlm.nih.gov/{pmid}\n"
         # extract & summarize abstract
-        summary = summarize(article.abstract, disease)
+        summary = article.abstract[:25]
+        #summary = summarize(article.abstract, disease)
         citations += summary + '\n\n'
     return citations
 
