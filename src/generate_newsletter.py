@@ -41,14 +41,14 @@ def makeNewsletter(query:str, offline:bool):
     pmids = getPMIDs(graph_store, disease, (start_date, end_date))
 
     # if no new articles in knowledge graph
-    if len(pmids) == 0:
+    if len(pmids) < 1:
         output += "Sorry, no new articles were found."
     
     else:
         # display article links only
         if offline:
             for pmid in pmids:
-                output += f"https://pubmed.ncbi.nlm.nih.gov/{pmid}\n"
+                output += f"[Article {pmid}](https://pubmed.ncbi.nlm.nih.gov/{pmid})\n\n"
         
         # get & display full citations  
         else:
