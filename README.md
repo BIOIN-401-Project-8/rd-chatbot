@@ -11,7 +11,7 @@ docker compose up -d app neo4j ollama
 
 Note, to setup Dynamic DNS with Namecheap, add the following line to your crontab with `crontab -e`:
 ```bash
-0 * * * * cd ~/Github/bioin-401-project/rgd-chatbot && docker compose run namecheap-ddns
+0 * * * * cd ~/Github/bioin-401-project/rd-chatbot && docker compose run namecheap-ddns
 ```
 
 ### Reverse Proxy
