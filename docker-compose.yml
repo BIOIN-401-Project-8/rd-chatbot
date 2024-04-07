@@ -6,6 +6,7 @@ services:
     environment:
       - LLAMA_INDEX_CACHE_DIR=/root/.cache
       - NEO4J_PASSWORD=${NEO4J_PASSWORD}
+      - GROQ_API_KEY=${GROQ_API_KEY}
     deploy:
       resources:
         reservations:
@@ -34,6 +35,7 @@ services:
     environment:
       - LLAMA_INDEX_CACHE_DIR=/root/.cache
       - NEO4J_PASSWORD=${NEO4J_PASSWORD}
+      - GROQ_API_KEY=${GROQ_API_KEY}
     deploy:
       resources:
         reservations:
