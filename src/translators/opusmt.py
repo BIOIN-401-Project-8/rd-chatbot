@@ -1,8 +1,10 @@
 from functools import lru_cache
 
 import hanziconv
+import nltk
 import torch
 from deep_translator.base import BaseTranslator
+from nltk.tokenize import sent_tokenize
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
 OPUS_MT_LANGUAGES_TO_CODES = {
@@ -30,6 +32,7 @@ OPUS_MT_LANGUAGES_TO_CODES = {
     "galician": "gl",
     "ganda": "lg",
     "german": "de",
+    "greek": "el",
     "haitian": "ht",
     "hausa": "ha",
     "hindi": "hi",
@@ -78,17 +81,46 @@ OPUS_MT_LANGUAGES_TO_CODES = {
 }
 
 
+CODES_TO_OPUS_MT_MODEL_NAMES = {
+    "el": "grk",
+    "zh-CN": "zh",
+    "zh-TW": "zh",
+}
+
+
+CODES_TO_PUNKT_MODEL_NAMES = {
+    "cs": "czech",
+    "nl": "dutch",
+    "et": "estonian",
+    "fr": "french",
+    "el": "greek",
+    "ml": "malayalam",
+    "pl": "polish",
+    "ru": "russian",
+    "es": "spanish",
+    "tr": "turkish",
+    "da": "danish",
+    "en": "english",
+    "fi": "finnish",
+    "de": "german",
+    "it": "italian",
+    "no": "norwegian",
+    "pt": "portuguese",
+    "sl": "slovene",
+    "sv": "swedish",
+}
+
+
 class OpusMTTranslator(BaseTranslator):
     def __init__(self, source: str = "fr", target: str = "en", **kwargs):
         self.model_name = None
         super().__init__(languages=OPUS_MT_LANGUAGES_TO_CODES, source=source, target=target, **kwargs)
+        nltk.download("punkt")
 
     @lru_cache(maxsize=2)
     def get_model_tokenizer(self, source: str = "fr", target: str = "en"):
-        if source.startswith("zh"):
-            source = "zh"
-        if target.startswith("zh"):
-            target = "zh"
+        source = CODES_TO_OPUS_MT_MODEL_NAMES.get(source, source)
+        target = CODES_TO_OPUS_MT_MODEL_NAMES.get(target, target)
         model_name = f"Helsinki-NLP/opus-mt-{source}-{target}"
         tokenizer = AutoTokenizer.from_pretrained(model_name)
         model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
@@ -98,10 +130,18 @@ class OpusMTTranslator(BaseTranslator):
 
     def translate(self, text: str, **kwargs) -> str:
         model, tokenizer = self.get_model_tokenizer(self.source, self.target)
-        inputs = tokenizer([text], return_tensors="pt", padding=True)
-        inputs = inputs.to(self.device)
-        translated = model.generate(**inputs)
-        res = tokenizer.decode(translated[0], skip_special_tokens=True)
+
+        paragraphs = text.split("\n")
+        translated_paragraphs = []
+        for paragraph in paragraphs:
+            sentences = sent_tokenize(paragraph, language=CODES_TO_PUNKT_MODEL_NAMES.get(self.source, "english"))
+            inputs = tokenizer(sentences, return_tensors="pt", padding=True)
+            inputs = inputs.to(self.device)
+            translated = model.generate(**inputs)
+            translated_sentences = tokenizer.batch_decode(translated, skip_special_tokens=True)
+            translated_paragraphs.append(" ".join(translated_sentences))
+
+        res = "\n".join(translated_paragraphs)
 
         if self.target == "zh-TW":
             res = hanziconv.HanziConv.toTraditional(res)

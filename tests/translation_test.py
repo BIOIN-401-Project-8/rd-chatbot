@@ -73,6 +73,7 @@ def mixtral8x7b_translator():
     }
     return LLMTranslator(llm, languages, source="fr", target="en")
 
+
 class TestGoogleTranslator:
     def test_translate_fr_en(self, google_translator):
         translation = _translate(
@@ -135,6 +136,18 @@ class TestOpusMTTranslator:
     def test_translate_en_fr(self, opusmt_translator):
         translation = _translate(opusmt_translator, "What is Duchenne Muscular Dystrophy?", source="en", target="fr")
         assert translation == "Qu'est-ce que la dystrophie musculaire de Duchenne?"
+
+    def test_translate_en_fr_long(self, opusmt_translator):
+        translation = _translate(
+            opusmt_translator,
+            "Summary of GRACILE syndrome: GRACILE syndrome is an inherited metabolic disease. GRACILE stands for growth retardation, aminoaciduria, cholestasis, iron overload, lactacidosis, and early death. Infants are very small at birth and quickly develop complications. During the first days of life, infants will develop a buildup of lactic acid in the bloodstream (lactic acidosis) and amino acids in the urine (aminoaciduria). They will also have problems with the flow of bile from the liver (cholestasis) and too much iron in their blood. Affected individuals aren't typically born with unique physical features. GRACILE syndrome is caused by a genetic change in the BCS1L gene, and it is inherited in an autosomal recessive pattern. The BCS1L gene provides instructions needed by the mitochondria in cells to help produce energy.",
+            source="en",
+            target="fr",
+        )
+        assert (
+            translation
+            == "Résumé du syndrome de GRACILE : Le syndrome de GRACILE est une maladie métabolique héréditaire. GRACILE représente un retard de croissance, une aminoacidité, une cholestase, une surcharge en fer, une acidocétose et une mort précoce. Les nourrissons sont très petits à la naissance et développent rapidement des complications. Au cours des premiers jours de la vie, les nourrissons développeront une accumulation d'acide lactique dans le flux sanguin (acidose lactique) et d'acides aminés dans l'urine (aminoacidurie). Ils auront également des problèmes avec le flux de bile du foie (cholestase) et trop de fer dans leur sang. Les personnes touchées ne sont généralement pas nées avec des caractéristiques physiques uniques. Le syndrome GRACILE est causé par un changement génétique du gène BCS1L, et il est hérité d'un motif récessif autosomal. Le gène BCS1L fournit les instructions nécessaires aux mitochondries dans les cellules pour aider à produire de l'énergie."
+        )
 
     def test_translate_en_it(self, opusmt_translator):
         translation = _translate(opusmt_translator, "What is Duchenne Muscular Dystrophy?", source="en", target="it")
