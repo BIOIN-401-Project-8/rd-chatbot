@@ -92,7 +92,7 @@ def metrics_llm():
     df.to_csv(output_csv)
 
     correct_columns = [column for column in df.columns if "correct_" in column]
-    model_names = cols,
+    model_names = [column.replace("correct_", "") for column in correct_columns]
 
     plot(df, correct_columns, model_names, "Accuracy", (0, 1))
 
@@ -124,7 +124,7 @@ def metrics_translation():
 
     column = columns[-1]
 
-    methods = ["google", "opusmt", "seamlessm4tv2"]
+    methods = ["google", "opusmt", "seamlessm4tv2", "mixtral8x7b", "mixtral_8x7b-instruct-v0.1-q4_0"]
     df_out = pd.DataFrame()
 
     for target in ["fr", "it"]:
@@ -164,6 +164,8 @@ def metrics_translation():
         "Google Translate",
         "OpusMT",
         "SeamlessM4Tv2",
+        "Mixtral-8x7B",
+        "Mixtral-8x7B_q4",
     ]
     plot(
         df_out,
@@ -205,6 +207,31 @@ def metrics_translation():
         (0, 1),
         "/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_back_translation_bleu_it.png",
         title="Italian Back Translation",
+    )
+
+    # plot time
+    time_columns = [column for column in df.columns if "time_" in column]
+    for time_column in time_columns:
+        df[time_column + "_seconds"] = df[time_column].apply(lambda x: pd.to_timedelta(x).total_seconds())
+    time_columns_fr = [column for column in time_columns if "_fr" in column]
+    plot(
+        df,
+        time_columns_fr,
+        cols,
+        "Time (s)",
+        None,
+        "/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_translation_time_fr.png",
+        title="French Translation",
+    )
+    time_columns_it = [column for column in time_columns if "_it" in column]
+    plot(
+        df,
+        time_columns_it,
+        cols,
+        "Time (s)",
+        None,
+        "/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_translation_time_it.png",
+        title="Italian Translation",
     )
 
 
