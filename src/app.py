@@ -26,13 +26,18 @@ async def on_chat_start(accepted: bool = False):
     initial_language_value = "Detect language"
     languages_to_iso_codes = translator.get_supported_languages(as_dict=True)
     language_values = [initial_language_value] + [language.title() for language in languages_to_iso_codes.keys()]
-    await cl.ChatSettings(
+    options = await cl.ChatSettings(
         [
             cl.input_widget.Select(
                 id="language",
                 label="Language",
                 values=language_values,
                 initial_value=initial_language_value,
+            ),
+            cl.input_widget.Switch(
+                id='newsletter',
+                label='Generate a newsletter?',
+                tooltip='A newsletter is a summary of recent PubMed articles'
             )
         ]
     ).send()
