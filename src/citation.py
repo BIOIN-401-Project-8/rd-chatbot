@@ -1,5 +1,6 @@
 import logging
 import re
+import xml.etree.ElementTree as ET
 from typing import List
 from uuid import uuid4
 
@@ -7,14 +8,73 @@ import pydot
 from gard import GARD
 from llama_index.core.base.response.schema import RESPONSE_TYPE
 from llama_index.core.schema import NodeWithScore
+from pybtex.database import parse_string
+from pybtex.plugin import find_plugin
 
 logger = logging.getLogger(__name__)
 gard = GARD()
 
+
+def bib_to_apa7_html(bibtex):
+    bibliography = parse_string(bibtex, "bibtex")
+    formatted_bib = APA.format_bibliography(bibliography)
+    return "\n".join(entry.text.render(TEXT) for entry in formatted_bib)
+
+
+def find_text(element, tag):
+    e = element.find(tag)
+    if e is not None:
+        return e.text
+    return ""
+
+
+APA = find_plugin("pybtex.style.formatting", "apa")()
+TEXT = find_plugin("pybtex.backends", "text")()
+
+
+def pmid_to_bib(pmid):
+    with open(f"/data/pmc-open-access-subset/efetch/PubmedArticle/{pmid}.xml") as f:
+        xml = f.read()
+    root = ET.fromstring(xml)
+    authors = []
+    for a in root.findall(".//Author"):
+        lastname = find_text(a, ".//LastName")
+        forename = find_text(a, ".//ForeName")
+        authors.append(f"{lastname}, {forename}")
+    author = " and ".join(authors)
+    if author == "":
+        author = "Anonymous"
+    title = find_text(root, ".//ArticleTitle")
+    journal = find_text(root, ".//Journal/Title")
+    year = find_text(root, ".//PubDate/Year")
+    month = find_text(root, ".//PubDate/Month")
+    doi = find_text(root, ".//ArticleId[@IdType='doi']")
+    url = f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/"
+
+    bibtex = f"""
+    @article{{{pmid},
+            author = {{{author}}},
+            title = {{{title}}},
+            journal = {{{journal}}},
+            year = {{{year}}},
+            month = {{{month}}},
+            doi = {{{doi}}},
+            url = {{{url}}},
+        }}
+    """
+    return bibtex
+
+
+def generate_full_pmid_citation(pmid):
+    bibtex = pmid_to_bib(pmid)
+    citation = bib_to_apa7_html(bibtex)
+    return citation
+
+
 def format_citation(citation: str):
     if citation.startswith("PMID:"):
         pmid = citation.removeprefix("PMID:")
-        return f"[{citation}](https://pubmed.ncbi.nlm.nih.gov/{pmid})"
+        return generate_full_pmid_citation(pmid)
     elif citation.startswith("ORPHA:"):
         orpha_code = citation.removeprefix("ORPHA:")
         return f"[{citation}](https://www.orpha.net/consor/cgi-bin/OC_Exp.php?lng=EN&Expert={orpha_code})"
@@ -48,12 +108,7 @@ def format_source(node: NodeWithScore):
 
 async def get_formatted_sources(source_nodes: List[NodeWithScore]):
     references = "\n\n### Sources\n"
-    references += "\n".join(
-        [
-            format_source(node)
-            for node in source_nodes
-        ]
-    )
+    references += "\n".join([format_source(node) for node in source_nodes])
     return references
 
 

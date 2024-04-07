@@ -87,14 +87,15 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
 
         subjs_upper = [subj.upper() for subj in subjs]
 
-        rel_map_rel = self.get_rel_map_rel(subjs_upper, depth, limit)
-        rel_map_organization = self.get_rel_map_organization(subjs_upper, limit)
-        rel_map_phenotype = self.get_rel_map_phenotype(subjs_upper, limit)
-        rel_map_prevalence = self.get_rel_map_prevalence(subjs_upper, limit)
+        # rel_map_rel = self.get_rel_map_rel(subjs_upper, depth, limit)
+        # rel_map_organization = self.get_rel_map_organization(subjs_upper, limit)
+        # rel_map_phenotype = self.get_rel_map_phenotype(subjs_upper, limit)
+        # rel_map_prevalence = self.get_rel_map_prevalence(subjs_upper, limit)
         rel_map_pubtator3 = self.get_rel_map_pubtator3(subjs, limit)
-        for subj, rels in chain(
-            rel_map_rel.items(), rel_map_organization.items(), rel_map_phenotype.items(), rel_map_prevalence.items(), rel_map_pubtator3.items()
-        ):
+        # for subj, rels in chain(
+        #     rel_map_rel.items(), rel_map_organization.items(), rel_map_phenotype.items(), rel_map_prevalence.items(), rel_map_pubtator3.items()
+        # ):
+        for subj, rels in rel_map_pubtator3.items():
             if subj in rel_map:
                 rel_map[subj] += rels
             else:
@@ -191,7 +192,6 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
             return {}
 
         return textualize_pubtator3s(pubtator3)
-
 
     def refresh_schema(self) -> None:
         """

@@ -25,6 +25,7 @@ services:
       - ~/.wakatime.cfg:/root/.wakatime.cfg:cached
       - ~/.cache:/root/.cache:cached
       - ~/Github/bioin-401-project/data:/data:cached
+      - /data/bioin-401-project/pmc-open-access-subset/:/data/pmc-open-access-subset:cached
     command: sleep infinity
 
   app:
@@ -53,6 +54,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ~/.cache:/root/.cache:cached
       - ~/Github/bioin-401-project/data:/data:cached
+      - /data/bioin-401-project/pmc-open-access-subset/:/data/pmc-open-access-subset:cached
     working_dir: /workspaces/rgd-chatbot
     command: chainlit run -hw src/app.py
 
