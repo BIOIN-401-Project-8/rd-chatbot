@@ -19,7 +19,7 @@ def get_language_detector(*iso_codes: IsoCode639_1):
 
 
 @cache
-def get_translator(translator: str = "opusmt"):
+def get_translator(translator: str = "google"):
     if translator == "google":
         return GoogleTranslator(source="auto", target="en")
     elif translator == "opusmt":
