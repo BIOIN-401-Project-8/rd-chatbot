@@ -21,25 +21,9 @@ logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
 @cl.on_chat_start
 async def on_chat_start(accepted: bool = False):
-    translator: BaseTranslator = get_translator()
-    cl.user_session.set("translator", translator)
-    initial_language_value = "Detect language"
-    languages_to_iso_codes = translator.get_supported_languages(as_dict=True)
-    language_values = [initial_language_value] + [language.title() for language in languages_to_iso_codes.keys()]
-    await cl.ChatSettings(
-        [
-            cl.input_widget.Select(
-                id="language",
-                label="Language",
-                values=language_values,
-                initial_value=initial_language_value,
-            )
-        ]
-    ).send()
-
     callback_manager = CallbackManager([CustomLlamaIndexCallbackHandler()])
-
     chat_engine_coroutine = cl.make_async(get_pipeline)(callback_manager=callback_manager)
+    cl.user_session.set("chat_engine_coroutine", chat_engine_coroutine)
 
     # display intro message and disclaimer
     descr = 'Hello! Welcome to Rare Disease Chatbot!'
@@ -76,8 +60,9 @@ async def on_chat_start(accepted: bool = False):
     welcome = "Welcome! Ask me anything about rare diseases, and I'll do my best to find you the most relevant and up-to-date information."
 
     await cl.Message(content=welcome).send()
-    chat_engine = await chat_engine_coroutine
-    cl.user_session.set("chat_engine", chat_engine)
+    translator: BaseTranslator = get_translator()
+    cl.user_session.set("translator", translator)
+    await set_chat_settings(translator)
 
     iso_codes = [
         IsoCode639_1[code.upper()].value
@@ -86,6 +71,28 @@ async def on_chat_start(accepted: bool = False):
     ]
     detector = get_language_detector(*iso_codes)
     cl.user_session.set("detector", detector)
+
+
+async def set_chat_settings(translator):
+    initial_language_value = "Detect language"
+    languages_to_iso_codes = translator.get_supported_languages(as_dict=True)
+    language_values = [initial_language_value] + [language.title() for language in languages_to_iso_codes.keys()]
+    await cl.ChatSettings(
+        [
+            cl.input_widget.Select(
+                id="translator",
+                label="Translator",
+                values=["Google", "OPUS-MT"],
+                initial_value="Google",
+            ),
+            cl.input_widget.Select(
+                id="language",
+                label="Language",
+                values=language_values,
+                initial_value=initial_language_value,
+            )
+        ]
+    ).send()
 
 
 def chat(chat_engine: BaseChatEngine, content: str, profile: bool = False):
@@ -102,7 +109,6 @@ def chat(chat_engine: BaseChatEngine, content: str, profile: bool = False):
 @cl.on_message
 async def on_message(message: cl.Message):
     start = time.time()
-    chat_engine: BaseChatEngine = cl.user_session.get("chat_engine")
     detector: LanguageDetector = cl.user_session.get("detector")
     translator: BaseTranslator = cl.user_session.get("translator")
     content = message.content
@@ -114,6 +120,7 @@ async def on_message(message: cl.Message):
     if language != "en" and language is not None:
         content = await translate(translator, content, source=language, target="en")
 
+    chat_engine: BaseChatEngine = await cl.user_session.get("chat_engine_coroutine")
     response = await cl.make_async(chat)(chat_engine, content, profile=False)
     response_message = cl.Message(content="")
 
@@ -143,12 +150,18 @@ async def on_message(message: cl.Message):
 
 
 @cl.on_settings_update
-def on_settings_update(settings: dict):
+async def on_settings_update(settings: dict):
+    translator = settings["translator"]
+    if translator == "Google":
+        translator: BaseTranslator = get_translator("google")
+    elif translator == "OPUS-MT":
+        translator: BaseTranslator = get_translator("opusmt")
+    await set_chat_settings(translator)
+    cl.user_session.set("translator", translator)
     language = settings["language"]
-    translator: BaseTranslator = cl.user_session.get("translator")
     if language == "Detect language":
         language = "auto"
     else:
         languages_to_iso_codes = translator.get_supported_languages(as_dict=True)
-        language = languages_to_iso_codes.get(language.lower())
+        language = languages_to_iso_codes.get(language.lower(), "auto")
     cl.user_session.set("language", language)

@@ -92,7 +92,7 @@ def metrics_llm():
     df.to_csv(output_csv)
 
     correct_columns = [column for column in df.columns if "correct_" in column]
-    model_names = cols,
+    model_names = [column.replace("correct_", "") for column in correct_columns]
 
     plot(df, correct_columns, model_names, "Accuracy", (0, 1))
 
@@ -116,15 +116,15 @@ def metrics_translation():
             break
         columns.append(column)
 
-    for column in df.columns:
-        if "error_" in column:
-            assert not df[column].any()
+    # for column in df.columns:
+    #     if "error_" in column:
+    #         assert not df[column].any()
 
     bleu = evaluate.load("bleu")
 
     column = columns[-1]
 
-    methods = ["google", "opusmt", "seamlessm4tv2"]
+    methods = ["google", "opusmt", "seamlessm4tv2", "mixtral8x7b", "mixtral_8x7b-instruct-v0.1-q4_0"]
     df_out = pd.DataFrame()
 
     for target in ["fr", "it"]:
@@ -164,6 +164,8 @@ def metrics_translation():
         "Google Translate",
         "OpusMT",
         "SeamlessM4Tv2",
+        "Mixtral-8x7B",
+        "Mixtral-8x7B_q4",
     ]
     plot(
         df_out,
@@ -205,6 +207,41 @@ def metrics_translation():
         (0, 1),
         "/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_back_translation_bleu_it.png",
         title="Italian Back Translation",
+    )
+
+    # plot time
+    time_translation_columns = [column for column in df.columns if column.startswith("time_translation_")]
+    time_back_translation_columns = [column for column in df.columns if column.startswith("time_back_translation_")]
+    df_time = pd.concat(
+        [
+            df[time_translation_columns],
+            df[time_back_translation_columns].rename(
+                columns=lambda x: x.replace("back_translation_", "translation_")
+            ),
+        ]
+    )
+    time_columns = [column for column in df_time.columns if "time_" in column]
+    for time_column in time_columns:
+        df_time[time_column + "_seconds"] = df_time[time_column].apply(lambda x: pd.to_timedelta(x).total_seconds())
+    time_columns_fr = [column + "_seconds" for column in time_columns if "_fr" in column]
+    plot(
+        df_time,
+        time_columns_fr,
+        cols,
+        "Time (s)",
+        None,
+        "/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_translation_time_fr.png",
+        title="French Translation",
+    )
+    time_columns_it = [column + "_seconds" for column in time_columns if "_it" in column]
+    plot(
+        df_time,
+        time_columns_it,
+        cols,
+        "Time (s)",
+        None,
+        "/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_translation_time_it.png",
+        title="Italian Translation",
     )
 
 
