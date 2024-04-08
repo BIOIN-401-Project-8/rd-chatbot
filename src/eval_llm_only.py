@@ -121,6 +121,7 @@ def eval_one_translation(
     df: pd.DataFrame, method: str, translator: BaseTranslator, source: str, target: str, column: str, slug: str
 ):
     output_file = f"/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_translation.csv"
+    logging.info(f"Translating {slug}")
     for index, row in tqdm(df.iterrows(), total=len(df)):
         if slug in row and pd.notna(row[slug]):
             continue
@@ -147,6 +148,11 @@ def main():
     else:
         df = pd.read_csv("/workspaces/rgd-chatbot/eval/data/RD/gard_corpus.csv")
     df = df.head(100)
+    # cols = df.columns
+    # set_to_null_cols = [
+    #     col for col in cols if col.startswith("translation_text_opusmt") or col.startswith("back_translation_text_opusmt") or col.startswith("error_text_opusmt") or col.startswith("time_text_opusmt")
+    # ]
+    # df[set_to_null_cols] = None
     df = eval_translation(df)
 
 

@@ -31,7 +31,7 @@ DEFAULT_CONTEXT_PROMPT_TEMPLATE = """
   {context_str}
 
   Instruction: Based on the above sources, provide a detailed answer with
-  sources for the user question below. Answer "don't know" if not present in the
+  sources for the user question below. Answer "I'm sorry, I don't know" if not present in the
   document.
   """
 

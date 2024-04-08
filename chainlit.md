@@ -1,4 +1,6 @@
-# Hello!
+<img src="\public\logo_light.png" alt="Rare Disease Chatbot" width="100"/>
+
+
 # Welcome to Rare Disease Chatbot 
 
 I'm a chatbot designed to help you stay informed about the latest findings in rare diseases. I can access and understand research articles from PubMed, a large database of scientific publications.
@@ -6,7 +8,7 @@ I'm a chatbot designed to help you stay informed about the latest findings in ra
 
 ### 📚 Learn More:
 
-- Find out what goes on behind the scenes with [RDChatbot User Documentation](https://www.youtube.com/watch?v=dQw4w9WgXcQ) 
+- Find out what goes on behind the scenes with [RDChatbot User Documentation](https://github.com/BIOIN-401-Project-8/rd-chatbot/wiki/User-Documentation) 
 - Dive deeper and check out our [Source Code](https://github.com/BIOIN-401-Project-8/rgd-chatbot/tree/main)
 
 <br>
