@@ -1,10 +1,9 @@
 import os
 
 import pytest
+from conftest import GITHUB_ACTIONS
 
 from src.graph_stores import CustomNeo4jGraphStore
-
-GITHUB_ACTIONS = bool(os.environ.get("GITHUB_ACTIONS"))
 
 
 @pytest.fixture

@@ -1,6 +1,7 @@
 import os
 
 import pytest
+from conftest import GITHUB_ACTIONS
 from deep_translator import GoogleTranslator
 from lingua import IsoCode639_1
 from llama_index.llms.groq import Groq
@@ -74,6 +75,7 @@ def mixtral8x7b_translator():
     return LLMTranslator(llm, languages, source="fr", target="en")
 
 
+@pytest.mark.skipif(GITHUB_ACTIONS, reason="This test won't run in Github Actions")
 class TestGoogleTranslator:
     def test_translate_fr_en(self, google_translator):
         translation = _translate(
@@ -112,6 +114,7 @@ class TestGoogleTranslator:
         assert translation == "什麼是杜氏肌肉營養不良症？"
 
 
+@pytest.mark.skipif(GITHUB_ACTIONS, reason="This test won't run in Github Actions")
 class TestOpusMTTranslator:
     def test_translate_fr_en(self, opusmt_translator):
         translation = _translate(
@@ -174,6 +177,8 @@ class TestOpusMTTranslator:
         assert translation == "什麼是杜尚尼亞肌肉萎縮癥?"
 
 
+@pytest.mark.skip(reason="Deprecated")
+@pytest.mark.skipif(GITHUB_ACTIONS, reason="This test won't run in Github Actions")
 class TestSeamlessM4Tv2Translator:
     def test_translate_fr_en(self, seamlessm4tv2_translator):
         translation = _translate(
@@ -220,6 +225,7 @@ class TestSeamlessM4Tv2Translator:
         assert translation == "杜<unk>肌肉萎缩是什么?"
 
 
+@pytest.mark.skipif(GITHUB_ACTIONS, reason="This test won't run in Github Actions")
 class TestMixtral8x7bTranslator:
     def test_translate_fr_en(self, mixtral8x7b_translator):
         translation = _translate(
