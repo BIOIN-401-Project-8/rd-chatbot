@@ -148,6 +148,11 @@ def main():
     else:
         df = pd.read_csv("/workspaces/rgd-chatbot/eval/data/RD/gard_corpus.csv")
     df = df.head(100)
+    # cols = df.columns
+    # set_to_null_cols = [
+    #     col for col in cols if col.startswith("translation_text_opusmt") or col.startswith("back_translation_text_opusmt") or col.startswith("error_text_opusmt") or col.startswith("time_text_opusmt")
+    # ]
+    # df[set_to_null_cols] = None
     df = eval_translation(df)
 
 

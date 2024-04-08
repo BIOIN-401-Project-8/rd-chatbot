@@ -210,12 +210,22 @@ def metrics_translation():
     )
 
     # plot time
-    time_columns = [column for column in df.columns if "time_" in column]
+    time_translation_columns = [column for column in df.columns if column.startswith("time_translation_")]
+    time_back_translation_columns = [column for column in df.columns if column.startswith("time_back_translation_")]
+    df_time = pd.concat(
+        [
+            df[time_translation_columns],
+            df[time_back_translation_columns].rename(
+                columns=lambda x: x.replace("back_translation_", "translation_")
+            ),
+        ]
+    )
+    time_columns = [column for column in df_time.columns if "time_" in column]
     for time_column in time_columns:
-        df[time_column + "_seconds"] = df[time_column].apply(lambda x: pd.to_timedelta(x).total_seconds())
-    time_columns_fr = [column for column in time_columns if "_fr" in column]
+        df_time[time_column + "_seconds"] = df_time[time_column].apply(lambda x: pd.to_timedelta(x).total_seconds())
+    time_columns_fr = [column + "_seconds" for column in time_columns if "_fr" in column]
     plot(
-        df,
+        df_time,
         time_columns_fr,
         cols,
         "Time (s)",
@@ -223,9 +233,9 @@ def metrics_translation():
         "/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_translation_time_fr.png",
         title="French Translation",
     )
-    time_columns_it = [column for column in time_columns if "_it" in column]
+    time_columns_it = [column + "_seconds" for column in time_columns if "_it" in column]
     plot(
-        df,
+        df_time,
         time_columns_it,
         cols,
         "Time (s)",
