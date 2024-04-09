@@ -137,7 +137,11 @@ async def on_message(message: cl.Message):
         content = await translate(translator, content, source="en", target=language)
 
     if source_nodes:
-        content += await get_formatted_sources(source_nodes)
+        output, sources_dict = await get_formatted_sources(source_nodes)
+        content += output
+        # update source numbers in content
+        for source in sources_dict:
+            content = content.replace(f"[{source}]", f"[{sources_dict[source]}]")
         ### uncomment following code to display source graph picture in chat
         # filename = get_source_graph(source_nodes)
         # elements = [cl.Image(path=filename, display="inline", size="large")]
