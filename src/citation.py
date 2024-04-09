@@ -2,6 +2,7 @@ import logging
 import re
 from typing import List
 from uuid import uuid4
+from metapub import PubMedFetcher
 
 import pydot
 from gard import GARD
@@ -11,6 +12,31 @@ from llama_index.core.schema import NodeWithScore
 logger = logging.getLogger(__name__)
 gard = GARD()
 
+
+def onlineFullCitation(pmid:str, citation:str):
+    '''
+    Search PMC by PMID. Get article title, authors, 
+    journal and abstract. (max 3 req per second w/out API, 10 with)
+    Args:
+        pmid(str): PMID to create citation for
+        citation(str): original citation str
+    Returns:
+        citation(str): formatted citation
+    '''
+    full_citation = ''
+    fetch = PubMedFetcher()
+    try:
+        article = fetch.article_by_pmid(pmid)
+    except:
+        return f"[{citation}](https://pubmed.ncbi.nlm.nih.gov/{pmid})"
+    # extract metadata
+    full_citation += article.title
+    full_citation += f"\nJOURNAL: {article.journal}, {article.year}\nAUTHORS: {', '.join(article.authors)}\n"
+    # add link
+    full_citation += f"https://pubmed.ncbi.nlm.nih.gov/{pmid}\n"
+    return full_citation
+
+
 def format_citation(citation: str):
     '''
     Uses article ID to generate a URL for the source.
@@ -18,7 +44,7 @@ def format_citation(citation: str):
     '''
     if citation.startswith("PMID:"):
         pmid = citation.removeprefix("PMID:")
-        return f"[{citation}](https://pubmed.ncbi.nlm.nih.gov/{pmid})"
+        return onlineFullCitation(pmid, citation)
     elif citation.startswith("ORPHA:"):
         orpha_code = citation.removeprefix("ORPHA:")
         return f"[{citation}](https://www.orpha.net/consor/cgi-bin/OC_Exp.php?lng=EN&Expert={orpha_code})"
