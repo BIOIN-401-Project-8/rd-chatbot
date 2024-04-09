@@ -38,38 +38,56 @@ def format_citation(citation: str):
 
 
 def format_citations(citations: List[str]):
-    '''
-    Turns list of citations into a formatted string.
-    '''
     citations_formatted = []
     for citation in citations:
         citations_formatted.append(format_citation(citation))
-    return ", ".join(citations_formatted)
+    return citations_formatted
 
 
-def format_source(node: NodeWithScore):
+async def get_formatted_sources(source_nodes:List[NodeWithScore]):
     '''
-    Get source number, source triple, and formatted citation from a node.
-    Return formatted str.
+    Return formatted string of source numbers and corresponding urls.
+    Return dict mapping original source numbers to new source numbers.
     '''
-    text = node.text
-    source_number = int(text.split(":")[0].removeprefix("Source "))
-    #source = node.text.split(":")[1].split("\n")[0].strip()
-    citation = format_citations(node.metadata["citation"])
-    # ignore triple in user result
-    return f"[{source_number}] {citation}"
-    #return f"[{source_number}] {citation} {source}"
-
-
-async def get_formatted_sources(source_nodes: List[NodeWithScore]):
     references = "\n\n### Sources\n"
-    references += "\n".join(
-        [
-            format_source(node)
-            for node in source_nodes
-        ]
-    )
-    return references
+    citations_dict = {}
+    sources_dict = {}
+
+    for node in source_nodes:
+        # get source number
+        text = node.text
+        source_number = int(text.split(":")[0].removeprefix("Source "))
+        # get list of formatted source URLs
+        citations = format_citations(node.metadata["citation"])
+        # add URLs and source number to dict
+        if len(citations) == 1:
+            try:
+                citations_dict[citations[0]].append(source_number)
+            except KeyError:
+                citations_dict[citations[0]] = [source_number]
+        else:  # more than one citation for same source number :(
+            for citation in citations:
+                # add a unique source number for each citation
+                try:
+                    citations_dict[citation].append(source_number)
+                except KeyError:
+                    citations_dict[citation] = [source_number]
+                source_number += 0.1  # make source number unique
+        
+    # consolidate citations w/ multiple source numbers to have just one
+    #max = 0
+    for c in citations_dict:
+        # use min source number for citation
+        new_source = min(citations_dict[c])
+        references += f"[{new_source}] {str(citation)}"
+        #max = new_source if new_source > max else max
+        # if more than one source, track replaced numbers
+        if len(citations_dict[c]) > 1:
+            for source in citations_dict[c]:
+                sources_dict[source] = new_source
+        else:
+            sources_dict[new_source] = new_source
+    return references, sources_dict
 
 
 def get_source_nodes(response: RESPONSE_TYPE, content: str):
