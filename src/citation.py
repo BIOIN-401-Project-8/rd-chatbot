@@ -23,7 +23,9 @@ def format_citation(citation: str):
         return f"[{citation}](https://www.omim.org/entry/{omim_identifier})"
     elif citation.startswith("UMLS:"):
         umls_identifier = citation.removeprefix("UMLS:")
-        return f"[{citation}](https://uts.nlm.nih.gov/metathesaurus.html#?searchString={umls_identifier})"
+        # temp fix for broken UMLS links
+        return f"[{citation}](https://www.ncbi.nlm.nih.gov/medgen/?term={umls_identifier})"
+        #return f"[{citation}](https://uts.nlm.nih.gov/metathesaurus.html#?searchString={umls_identifier})"
     elif citation.startswith("GARD:"):
         gard_identifier = citation.removeprefix("GARD:")
         return f"[{citation}]({gard.get_url(gard_identifier)})"
