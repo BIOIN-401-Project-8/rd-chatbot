@@ -101,12 +101,10 @@ async def get_formatted_sources(source_nodes:List[NodeWithScore]):
                 source_number += 0.1  # make source number unique
         
     # consolidate citations w/ multiple source numbers to have just one
-    #max = 0
     for c in citations_dict:
         # use min source number for citation
         new_source = min(citations_dict[c])
-        references += f"[{new_source}] {str(citation)}"
-        #max = new_source if new_source > max else max
+        references += f"[{new_source}] {str(c)}"
         # if more than one source, track replaced numbers
         if len(citations_dict[c]) > 1:
             for source in citations_dict[c]:
