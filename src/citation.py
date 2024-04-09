@@ -12,6 +12,10 @@ logger = logging.getLogger(__name__)
 gard = GARD()
 
 def format_citation(citation: str):
+    '''
+    Uses article ID to generate a URL for the source.
+    Returns formatted link, with the citation as link text. 
+    '''
     if citation.startswith("PMID:"):
         pmid = citation.removeprefix("PMID:")
         return f"[{citation}](https://pubmed.ncbi.nlm.nih.gov/{pmid})"
@@ -34,6 +38,9 @@ def format_citation(citation: str):
 
 
 def format_citations(citations: List[str]):
+    '''
+    Turns list of citations into a formatted string.
+    '''
     citations_formatted = []
     for citation in citations:
         citations_formatted.append(format_citation(citation))
@@ -41,11 +48,17 @@ def format_citations(citations: List[str]):
 
 
 def format_source(node: NodeWithScore):
+    '''
+    Get source number, source triple, and formatted citation from a node.
+    Return formatted str.
+    '''
     text = node.text
     source_number = int(text.split(":")[0].removeprefix("Source "))
-    source = node.text.split(":")[1].split("\n")[0].strip()
+    #source = node.text.split(":")[1].split("\n")[0].strip()
     citation = format_citations(node.metadata["citation"])
-    return f"[{source_number}] {citation} {source}"
+    # ignore triple in user result
+    return f"[{source_number}] {citation}"
+    #return f"[{source_number}] {citation} {source}"
 
 
 async def get_formatted_sources(source_nodes: List[NodeWithScore]):
