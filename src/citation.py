@@ -5,12 +5,12 @@ import xml.etree.ElementTree as ET
 from collections import defaultdict
 from typing import List
 from uuid import uuid4
-from metapub import PubMedFetcher
 
 import pydot
 from gard import GARD
 from llama_index.core.base.response.schema import RESPONSE_TYPE
 from llama_index.core.schema import NodeWithScore
+from metapub import PubMedFetcher
 from pybtex.database import parse_string
 from pybtex.plugin import find_plugin
 
@@ -40,7 +40,6 @@ def onlineFullCitation(pmid:str, citation:str):
     # add link
     full_citation += f"https://pubmed.ncbi.nlm.nih.gov/{pmid}\n"
     return full_citation
-
 
 
 def bib_to_apa7_html(bibtex):
@@ -313,3 +312,28 @@ def expand_citations(content: str):
         else:
             content = content.replace(f"Sources {source}", ", ".join([f"Source {x}" for x in numbers]))
     return content
+
+
+def postprocess_citation(response):
+    content = response.response
+
+    source_nodes = get_source_nodes(response, content)
+
+    content = content.split("Sources:")[0].strip()
+    content = expand_citations(content)
+    content = re.sub(r"Source (\d+)", r"[\1]", content, flags=re.I)
+    content = re.sub(r"\(\[", "[", content)
+    content = re.sub(r"\]\)", "]", content)
+    content = re.sub(r"\[\[+", "[", content)
+    content = re.sub(r"\]\]+", "]", content)
+
+    bibliography = None
+    if source_nodes:
+        # get order of sources
+        source_order = re.findall(r"\[(\d+)\]", content)
+        source_order = [int(source) for source in source_order]
+        bibliography, inline_citation_map = generate_bibliography(source_nodes, source_order)
+        for source_number, biblography_numbers in inline_citation_map.items():
+            content = re.sub(rf"\[{source_number}\]", smart_inline_citation_format(biblography_numbers), content)
+            content = merge_adjacent_citations(content)
+    return content, bibliography

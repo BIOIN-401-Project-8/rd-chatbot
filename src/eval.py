@@ -14,7 +14,7 @@ from tqdm import tqdm
 
 from pipelines import get_llm, get_pipeline
 from translation import BaseTranslator, _translate, get_translator
-
+from citation import postprocess_citation
 logger = logging.getLogger(__name__)
 fh = logging.FileHandler("eval.log")
 fh.setLevel(logging.DEBUG)
@@ -22,6 +22,15 @@ logger.addHandler(fh)
 sh = logging.StreamHandler()
 sh.setLevel(logging.INFO)
 logger.addHandler(sh)
+
+
+def run_pipeline(llm_model_name: str, question: str):
+    pipeline = get_pipeline(llm_model_name=llm_model_name)
+    response = pipeline.chat(question)
+    content, bibliography = postprocess_citation(response)
+    if bibliography:
+        content += bibliography
+    return content
 
 
 def slugify(value, allow_unicode=False):
@@ -43,13 +52,13 @@ def slugify(value, allow_unicode=False):
 
 
 def eval_llm():
-    models = [
+    models_llm_only = [
         "starling-lm:7b-alpha-q4_0",
         "llama3:8b-instruct-q4_0",
         "groq:llama3-8b-8192",
         "groq:llama3-70b-8192",
         "groq:mixtral-8x7b-32768",
-        "openai:gpt-4-turbo",
+        # "openai:gpt-4-turbo",
     ]
 
     output_file = f"/workspaces/rgd-chatbot/eval/results/RD/test_questions.csv"
@@ -59,19 +68,14 @@ def eval_llm():
     if Path(output_file).exists():
         df = pd.read_csv(output_file)
 
-    for model_name, llm_only in product(models, [True]):
+    for model_name in models_llm_only:
         df_view = df
         slug = model_name
-        if not llm_only:
-            slug += "_rag"
         if f"response_{slugify(model_name)}" in df.columns:
             df_view = df[df[f"error_{slugify(model_name)}"] == True]
         if len(df_view) == 0:
             continue
-        if llm_only:
-            pipeline = get_llm(llm_model_name=model_name)
-        else:
-            pipeline = get_pipeline(llm_model_name=model_name)
+        llm = get_llm(llm_model_name=model_name)
 
         for index, row in tqdm(df_view.iterrows(), total=len(df_view)):
             slug = slugify(model_name)
@@ -79,11 +83,40 @@ def eval_llm():
             start = time.time()
             try:
                 question = row["question"]
-                if llm_only:
-                    response = pipeline.complete(question)
-                    response = response.text
-                else:
-                    response = pipeline.chat(question)
+                response = llm.complete(question)
+                response = response.text
+            except Exception as e:
+                logger.exception(f"Failed to get response for {question}")
+                response = str(e)
+                error = True
+            end = time.time()
+
+            df_view.loc[index, f"response_{slug}"] = response
+            df_view.loc[index, f"time_{slug}"] = timedelta(seconds=end - start)
+            df_view.loc[index, f"error_{slug}"] = error
+            df.loc[df_view.index, df_view.columns] = df_view
+            df.to_csv(output_file, index=False)
+
+    models_rag = [
+        "llama3:8b-instruct-q4_0",
+    ]
+    for model_name in models_rag:
+        df_view = df
+        slug = model_name
+        slug += "_rag"
+        if f"response_{slugify(model_name)}" in df.columns:
+            df_view = df[df[f"error_{slugify(model_name)}"] == True]
+        if len(df_view) == 0:
+            continue
+        llm = get_llm(llm_model_name=model_name)
+
+        for index, row in tqdm(df_view.iterrows(), total=len(df_view)):
+            slug = slugify(model_name)
+            error = False
+            start = time.time()
+            try:
+                question = row["question"]
+                response = run_pipeline(model_name, question)
             except Exception as e:
                 logger.exception(f"Failed to get response for {question}")
                 response = str(e)
