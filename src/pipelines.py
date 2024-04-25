@@ -8,7 +8,10 @@ from llama_index.core.retrievers import BaseRetriever
 from llama_index.core.storage import StorageContext
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.embeddings.ollama import OllamaEmbedding
+from llama_index.llms.groq import Groq
 from llama_index.llms.ollama import Ollama
+from llama_index.llms.openai import OpenAI
+from llama_index.llms.openrouter import OpenRouter
 
 from chat_engine.citation_types import CitationChatMode
 from embeddings import SentenceTransformerEmbeddings
@@ -85,15 +88,37 @@ def get_ollama_embed_model(embed_model_name: str = "mxbai-embed-large:335m-v1-fp
 
 
 def get_llm(llm_model_name: str = "llama3:8b-instruct-q4_0"):
-    # Pulling the model with Ollama
-    # TODO: display this as a progress bar
-    httpx.post("http://ollama:11434/api/pull", json={"name": llm_model_name}, timeout=600.0)
-    return Ollama(
-        model=llm_model_name,
-        base_url="http://ollama:11434",
-        request_timeout=30.0,
-        temperature=0.0,
-    )
+    if llm_model_name.startswith("openai:"):
+        llm_model_name = llm_model_name.removeprefix("openai:")
+        return OpenAI(
+            model=llm_model_name,
+            api_key=os.environ["OPENAI_API_KEY"],
+            temperature=0.0,
+        )
+    elif llm_model_name.startswith("groq:"):
+        llm_model_name = llm_model_name.removeprefix("groq:")
+        return Groq(
+            model=llm_model_name,
+            api_key=os.environ["GROQ_API_KEY"],
+            temperature=0.0,
+        )
+    elif llm_model_name.startswith("openrouter:"):
+        llm_model_name = llm_model_name.removeprefix("openrouter:")
+        return OpenRouter(
+            model=llm_model_name,
+            api_key=os.environ["OPENROUTER_API_KEY"],
+            temperature=0.0,
+        )
+    else:
+        # Pulling the model with Ollama
+        # TODO: display this as a progress bar
+        httpx.post("http://ollama:11434/api/pull", json={"name": llm_model_name}, timeout=600.0)
+        return Ollama(
+            model=llm_model_name,
+            base_url="http://ollama:11434",
+            request_timeout=30.0,
+            temperature=0.0,
+        )
 
 
 def get_query_engine(retriever: BaseRetriever):
