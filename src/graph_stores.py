@@ -3,7 +3,13 @@ from typing import Any, Dict, List
 
 from llama_index.graph_stores.neo4j import Neo4jGraphStore
 
-from textualize import textualize_organizations, textualize_phenotypes, textualize_prevelances, textualize_rels
+from textualize import (
+    textualize_organizations,
+    textualize_phenotypes,
+    textualize_prevelances,
+    textualize_pubtator3s,
+    textualize_rels
+)
 
 
 class CustomNeo4jGraphStore(Neo4jGraphStore):
@@ -79,14 +85,19 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
             # unlike simple graph_store, we don't do get_all here
             return rel_map
 
-        subjs = [subj.upper() for subj in subjs]
+        subjs_upper = [subj.upper() for subj in subjs]
 
-        rel_map_rel = self.get_rel_map_rel(subjs, depth, limit)
-        rel_map_organization = self.get_rel_map_organization(subjs, limit)
-        rel_map_phenotype = self.get_rel_map_phenotype(subjs, limit)
-        rel_map_prevalence = self.get_rel_map_prevalence(subjs, limit)
+        rel_map_rel = self.get_rel_map_rel(subjs_upper, depth, limit)
+        rel_map_organization = self.get_rel_map_organization(subjs_upper, limit)
+        rel_map_phenotype = self.get_rel_map_phenotype(subjs_upper, limit)
+        rel_map_prevalence = self.get_rel_map_prevalence(subjs_upper, limit)
+        rel_map_rel = self.get_rel_map_rel(subjs_upper, depth, limit)
+        rel_map_organization = self.get_rel_map_organization(subjs_upper, limit)
+        rel_map_phenotype = self.get_rel_map_phenotype(subjs_upper, limit)
+        rel_map_prevalence = self.get_rel_map_prevalence(subjs_upper, limit)
+        rel_map_pubtator3 = self.get_rel_map_pubtator3(subjs_upper, limit)
         for subj, rels in chain(
-            rel_map_rel.items(), rel_map_organization.items(), rel_map_phenotype.items(), rel_map_prevalence.items()
+            rel_map_rel.items(), rel_map_organization.items(), rel_map_phenotype.items(), rel_map_prevalence.items(), rel_map_pubtator3.items()
         ):
             if subj in rel_map:
                 rel_map[subj] += rels
@@ -103,6 +114,7 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
         query = f"""MATCH p=(n:`{self.node_label}`)-[r:R_rel]->(m)
             {"WHERE apoc.coll.intersection(apoc.convert.toList(n.N_Name), $subjs)" if subjs else ""}
             RETURN n._N_Name AS n__N_Name, n._I_GENE AS n__I_GENE, m._N_Name AS m__N_Name, m._I_GENE AS m__I_GENE, r.citations AS r_citations, r.interpretation AS r_interpretation, r.name AS r_name, r.value AS r_value
+            LIMIT {limit}
         """
 
         rels = list(self.query(query, {"subjs": subjs}))
@@ -167,6 +179,39 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
             return {}
 
         return textualize_prevelances(prevalences)
+
+    def get_rel_map_pubtator3(self, subjs: List[str] | None = None, limit: int = 30) -> Dict[str, List[List[str]]]:
+        if subjs is None or len(subjs) == 0:
+            return {}
+
+        subjs = sorted(subjs, key=len)
+        # Remove duplicates
+        subjs = [j for i, j in enumerate(subjs) if all(j not in k for k in subjs[i + 1:])]
+
+        pubtator3 = []
+        query = f"""
+            MATCH p=(n:PubTator3:Disease)-[r:`associate_PubTator3`|`cause_PubTator3`|`compare_PubTator3`|`cotreat_PubTator3`|`drug_interact_PubTator3`|`inhibit_PubTator3`|`interact_PubTator3`|`negative_correlate_PubTator3`|`positive_correlate_PubTator3`|`prevent_PubTator3`|`stimulate_PubTator3`|`treat_PubTator3`]->(m:PubTator3)
+            {f"WHERE apoc.coll.intersection(split(toUpper(n.Mentions), '|'), $subjs)" if subjs else ""}
+            RETURN n.Mentions AS n_Mentions, m.Mentions AS m_Mentions, r.PMID AS r_PMID, type(r) as r_type
+            ORDER BY size(r.PMID) DESC
+            LIMIT 20
+        """
+        result = list(self.query(query, {"subjs": subjs}))
+        pubtator3.extend(result)
+        query = f"""
+            MATCH p=(n:PubTator3)-[r:`associate_PubTator3`|`cause_PubTator3`|`compare_PubTator3`|`cotreat_PubTator3`|`drug_interact_PubTator3`|`inhibit_PubTator3`|`interact_PubTator3`|`negative_correlate_PubTator3`|`positive_correlate_PubTator3`|`prevent_PubTator3`|`stimulate_PubTator3`|`treat_PubTator3`]->(m:PubTator3:Disease)
+            {f"WHERE apoc.coll.intersection(split(toUpper(m.Mentions), '|'), $subjs)" if subjs else ""}
+            RETURN n.Mentions AS n_Mentions, m.Mentions AS m_Mentions, r.PMID AS r_PMID, type(r) as r_type
+            ORDER BY size(r.PMID) DESC
+            LIMIT 100
+        """
+        result = list(self.query(query, {"subjs": subjs}))
+        pubtator3.extend(result)
+
+        if not pubtator3:
+            return {}
+
+        return textualize_pubtator3s(pubtator3)
 
     def refresh_schema(self) -> None:
         """

@@ -36,3 +36,22 @@ class TestKG_RAG_KnowledgeGraphRAGRetriever:
         nodes = retriever.retrieve("What genes are associated with Duchenne Muscular Dystrophy?")
         texts = [node.text for node in nodes]
         assert "DUCHENNE MUSCULAR DYSTROPHY disease associated with gene DYSTROPHIN" in texts
+
+    def test_treat(self, retriever):
+        nodes = retriever.retrieve("Do steroids treat Brachial plexus birth injury?")
+        texts = [node.text for node in nodes]
+        assert "Steroid- treat Brachial plexus birth injury" in texts
+
+    def test_treats(self, retriever):
+        nodes = retriever.retrieve("What treats PKU?")
+        texts = [node.text for node in nodes]
+        assert texts
+
+    def test_GNE_myopathy(self, retriever):
+        nodes = retriever.retrieve("My right leg hurts from GNE Myopathy, what do I do?")
+        texts = [node.text for node in nodes]
+        assert texts
+
+    def test_extract_mentions(self, retriever):
+        entities = retriever._get_entities("My right leg hurts from GNE Myopathy, what do I do?")
+        assert "GNE Myopathy" in entities

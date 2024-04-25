@@ -135,6 +135,9 @@ class OpusMTTranslator(BaseTranslator):
         translated_paragraphs = []
         for paragraph in paragraphs:
             sentences = sent_tokenize(paragraph, language=CODES_TO_PUNKT_MODEL_NAMES.get(self.source, "english"))
+            if not sentences:
+                translated_paragraphs.append("")
+                continue
             inputs = tokenizer(sentences, return_tensors="pt", padding=True, truncation=True)
             inputs = inputs.to(self.device)
             translated = model.generate(**inputs)

@@ -178,13 +178,31 @@ def textualize_rels(rels: list[dict]):
         subj = rel["n__N_Name"] or rel["n__I_GENE"]
         if subj not in rel_map:
             rel_map[subj] = []
-        rel_description = textualize_rel(rel)
-        if not rel_description:
+        obj = textualize_rel(rel)
+        if not obj:
             continue
         relationships = rel["r_name"]
         if isinstance(relationships, list):
             relationships = "|".join(relationships)
         relationships = relationships.replace("_", " ")
         citations = get_list(rel["r_citations"]) + get_list(rel["r_value"])
-        rel_map[subj].append((relationships, rel_description, "|".join(citations)))
+        rel_map[subj].append((relationships, obj, "|".join(citations)))
+    return rel_map
+
+def textualize_pubtator3s(rels: list[dict]):
+    rel_map: Dict[str, List[List[str]]] = {}
+    for rel in rels:
+        subj = rel["n_Mentions"].removeprefix("|")
+        if not subj:
+            continue
+        if subj not in rel_map:
+            rel_map[subj] = []
+        obj = rel["m_Mentions"].removeprefix("|")
+        if not obj:
+            continue
+        pred = rel["r_type"].removesuffix("_PubTator3")
+        citations = rel["r_PMID"].split("|")
+        citations = [f"PMID:{citation}" for citation in citations]
+        citation = "|".join(citations)
+        rel_map[subj].append((pred, obj, citation))
     return rel_map

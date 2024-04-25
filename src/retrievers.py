@@ -94,6 +94,50 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
 
         return nodes
 
+    def _process_entities(
+        self,
+        query_str: str,
+        handle_fn: Optional[Callable],
+        handle_llm_prompt_template: Optional[BasePromptTemplate],
+        cross_handle_policy: Optional[str] = "union",
+        max_items: Optional[int] = 5,
+        result_start_token: str = "KEYWORDS:",
+    ) -> List[str]:
+        """Get entities from query string."""
+        # Skip if max_items is 0
+        if max_items == 0:
+            return []
+        return super()._process_entities(
+            query_str=query_str,
+            handle_fn=handle_fn,
+            handle_llm_prompt_template=handle_llm_prompt_template,
+            cross_handle_policy=cross_handle_policy,
+            max_items=max_items,
+            result_start_token=result_start_token,
+        )
+
+    async def _aprocess_entities(
+        self,
+        query_str: str,
+        handle_fn: Optional[Callable],
+        handle_llm_prompt_template: Optional[BasePromptTemplate],
+        cross_handle_policy: Optional[str] = "union",
+        max_items: Optional[int] = 5,
+        result_start_token: str = "KEYWORDS:",
+    ) -> List[str]:
+        """Get entities from query string."""
+        # Skip if max_items is 0
+        if max_items == 0:
+            return []
+        return await super()._aprocess_entities(
+            query_str=query_str,
+            handle_fn=handle_fn,
+            handle_llm_prompt_template=handle_llm_prompt_template,
+            cross_handle_policy=cross_handle_policy,
+            max_items=max_items,
+            result_start_token=result_start_token,
+        )
+
     def _retrieve_keyword(self, query_bundle: QueryBundle) -> List[NodeWithScore]:
         """Retrieve in keyword mode."""
         if self._retriever_mode not in ["keyword", "keyword_embedding"]:
@@ -141,13 +185,25 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
         logger.debug(f"rel_map: {rel_map}")
 
         # Build Knowledge Sequence
+        memo = {}
         knowledge_sequence = []
         if rel_map:
             for rel_key, rel_values in rel_map.items():
-                subj = self._get_best_rel_item(rel_key, query_bundle)
+                if rel_key in memo:
+                    subj = memo[rel_key]
+                else:
+                    subj = self._get_best_rel_item(rel_key, query_bundle, entities)
+                    memo[rel_key] = subj
                 for rel, obj, citation in rel_values:
-                    rel = self._get_best_rel_item(rel, query_bundle)
-                    obj = self._get_best_rel_item(obj, query_bundle)
+                    if rel in memo:
+                        rel = memo[rel]
+                    else:
+                        rel = self._get_best_rel_item(rel, query_bundle)
+                        memo[rel] = rel
+                    if obj in memo:
+                        obj = memo[obj]
+                    else:
+                        obj = self._get_best_rel_item(obj, query_bundle, entities)
                     knowledge_sequence.append((subj, rel, obj, citation))
         else:
             logger.info("> No knowledge sequence extracted from entities.")
@@ -158,9 +214,21 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
     async def _aget_knowledge_sequence(self, entities: List[str], query_bundle: QueryBundle) -> Tuple[List[str], Optional[Dict[Any, Any]]]:
         return self._get_knowledge_sequence(entities, query_bundle)
 
-    def _get_best_rel_item(self, rel_items: str, query_bundle: QueryBundle) -> str:
+    def _get_best_rel_item(self, rel_items: str, query_bundle: QueryBundle, entities: List[str] | None = None) -> str:
         """Get best rel key."""
         rel_items = rel_items.split("|")
+        rel_items = [rel_item for rel_item in rel_items if rel_item]
+        # return rel_items[0]
+        # if in entities
+        rel_items_selected = []
+        if entities:
+            for entity in entities:
+                if entity in rel_items:
+                    rel_items_selected.append(entity)
+
+        if rel_items_selected:
+            rel_items = rel_items_selected
+
         if len(rel_items) == 1:
             return rel_items[0]
 
