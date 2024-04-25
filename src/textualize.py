@@ -192,15 +192,17 @@ def textualize_rels(rels: list[dict]):
 def textualize_pubtator3s(rels: list[dict]):
     rel_map: Dict[str, List[List[str]]] = {}
     for rel in rels:
-        subj = "|".join(rel["n_Mentions"])
+        subj = rel["n_Mentions"].removeprefix("|")
         if not subj:
             continue
         if subj not in rel_map:
             rel_map[subj] = []
-        obj = "|".join(rel["m_Mentions"])
+        obj = rel["m_Mentions"].removeprefix("|")
         if not obj:
             continue
         pred = rel["r_type"].removesuffix("_PubTator3")
-        citation = f"PMID:{rel['r_PMID']}"
+        citations = rel["r_PMID"].split("|")
+        citations = [f"PMID:{citation}" for citation in citations]
+        citation = "|".join(citations)
         rel_map[subj].append((pred, obj, citation))
     return rel_map

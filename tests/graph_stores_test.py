@@ -80,10 +80,17 @@ class TestCustomNeo4jGraphStore:
         )
 
     def test_get_rel_map_pubtator3(self, graph_store: CustomNeo4jGraphStore):
-        rel_map = graph_store.get_rel_map_pubtator3(["GRACILE Syndrome"], limit=1)
+        rel_map = graph_store.get_rel_map_pubtator3(["GRACILE SYNDROME"], limit=1)
         rels = rel_map['Fellman disease|Fellman syndrome|GAD|GRACILE|GRACILE Syndrome|GRACILE syndrome|GRACILE-like|GRACILE-like condition|GRACILE-like disorder|GRACILE-like syndrome|Gracile axonal dystrophy|Gracile syndrome|and early death (GRACILE) syndrome|atrophy of gracile and cuneate nuclei|degeneration of the gracile nucleus and|gad|gracile|gracile axonal dystrophy|gracile fasciculi|gracile fasciculus|gracile syndrome|spinal gracile axonal dystrophy|tuberculum gracile']
         assert rels[0] == (
             "associate",
             "protein gene product 9.5",
             "PMID:14648596",
         )
+
+    def test_get_rel_map_pubtator3_GNE_Myopathy(self, graph_store: CustomNeo4jGraphStore):
+        rel_map = graph_store.get_rel_map_pubtator3(
+            ["GNE", "MYOPATHY"], limit=100
+        )
+        rels = []
+        assert rels == []

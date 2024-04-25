@@ -87,15 +87,18 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
 
         subjs_upper = [subj.upper() for subj in subjs]
 
-        # rel_map_rel = self.get_rel_map_rel(subjs_upper, depth, limit)
-        # rel_map_organization = self.get_rel_map_organization(subjs_upper, limit)
-        # rel_map_phenotype = self.get_rel_map_phenotype(subjs_upper, limit)
-        # rel_map_prevalence = self.get_rel_map_prevalence(subjs_upper, limit)
-        rel_map_pubtator3 = self.get_rel_map_pubtator3(subjs, limit)
-        # for subj, rels in chain(
-        #     rel_map_rel.items(), rel_map_organization.items(), rel_map_phenotype.items(), rel_map_prevalence.items(), rel_map_pubtator3.items()
-        # ):
-        for subj, rels in rel_map_pubtator3.items():
+        rel_map_rel = self.get_rel_map_rel(subjs_upper, depth, limit)
+        rel_map_organization = self.get_rel_map_organization(subjs_upper, limit)
+        rel_map_phenotype = self.get_rel_map_phenotype(subjs_upper, limit)
+        rel_map_prevalence = self.get_rel_map_prevalence(subjs_upper, limit)
+        rel_map_rel = self.get_rel_map_rel(subjs_upper, depth, limit)
+        rel_map_organization = self.get_rel_map_organization(subjs_upper, limit)
+        rel_map_phenotype = self.get_rel_map_phenotype(subjs_upper, limit)
+        rel_map_prevalence = self.get_rel_map_prevalence(subjs_upper, limit)
+        rel_map_pubtator3 = self.get_rel_map_pubtator3(subjs_upper, limit)
+        for subj, rels in chain(
+            rel_map_rel.items(), rel_map_organization.items(), rel_map_phenotype.items(), rel_map_prevalence.items(), rel_map_pubtator3.items()
+        ):
             if subj in rel_map:
                 rel_map[subj] += rels
             else:
@@ -111,6 +114,7 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
         query = f"""MATCH p=(n:`{self.node_label}`)-[r:R_rel]->(m)
             {"WHERE apoc.coll.intersection(apoc.convert.toList(n.N_Name), $subjs)" if subjs else ""}
             RETURN n._N_Name AS n__N_Name, n._I_GENE AS n__I_GENE, m._N_Name AS m__N_Name, m._I_GENE AS m__I_GENE, r.citations AS r_citations, r.interpretation AS r_interpretation, r.name AS r_name, r.value AS r_value
+            LIMIT {limit}
         """
 
         rels = list(self.query(query, {"subjs": subjs}))
@@ -180,13 +184,29 @@ class CustomNeo4jGraphStore(Neo4jGraphStore):
         if subjs is None or len(subjs) == 0:
             return {}
 
+        subjs = sorted(subjs, key=len)
+        # Remove duplicates
+        subjs = [j for i, j in enumerate(subjs) if all(j not in k for k in subjs[i + 1:])]
+
+        pubtator3 = []
         query = f"""
             MATCH p=(n:PubTator3:Disease)-[r:`associate_PubTator3`|`cause_PubTator3`|`compare_PubTator3`|`cotreat_PubTator3`|`drug_interact_PubTator3`|`inhibit_PubTator3`|`interact_PubTator3`|`negative_correlate_PubTator3`|`positive_correlate_PubTator3`|`prevent_PubTator3`|`stimulate_PubTator3`|`treat_PubTator3`]->(m:PubTator3)
-            {"WHERE apoc.coll.intersection(apoc.convert.fromJsonList(n.Mentions), $subjs)" if subjs else ""}
-            RETURN apoc.convert.fromJsonList(n.Mentions) AS n_Mentions, apoc.convert.fromJsonList(m.Mentions) AS m_Mentions, r.PMID AS r_PMID, type(r) as r_type
-            LIMIT {limit}
+            {f"WHERE apoc.coll.intersection(split(toUpper(n.Mentions), '|'), $subjs)" if subjs else ""}
+            RETURN n.Mentions AS n_Mentions, m.Mentions AS m_Mentions, r.PMID AS r_PMID, type(r) as r_type
+            ORDER BY size(r.PMID) DESC
+            LIMIT 20
         """
-        pubtator3 = list(self.query(query, {"subjs": subjs}))
+        result = list(self.query(query, {"subjs": subjs}))
+        pubtator3.extend(result)
+        query = f"""
+            MATCH p=(n:PubTator3)-[r:`associate_PubTator3`|`cause_PubTator3`|`compare_PubTator3`|`cotreat_PubTator3`|`drug_interact_PubTator3`|`inhibit_PubTator3`|`interact_PubTator3`|`negative_correlate_PubTator3`|`positive_correlate_PubTator3`|`prevent_PubTator3`|`stimulate_PubTator3`|`treat_PubTator3`]->(m:PubTator3:Disease)
+            {f"WHERE apoc.coll.intersection(split(toUpper(m.Mentions), '|'), $subjs)" if subjs else ""}
+            RETURN n.Mentions AS n_Mentions, m.Mentions AS m_Mentions, r.PMID AS r_PMID, type(r) as r_type
+            ORDER BY size(r.PMID) DESC
+            LIMIT 100
+        """
+        result = list(self.query(query, {"subjs": subjs}))
+        pubtator3.extend(result)
 
         if not pubtator3:
             return {}
