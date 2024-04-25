@@ -10,7 +10,13 @@ from llama_index.core.callbacks import CallbackManager
 from llama_index.core.chat_engine.types import BaseChatEngine
 
 from callbacks import CustomLlamaIndexCallbackHandler
-from citation import get_formatted_sources, get_source_graph, get_source_nodes
+from citation import (
+    expand_citations,
+    generate_bibliography,
+    get_source_nodes,
+    merge_adjacent_citations,
+    smart_inline_citation_format
+)
 from lingua_iso_codes import IsoCode639_1
 from pipelines import get_pipeline
 from translation import BaseTranslator, detect_language, get_language_detector, get_translator, translate
@@ -132,19 +138,28 @@ async def on_message(message: cl.Message):
     source_nodes = get_source_nodes(response, content)
 
     content = content.split("Sources:")[0].strip()
+    content = expand_citations(content)
     content = re.sub(r"Source (\d+)", r"[\1]", content, flags=re.I)
     content = re.sub(r"\(\[", "[", content)
     content = re.sub(r"\]\)", "]", content)
+    content = re.sub(r"\[\[+", "[", content)
+    content = re.sub(r"\]\]+", "]", content)
+
+    bibliography = None
+    if source_nodes:
+        # get order of sources
+        source_order = re.findall(r"\[(\d+)\]", content)
+        source_order = [int(source) for source in source_order]
+        bibliography, inline_citation_map = generate_bibliography(source_nodes, source_order)
+        for source_number, biblography_numbers in inline_citation_map.items():
+            content = re.sub(rf"\[{source_number}\]", smart_inline_citation_format(biblography_numbers), content)
+            content = merge_adjacent_citations(content)
 
     if language != "en" and language is not None:
         content = await translate(translator, content, source="en", target=language)
 
-    if source_nodes:
-        content += await get_formatted_sources(source_nodes)
-        ### uncomment following code to display source graph picture in chat
-        # filename = get_source_graph(source_nodes)
-        # elements = [cl.Image(path=filename, display="inline", size="large")]
-        # response_message.elements = elements
+    if bibliography:
+        content += bibliography
 
     end = time.time()
     content += f"\n\n<small>{end - start:.2f} seconds</small>"

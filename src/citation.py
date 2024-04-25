@@ -1,6 +1,8 @@
+import gzip
 import logging
 import re
 import xml.etree.ElementTree as ET
+from collections import defaultdict
 from typing import List
 from uuid import uuid4
 
@@ -33,7 +35,11 @@ TEXT = find_plugin("pybtex.backends", "text")()
 
 
 def pmid_to_bib(pmid):
-    with open(f"/data/pmc-open-access-subset/efetch/PubmedArticle/{pmid}.xml") as f:
+    pmid = int(pmid)
+    padded_pmid = f"{pmid:08d}"
+    with gzip.open(
+        f"/data/Archive/pubmed/Archive/{padded_pmid[:2]}/{padded_pmid[2:4]}/{padded_pmid[4:6]}/{pmid}.xml.gz"
+    ) as f:
         xml = f.read()
     root = ET.fromstring(xml)
     authors = []
@@ -74,7 +80,11 @@ def generate_full_pmid_citation(pmid):
 def format_citation(citation: str):
     if citation.startswith("PMID:"):
         pmid = citation.removeprefix("PMID:")
-        return generate_full_pmid_citation(pmid)
+        try:
+            return generate_full_pmid_citation(pmid)
+        except FileNotFoundError:
+            logger.exception(f"Could not find file for PMID {pmid}")
+            return citation
     elif citation.startswith("ORPHA:"):
         orpha_code = citation.removeprefix("ORPHA:")
         return f"[{citation}](https://www.orpha.net/consor/cgi-bin/OC_Exp.php?lng=EN&Expert={orpha_code})"
@@ -98,18 +108,26 @@ def format_citations(citations: List[str]):
     return ", ".join(citations_formatted)
 
 
-def format_source(node: NodeWithScore):
-    text = node.text
-    source_number = int(text.split(":")[0].removeprefix("Source "))
-    source = node.text.split(":")[1].split("\n")[0].strip()
-    citation = format_citations(node.metadata["citation"])
-    return f"[{source_number}] {citation} {source}"
-
-
-async def get_formatted_sources(source_nodes: List[NodeWithScore]):
+def generate_bibliography(source_nodes: List[NodeWithScore], source_order: List[int]):
     references = "\n\n### Sources\n"
-    references += "\n".join([format_source(node) for node in source_nodes])
-    return references
+    # deduplicate sources
+    source_map = {}
+    for node in source_nodes:
+        source_number = int(node.text.split(":")[0].removeprefix("Source "))
+        citations = node.metadata["citation"]
+        source_map[source_number] = [format_citation(citation) for citation in citations]
+
+    inline_citation_map = defaultdict(list)
+    citation_bibliography_number = {}
+    for i, (source_number, citations) in enumerate(sorted(source_map.items(), key=lambda x: source_order.index(x[0]))):
+        for citation in citations:
+            if citation not in citation_bibliography_number:
+                citation_bibliography_number[citation] = len(citation_bibliography_number) + 1
+            bibliography_number = citation_bibliography_number[citation]
+            inline_citation_map[source_number].append(bibliography_number)
+            references += f"[{bibliography_number}] {citation}\n"
+
+    return references, inline_citation_map
 
 
 def get_source_nodes(response: RESPONSE_TYPE, content: str):
@@ -142,3 +160,73 @@ def get_source_graph(source_nodes: List[NodeWithScore]):
     filename = f".files/{uuid4()}.png"
     graph.write_png(filename)
     return filename
+
+
+def smart_inline_citation_format(numbers: list[int]):
+    # calculate consecutive ranges
+    # join those with -
+    # join all with ,
+    numbers.sort()
+    ranges = []
+    start = numbers[0]
+    end = numbers[0]
+    for number in numbers[1:]:
+        if number == end + 1:
+            end = number
+        else:
+            if start == end:
+                ranges.append(str(start))
+            else:
+                ranges.append(f"{start}-{end}")
+            start = number
+            end = number
+    if start == end:
+        ranges.append(str(start))
+    else:
+        ranges.append(f"{start}-{end}")
+    cites = ", ".join(ranges)
+    return f"[{cites}]"
+
+
+def merge_adjacent_citations(content: str):
+    # test case
+    # GNE Myopathy is a rare genetic disorder characterized by progressive muscle weakness and atrophy, primarily affecting skeletal muscles. The condition is caused by mutations in the GNE gene, which encodes an enzyme involved in the synthesis of sialic acid, a crucial component of cell membranes and various glycoproteins [1-10], [8], [9], [10], [11], [12], [13], [14], [15], [16], [17], [18], [19], [20], [21], [22], [23], [24], [25], [26].\n\nThe symptoms of GNE Myopathy typically manifest during early childhood or adolescence and include muscle weakness, muscle atrophy, and abnormal electrical activity in muscles as detected by electromyography (EMG) tests [2], [3], [4], [5], [6]. Over time, the disease can lead to significant disability and impaired mobility.\n\nThe GNE gene has multiple allelic variants associated with GNE Myopathy, which are responsible for the different forms of the disorder observed in affected individuals [17], [18], [19], [20]. The specific variant determines the severity and progression of the disease, as well as the age of onset and other clinical features.\n\nIn summary, GNE Myopathy is a genetic disorder characterized by muscle weakness, atrophy, and electrical abnormalities in muscles due to mutations in the GNE gene. The condition affects skeletal muscles and can lead to significant disability over time.
+    content = re.sub(r"\], \[", ", ", content)
+    citations = re.findall(r"(\[[\d,\- ]+\])", content)
+    print(citations)
+    mapping = {}
+    for cite in citations:
+        x = cite.removeprefix("[").removesuffix("]").split(",")
+        numbers = set()
+        for a in x:
+            if "-" in a:
+                start, end = map(int, a.split("-"))
+                numbers.update(range(start, end + 1))
+            else:
+                numbers.add(int(a))
+        numbers = list(numbers)
+        print(numbers)
+        mapping[cite] = smart_inline_citation_format(numbers)
+    for x, y in mapping.items():
+        content = content.replace(x, y)
+    return content
+
+
+def expand_citations(content: str):
+    # (Sources 9-12) -> (Source 9, Source 10, Source 11, Source 12)
+    sources = re.findall(r"Sources* ([\d]+)-([\d]+)", content)
+    for start, end in sources:
+        numbers = list(range(int(start), int(end) + 1))
+        if f"Sources {start}-{end}" in content:
+            content = content.replace(f"Sources {start}-{end}", ", ".join([f"Source {x}" for x in numbers]))
+        else:
+            content = content.replace(f"Source {start}-{end}", ", ".join([f"Source {x}" for x in numbers]))
+    # (Sources 5, 6, 7) -> (Source 5), (Source 6), (Source 7)
+    sources = re.findall(r"Sources ([\d, ]+)", content)
+    for source in sources:
+        numbers = [int(x) for x in source.split(",")]
+        if len(numbers) == 1:
+            content = content.replace(f"Sources {source}", f"Source {numbers[0]}")
+        else:
+            content = content.replace(f"Sources {source}", ", ".join([f"Source {x}" for x in numbers]))
+    return content
