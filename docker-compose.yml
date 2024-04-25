@@ -7,6 +7,8 @@ services:
       - LLAMA_INDEX_CACHE_DIR=/root/.cache
       - NEO4J_PASSWORD=${NEO4J_PASSWORD}
       - GROQ_API_KEY=${GROQ_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
     deploy:
       resources:
         reservations:
@@ -16,7 +18,7 @@ services:
               capabilities: [gpu]
     shm_size: 2gb
     networks:
-      - rgd-chatbot
+      - rd-chatbot
     volumes:
       - ..:/workspaces:cached
       - /var/run/docker.sock:/var/run/docker.sock
@@ -37,6 +39,8 @@ services:
       - LLAMA_INDEX_CACHE_DIR=/root/.cache
       - NEO4J_PASSWORD=${NEO4J_PASSWORD}
       - GROQ_API_KEY=${GROQ_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
     deploy:
       resources:
         reservations:
@@ -46,7 +50,7 @@ services:
               capabilities: [gpu]
     shm_size: 2gb
     networks:
-      - rgd-chatbot
+      - rd-chatbot
     ports:
       - 8000:8000
     volumes:
@@ -55,7 +59,7 @@ services:
       - ~/.cache:/root/.cache:cached
       - ${DATA_PATH_1}:/data:cached
       - ${DATA_PATH_2}:/data/Archive:cached
-    working_dir: /workspaces/rgd-chatbot
+    working_dir: /workspaces/rd-chatbot
     command: chainlit run -hw src/app.py
 
   neo4j:
@@ -64,7 +68,7 @@ services:
     volumes:
       - ${DATA_PATH_1}/neo4j:/data:cached
     networks:
-      - rgd-chatbot
+      - rd-chatbot
     ports:
       - 7474:7474
       - 7687:7687
@@ -85,7 +89,7 @@ services:
               capabilities:
                 - gpu
     networks:
-      - rgd-chatbot
+      - rd-chatbot
     volumes:
       - ollama:/root/.ollama
     ports:
@@ -130,8 +134,8 @@ services:
     command: bash -c "sed s/RATHOLE_TOKEN/${RATHOLE_TOKEN}/g server.toml.tmpl > server.toml && ./rathole server.toml"
 
 networks:
-  rgd-chatbot:
-    name: rgd-chatbot
+  rd-chatbot:
+    name: rd-chatbot
 
 volumes:
   ollama:

@@ -1,8 +1,10 @@
+#%%
 import logging
 import re
 import time
 import unicodedata
 from datetime import timedelta
+from itertools import product
 from pathlib import Path
 
 import pandas as pd
@@ -10,7 +12,7 @@ from llama_index.core import Settings
 from llama_index.core.prompts import PromptTemplate
 from tqdm import tqdm
 
-from pipelines import get_llm
+from pipelines import get_llm, get_pipeline
 from translation import BaseTranslator, _translate, get_translator
 
 logger = logging.getLogger(__name__)
@@ -41,55 +43,49 @@ def slugify(value, allow_unicode=False):
 
 
 def eval_llm():
-
     models = [
-        "mistral:7b-instruct-v0.2-q4_0",
-        "mistral:7b-instruct-v0.2-q8_0",
-        "mistral:7b-instruct-v0.2-fp16",
         "starling-lm:7b-alpha-q4_0",
+        "llama3:8b-instruct-q4_0",
+        "groq:llama3-8b-8192",
+        "groq:llama3-70b-8192",
+        "groq:mixtral-8x7b-32768",
+        "openai:gpt-4-turbo",
     ]
-    v = 2
 
-    output_file = f"/workspaces/rgd-chatbot/eval/results/KG_RAG/test_questions_one_hop_true_false_v{v}.csv"
+    output_file = f"/workspaces/rgd-chatbot/eval/results/RD/test_questions.csv"
 
-    df = pd.read_csv("/workspaces/rgd-chatbot/eval/data/KG_RAG/test_questions_one_hop_true_false_v2.csv")
+    df = pd.read_csv("/workspaces/rgd-chatbot/eval/data/RD/test_questions.csv")
 
     if Path(output_file).exists():
         df = pd.read_csv(output_file)
 
-    for model_name in models:
+    for model_name, llm_only in product(models, [True]):
         df_view = df
+        slug = model_name
+        if not llm_only:
+            slug += "_rag"
         if f"response_{slugify(model_name)}" in df.columns:
             df_view = df[df[f"error_{slugify(model_name)}"] == True]
         if len(df_view) == 0:
             continue
-        try:
-            logger.info(f"Loading model {model_name}")
-            Settings.llm = get_llm(model_name)
-        except:
-            logger.exception(f"Failed to load model {model_name}")
-            continue
-
-        prompt = PromptTemplate(
-            """You are an expert biomedical researcher. Please provide your answer in the following JSON format for the Question asked:
-    {{
-    "answer": "True"
-    }}
-    OR
-    {{
-    "answer": "False"
-    }}
-    {question}"""
-        )
+        if llm_only:
+            pipeline = get_llm(llm_model_name=model_name)
+        else:
+            pipeline = get_pipeline(llm_model_name=model_name)
 
         for index, row in tqdm(df_view.iterrows(), total=len(df_view)):
             slug = slugify(model_name)
             error = False
             start = time.time()
             try:
-                response = Settings.llm.predict(prompt, question=row["text"])
+                question = row["question"]
+                if llm_only:
+                    response = pipeline.complete(question)
+                    response = response.text
+                else:
+                    response = pipeline.chat(question)
             except Exception as e:
-                logger.exception(f"Failed to get response for {row['text']}")
+                logger.exception(f"Failed to get response for {question}")
                 response = str(e)
                 error = True
             end = time.time()
@@ -114,7 +110,9 @@ def eval_translation(df: pd.DataFrame):
                 slug = f"translation_{column}_{method}_{source}_{target}"
                 eval_one_translation(df, method, translator, source, target, column, slug)
                 slug = f"back_translation_{column}_{method}_{source}_{target}"
-                eval_one_translation(df, method, translator, target, source, f"translation_{column}_{method}_en_{target}", slug)
+                eval_one_translation(
+                    df, method, translator, target, source, f"translation_{column}_{method}_en_{target}", slug
+                )
 
 
 def eval_one_translation(
@@ -142,19 +140,14 @@ def eval_one_translation(
 
 
 def main():
-    # df = eval_llm()
-    if Path(f"/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_translation.csv").exists():
-        df = pd.read_csv("/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_translation.csv")
-    else:
-        df = pd.read_csv("/workspaces/rgd-chatbot/eval/data/RD/gard_corpus.csv")
-    df = df.head(100)
-    # cols = df.columns
-    # set_to_null_cols = [
-    #     col for col in cols if col.startswith("translation_text_opusmt") or col.startswith("back_translation_text_opusmt") or col.startswith("error_text_opusmt") or col.startswith("time_text_opusmt")
-    # ]
-    # df[set_to_null_cols] = None
-    df = eval_translation(df)
+    df = eval_llm()
+    # if Path(f"/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_translation.csv").exists():
+    #     df = pd.read_csv("/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_translation.csv")
+    # else:
+    #     df = pd.read_csv("/workspaces/rgd-chatbot/eval/data/RD/gard_corpus.csv")
+    # df = df.head(100)
+    # df = eval_translation(df)
 
-
+#%%
 if __name__ == "__main__":
     main()
