@@ -18,7 +18,7 @@ services:
               capabilities: [gpu]
     shm_size: 2gb
     networks:
-      - rgd-chatbot
+      - rd-chatbot
     volumes:
       - ..:/workspaces:cached
       - /var/run/docker.sock:/var/run/docker.sock
@@ -50,7 +50,7 @@ services:
               capabilities: [gpu]
     shm_size: 2gb
     networks:
-      - rgd-chatbot
+      - rd-chatbot
     ports:
       - 8000:8000
     volumes:
@@ -68,7 +68,7 @@ services:
     volumes:
       - ${DATA_PATH_1}/neo4j:/data:cached
     networks:
-      - rgd-chatbot
+      - rd-chatbot
     ports:
       - 7474:7474
       - 7687:7687
@@ -89,7 +89,7 @@ services:
               capabilities:
                 - gpu
     networks:
-      - rgd-chatbot
+      - rd-chatbot
     volumes:
       - ollama:/root/.ollama
     ports:
@@ -134,8 +134,8 @@ services:
     command: bash -c "sed s/RATHOLE_TOKEN/${RATHOLE_TOKEN}/g server.toml.tmpl > server.toml && ./rathole server.toml"
 
 networks:
-  rgd-chatbot:
-    name: rgd-chatbot
+  rd-chatbot:
+    name: rd-chatbot
 
 volumes:
   ollama:
