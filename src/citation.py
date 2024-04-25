@@ -5,6 +5,7 @@ import xml.etree.ElementTree as ET
 from collections import defaultdict
 from typing import List
 from uuid import uuid4
+from metapub import PubMedFetcher
 
 import pydot
 from gard import GARD
@@ -15,6 +16,31 @@ from pybtex.plugin import find_plugin
 
 logger = logging.getLogger(__name__)
 gard = GARD()
+
+
+def onlineFullCitation(pmid:str, citation:str):
+    '''
+    Search PMC by PMID. Get article title, authors,
+    journal and abstract. (max 3 req per second w/out API, 10 with)
+    Args:
+        pmid(str): PMID to create citation for
+        citation(str): original citation str
+    Returns:
+        citation(str): formatted citation
+    '''
+    full_citation = ''
+    fetch = PubMedFetcher()
+    try:
+        article = fetch.article_by_pmid(pmid)
+    except:
+        return f"[{citation}](https://pubmed.ncbi.nlm.nih.gov/{pmid})"
+    # extract metadata
+    full_citation += article.title
+    full_citation += f"\nJOURNAL: {article.journal}, {article.year}\nAUTHORS: {', '.join(article.authors)}\n"
+    # add link
+    full_citation += f"https://pubmed.ncbi.nlm.nih.gov/{pmid}\n"
+    return full_citation
+
 
 
 def bib_to_apa7_html(bibtex):
@@ -78,6 +104,10 @@ def generate_full_pmid_citation(pmid):
 
 
 def format_citation(citation: str):
+    '''
+    Uses article ID to generate a URL for the source.
+    Returns formatted link, with the citation as link text.
+    '''
     if citation.startswith("PMID:"):
         pmid = citation.removeprefix("PMID:")
         try:
@@ -93,12 +123,65 @@ def format_citation(citation: str):
         return f"[{citation}](https://www.omim.org/entry/{omim_identifier})"
     elif citation.startswith("UMLS:"):
         umls_identifier = citation.removeprefix("UMLS:")
-        return f"[{citation}](https://uts.nlm.nih.gov/metathesaurus.html#?searchString={umls_identifier})"
+        # temp fix for broken UMLS links
+        return f"[{citation}](https://www.ncbi.nlm.nih.gov/medgen/?term={umls_identifier})"
+        #return f"[{citation}](https://uts.nlm.nih.gov/metathesaurus.html#?searchString={umls_identifier})"
     elif citation.startswith("GARD:"):
         gard_identifier = citation.removeprefix("GARD:")
         return f"[{citation}]({gard.get_url(gard_identifier)})"
     else:
         return citation
+
+
+def format_citations2(citations: List[str]):
+    citations_formatted = []
+    for citation in citations:
+        citations_formatted.append(format_citation(citation))
+    return citations_formatted
+
+
+async def get_formatted_sources(source_nodes:List[NodeWithScore]):
+    '''
+    Return formatted string of source numbers and corresponding urls.
+    Return dict mapping original source numbers to new source numbers.
+    '''
+    references = "\n\n### Sources\n"
+    citations_dict = {}
+    sources_dict = {}
+
+    for node in source_nodes:
+        # get source number
+        text = node.text
+        source_number = int(text.split(":")[0].removeprefix("Source "))
+        # get list of formatted source URLs
+        citations = format_citations2(node.metadata["citation"])
+        # add URLs and source number to dict
+        if len(citations) == 1:
+            try:
+                citations_dict[citations[0]].append(source_number)
+            except KeyError:
+                citations_dict[citations[0]] = [source_number]
+        else:  # more than one citation for same source number :(
+            for citation in citations:
+                # add a unique source number for each citation
+                try:
+                    citations_dict[citation].append(source_number)
+                except KeyError:
+                    citations_dict[citation] = [source_number]
+                source_number += 0.1  # make source number unique
+
+    # consolidate citations w/ multiple source numbers to have just one
+    for c in citations_dict:
+        # use min source number for citation
+        new_source = min(citations_dict[c])
+        references += f"[{new_source}] {str(c)}"
+        # if more than one source, track replaced numbers
+        if len(citations_dict[c]) > 1:
+            for source in citations_dict[c]:
+                sources_dict[source] = new_source
+        else:
+            sources_dict[new_source] = new_source
+    return references, sources_dict
 
 
 def format_citations(citations: List[str]):
