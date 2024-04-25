@@ -162,6 +162,6 @@ cython_debug/
 .chainlit/translations/
 .files/
 eval/results
-eval/data
+eval/data/KG_RAG/
 src/generate_gard_corpus.py
 src/metrics_llm_only.py
