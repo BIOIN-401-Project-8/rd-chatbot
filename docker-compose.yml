@@ -24,8 +24,8 @@ services:
       - ~/.gitconfig:/root/.gitconfig:cached
       - ~/.wakatime.cfg:/root/.wakatime.cfg:cached
       - ~/.cache:/root/.cache:cached
-      - ~/Github/bioin-401-project/data:/data:cached
-      - /media/data/bioin-401-project/Archive:/data/Archive:cached
+      - ${DATA_PATH_1}:/data:cached
+      - ${DATA_PATH_2}:/data/Archive:cached
     command: sleep infinity
 
   app:
@@ -53,8 +53,8 @@ services:
       - ..:/workspaces:cached
       - /var/run/docker.sock:/var/run/docker.sock
       - ~/.cache:/root/.cache:cached
-      - ~/Github/bioin-401-project/data:/data:cached
-      - /media/data/bioin-401-project/Archive:/data/Archive:cached
+      - ${DATA_PATH_1}:/data:cached
+      - ${DATA_PATH_2}:/data/Archive:cached
     working_dir: /workspaces/rgd-chatbot
     command: chainlit run -hw src/app.py
 
@@ -62,7 +62,7 @@ services:
     image: neo4j:5.16.0
     restart: unless-stopped
     volumes:
-      - ~/Github/bioin-401-project/data/neo4j:/data:cached
+      - ${DATA_PATH_1}/neo4j:/data:cached
     networks:
       - rgd-chatbot
     ports:
@@ -104,8 +104,8 @@ services:
       - '81:81'
       - '443:443'
     volumes:
-      - ~/Github/bioin-401-project/data/nginx-proxy-manager/data:/data
-      - ~/Github/bioin-401-project/data/nginx-proxy-manager/letsencrypt:/etc/letsencrypt
+      - ${DATA_PATH_1}/nginx-proxy-manager/data:/data
+      - ${DATA_PATH_1}/nginx-proxy-manager/letsencrypt:/etc/letsencrypt
 
   namecheap-ddns:
     image: alpine:3.19.1
