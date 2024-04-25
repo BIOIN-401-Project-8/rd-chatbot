@@ -7,6 +7,8 @@ services:
       - LLAMA_INDEX_CACHE_DIR=/root/.cache
       - NEO4J_PASSWORD=${NEO4J_PASSWORD}
       - GROQ_API_KEY=${GROQ_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
     deploy:
       resources:
         reservations:
@@ -37,6 +39,8 @@ services:
       - LLAMA_INDEX_CACHE_DIR=/root/.cache
       - NEO4J_PASSWORD=${NEO4J_PASSWORD}
       - GROQ_API_KEY=${GROQ_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
     deploy:
       resources:
         reservations:
@@ -55,7 +59,7 @@ services:
       - ~/.cache:/root/.cache:cached
       - ${DATA_PATH_1}:/data:cached
       - ${DATA_PATH_2}:/data/Archive:cached
-    working_dir: /workspaces/rgd-chatbot
+    working_dir: /workspaces/rd-chatbot
     command: chainlit run -hw src/app.py
 
   neo4j:
