@@ -6,6 +6,8 @@ from llama_index.core.callbacks import CallbackManager
 from llama_index.core.prompts import PromptTemplate, PromptType
 from llama_index.core.retrievers import BaseRetriever
 from llama_index.core.storage import StorageContext
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+from llama_index.embeddings.ollama import OllamaEmbedding
 from llama_index.llms.ollama import Ollama
 
 from chat_engine.citation_types import CitationChatMode
@@ -26,9 +28,9 @@ def get_graph_store():
     )
 
 
-def get_retriever_pipeline(callback_manager: CallbackManager | None = None):
-    Settings.llm = get_llm()
-    Settings.embed_model, Settings.num_output = get_embed_model()
+def get_retriever_pipeline(callback_manager: CallbackManager | None = None, llm_model_name: str = "llama3:8b-instruct-q4_0"):
+    Settings.llm = get_llm(llm_model_name)
+    Settings.embed_model, Settings.num_output = get_sentence_transformer_embed_model()
     Settings.callback_manager = callback_manager
 
     graph_store = get_graph_store()
@@ -37,8 +39,8 @@ def get_retriever_pipeline(callback_manager: CallbackManager | None = None):
     return get_retriever(storage_context)
 
 
-def get_pipeline(callback_manager: CallbackManager | None = None):
-    retriever = get_retriever_pipeline(callback_manager)
+def get_pipeline(callback_manager: CallbackManager | None = None, llm_model_name: str = "llama3:8b-instruct-q4_0"):
+    retriever = get_retriever_pipeline(callback_manager, llm_model_name)
 
     query_engine = get_query_engine(retriever)
     chat_engine = query_engine.as_chat_engine(
@@ -48,17 +50,41 @@ def get_pipeline(callback_manager: CallbackManager | None = None):
     return chat_engine
 
 
-def get_embed_model(embed_model_name: str = "intfloat/e5-base-v2"):
+def get_huggingface_embed_model(embed_model_name: str =  "mixedbread-ai/mxbai-embed-large-v1", embed_batch_size: int = 8):
+    return (
+        HuggingFaceEmbedding(
+            model_name=embed_model_name,
+            embed_batch_size=embed_batch_size,
+        ),
+        1024,
+    )
+
+
+def get_sentence_transformer_embed_model(embed_model_name: str = "intfloat/e5-base-v2", embed_batch_size: int = 16):
     return (
         SentenceTransformerEmbeddings(
             model_name_or_path=embed_model_name,
-            embed_batch_size=16,
+            embed_batch_size=embed_batch_size,
         ),
         768,
     )
 
 
-def get_llm(llm_model_name: str = "starling-lm"):
+def get_ollama_embed_model(embed_model_name: str = "mxbai-embed-large:335m-v1-fp16", embed_batch_size: int = 8):
+    # NOTE: this is slow, while Ollama implements embeddings, as of v0.1.32 it does support batch embeddings
+    # https://ollama.com/blog/embedding-models
+    httpx.post("http://ollama:11434/api/pull", json={"name": embed_model_name}, timeout=600.0)
+    return (
+        OllamaEmbedding(
+            model_name=embed_model_name,
+            base_url="http://ollama:11434",
+            embed_batch_size=embed_batch_size,
+        ),
+        1024,
+    )
+
+
+def get_llm(llm_model_name: str = "llama3:8b-instruct-q4_0"):
     # Pulling the model with Ollama
     # TODO: display this as a progress bar
     httpx.post("http://ollama:11434/api/pull", json={"name": llm_model_name}, timeout=600.0)
@@ -140,25 +166,26 @@ def get_query_engine(retriever: BaseRetriever):
 def get_retriever(
     storage_context: StorageContext,
 ):
-    CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL = (
-        "A question is provided below. Given the question, extract up to {max_keywords} "
-        "diseases from the text. Focus on extracting the diseases that we can use "
-        "to best lookup answers to the question. Avoid stopwords. Do not add an explanation.\n"
-        "---------------------\n"
-        "QUESTION: {question}\n"
-        "---------------------\n"
-        "Provide diseases in the following comma-separated format: 'KEYWORDS: disease1, disease2'\n"
-    )
+    if Settings.llm.model == "llama3:8b-instruct-q4_0":
+        CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL = (
+            'Given the question, extract key phrases from the question. Avoid stopwords. Reply with a comma separated list of terms.\n'
+            'question: {question}\n'
+            'TERMS: \n'
+        )
+        CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL = PromptTemplate(
+            CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL,
+            prompt_type=PromptType.QUERY_KEYWORD_EXTRACT,
+        )
+    else:
+        CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL = None
+
     return KG_RAG_KnowledgeGraphRAGRetriever(
         storage_context=storage_context,
         verbose=True,
         graph_traversal_depth=1,
-        max_entities=2,
-        max_synonyms=1,
+        max_entities=5,
+        max_synonyms=0,
         similarity_top_k=30,
         max_knowledge_sequence=1000,
-        entity_extract_template=PromptTemplate(
-            CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL,
-            prompt_type=PromptType.QUERY_KEYWORD_EXTRACT,
-        ),
+        entity_extract_template=CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL,
     )
