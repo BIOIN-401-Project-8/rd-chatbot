@@ -294,7 +294,21 @@ def merge_adjacent_citations(content: str):
     return content
 
 
+def get_numbers(source):
+    numbers = source.split(",")
+    numbers = map(str.strip, numbers)
+    numbers = filter(None, numbers)
+    numbers = [int(x) for x in numbers]
+    return numbers
+
+
 def expand_citations(content: str):
+    # (Sources 3, 8, and 9) -> (Source 3, Source 8, Source 9)
+    sources = re.findall(r"Sources (\d[\d, ]+), and ([\d]+)", content)
+    for source, and_source in sources:
+        numbers = get_numbers(source)
+        numbers.append(int(and_source))
+        content = content.replace(f"Sources {source}, and {and_source}", ", ".join([f"Source {x}" for x in numbers]))
     # (Sources 9-12) -> (Source 9, Source 10, Source 11, Source 12)
     sources = re.findall(r"Sources* ([\d]+)-([\d]+)", content)
     for start, end in sources:
@@ -306,7 +320,7 @@ def expand_citations(content: str):
     # (Sources 5, 6, 7) -> (Source 5), (Source 6), (Source 7)
     sources = re.findall(r"Sources (\d[\d, ]+)", content)
     for source in sources:
-        numbers = [int(x) for x in source.split(",")]
+        numbers = get_numbers(source)
         if len(numbers) == 1:
             content = content.replace(f"Sources {source}", f"Source {numbers[0]}")
         else:

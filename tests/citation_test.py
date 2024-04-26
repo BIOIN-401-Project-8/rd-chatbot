@@ -1,4 +1,4 @@
-from src.citation import get_sources
+from src.citation import expand_citations, get_sources
 
 
 class TestCitation:
@@ -12,3 +12,6 @@ class TestCitation:
             "Duchenne type, and congenital muscular dystrophy (SOURCES 11, 12, 15)."
         )
         assert sources == {2, 3, 6, 7, 9, 10, 11, 12, 15}
+
+    def test_expand_citations(self):
+        assert expand_citations("Sources 3, 8, and 9") == 'Source 3, Source 8, Source 9'
