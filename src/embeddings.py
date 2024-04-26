@@ -44,5 +44,5 @@ class SentenceTransformerEmbeddings(BaseEmbedding):
         return embeddings[0]
 
     def _get_text_embeddings(self, texts: List[str]) -> List[List[float]]:
-        embeddings = self._model.encode(texts, normalize_embeddings=True, batch_size=self._embed_batch_size).tolist()
+        embeddings = self._model.encode(texts, normalize_embeddings=True, batch_size=self._embed_batch_size, show_progress_bar=False).tolist()
         return embeddings
