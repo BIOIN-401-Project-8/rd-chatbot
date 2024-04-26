@@ -194,3 +194,7 @@ class CitationCondensePlusContextChatEngine(CondensePlusContextChatEngine):
         thread.start()
 
         return chat_response
+
+    def reset(self) -> None:
+        self._nodes = []
+        super().reset()
