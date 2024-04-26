@@ -183,6 +183,12 @@ async def get_formatted_sources(source_nodes:List[NodeWithScore]):
     return references, sources_dict
 
 
+def get_source_ordering(source_order, source_number: str):
+    try:
+        return source_order.index(int(source_number))
+    except ValueError:
+        return len(source_order)
+
 def generate_bibliography(source_nodes: List[NodeWithScore], source_order: List[int]):
     references = "\n\n### Sources\n"
     # deduplicate sources
@@ -196,7 +202,7 @@ def generate_bibliography(source_nodes: List[NodeWithScore], source_order: List[
 
     inline_citation_map = defaultdict(list)
     citation_bibliography_number = {}
-    for i, (source_number, citation) in enumerate(sorted(source_map.items(), key=lambda x: source_order.index(x[0]))):
+    for i, (source_number, citation) in enumerate(sorted(source_map.items(), key=lambda x: get_source_ordering(source_order, x[0]))):
         if citation not in citation_bibliography_number:
             bibliography_number = len(citation_bibliography_number) + 1
             citation_bibliography_number[citation] = bibliography_number
@@ -271,7 +277,6 @@ def merge_adjacent_citations(content: str):
     # GNE Myopathy is a rare genetic disorder characterized by progressive muscle weakness and atrophy, primarily affecting skeletal muscles. The condition is caused by mutations in the GNE gene, which encodes an enzyme involved in the synthesis of sialic acid, a crucial component of cell membranes and various glycoproteins [1-10], [8], [9], [10], [11], [12], [13], [14], [15], [16], [17], [18], [19], [20], [21], [22], [23], [24], [25], [26].\n\nThe symptoms of GNE Myopathy typically manifest during early childhood or adolescence and include muscle weakness, muscle atrophy, and abnormal electrical activity in muscles as detected by electromyography (EMG) tests [2], [3], [4], [5], [6]. Over time, the disease can lead to significant disability and impaired mobility.\n\nThe GNE gene has multiple allelic variants associated with GNE Myopathy, which are responsible for the different forms of the disorder observed in affected individuals [17], [18], [19], [20]. The specific variant determines the severity and progression of the disease, as well as the age of onset and other clinical features.\n\nIn summary, GNE Myopathy is a genetic disorder characterized by muscle weakness, atrophy, and electrical abnormalities in muscles due to mutations in the GNE gene. The condition affects skeletal muscles and can lead to significant disability over time.
     content = re.sub(r"\], \[", ", ", content)
     citations = re.findall(r"(\[[\d,\- ]+\])", content)
-    print(citations)
     mapping = {}
     for cite in citations:
         x = cite.removeprefix("[").removesuffix("]").split(",")
@@ -283,7 +288,6 @@ def merge_adjacent_citations(content: str):
             else:
                 numbers.add(int(a))
         numbers = list(numbers)
-        print(numbers)
         mapping[cite] = smart_inline_citation_format(numbers)
     for x, y in mapping.items():
         content = content.replace(x, y)
@@ -330,8 +334,10 @@ def postprocess_citation(response):
     source_nodes = get_source_nodes(response, content)
 
     content = content.split("Sources:")[0].strip()
+    content = content.split("References:")[0].strip()
     content = expand_citations(content)
     content = re.sub(r"Source (\d+)", r"[\1]", content, flags=re.I)
+    content = re.sub(r"\(([\d, -]+)\.\)", r"[\1]\.", content, flags=re.I)
     content = re.sub(r"\(\[", "[", content)
     content = re.sub(r"\]\)", "]", content)
     content = re.sub(r"\[\[+", "[", content)
@@ -339,11 +345,22 @@ def postprocess_citation(response):
 
     bibliography = None
     if source_nodes:
-        # get order of sources
-        source_order = re.findall(r"\[(\d+)\]", content)
-        source_order = [int(source) for source in source_order]
+        source_order = get_source_order(content)
+
+        # remove extraneous hallucinated sources
+        for i in range(len(source_nodes) + 1, max(source_order)):
+            content = re.sub(rf"\[{i}\]", "", content)
+
+        source_order = get_source_order(content)
+
         bibliography, inline_citation_map = generate_bibliography(source_nodes, source_order)
         for source_number, biblography_numbers in inline_citation_map.items():
             content = re.sub(rf"\[{source_number}\]", smart_inline_citation_format(biblography_numbers), content)
             content = merge_adjacent_citations(content)
+
     return content, bibliography
+
+def get_source_order(content):
+    source_order = re.findall(r"\[(\d+)\]", content)
+    source_order = [int(source) for source in source_order]
+    return source_order
