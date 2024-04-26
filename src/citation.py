@@ -304,7 +304,7 @@ def expand_citations(content: str):
         else:
             content = content.replace(f"Source {start}-{end}", ", ".join([f"Source {x}" for x in numbers]))
     # (Sources 5, 6, 7) -> (Source 5), (Source 6), (Source 7)
-    sources = re.findall(r"Sources ([\d, ]+)", content)
+    sources = re.findall(r"Sources (\d[\d, ]+)", content)
     for source in sources:
         numbers = [int(x) for x in source.split(",")]
         if len(numbers) == 1:
