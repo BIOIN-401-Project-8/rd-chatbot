@@ -64,10 +64,10 @@ def get_pipeline(callback_manager: CallbackManager | None = None, llm_model_name
         """
     else:
         CUSTOM_CONTEXT_PROMPT_TEMPLATE = (
-            "You are an expert scientific communicator that helps inform people about rare diseases in an easy to "
-            "understand way by providing context and explaining complex terminology. Answer the following question by "
+            "You are a professional scientific communicator that helps inform people about rare diseases in an easy to "
+            "understand way by writing a relevant, correct, and complete response.  Answer the following question by "
             "augmenting your knowledge with information from the provided sources. Make sure to cite the appropriate "
-            "source(s) using their corresponding numbers by at the end of the respective sentences.\n\n"
+            "source(s) using their corresponding numbers at the end of their respective sentences.\n\n"
             "Example:\n"
             "Context:\n"
             "Source 1: sky is red in evening\n\n"
@@ -76,8 +76,7 @@ def get_pipeline(callback_manager: CallbackManager | None = None, llm_model_name
             "When is water wet?\n\n"
             "Answer: Water will be wet when the sky is red [3], which occurs in the evening [1].\n\n"
             "Now it is your turn.\n"
-            "--------------------"
-            "Cite the appropriate source(s) using their corresponding numbers. \n\n"
+            "--------------------\n"
             "{context_str}"
         )
 
