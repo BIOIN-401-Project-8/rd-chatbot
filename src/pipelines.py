@@ -45,6 +45,42 @@ def get_retriever_pipeline(callback_manager: CallbackManager | None = None, llm_
 def get_pipeline(callback_manager: CallbackManager | None = None, llm_model_name: str = "llama3:8b-instruct-q5_K_M"):
     retriever = get_retriever_pipeline(callback_manager, llm_model_name)
 
+    if llm_model_name.startswith("starling-lm"):
+        CUSTOM_CONTEXT_PROMPT_TEMPLATE = """
+            The following is a friendly conversation between a user and an AI assistant.
+            The assistant is provides an answer based solely on the provided sources. The
+            assistant cites the appropriate source(s) using their corresponding numbers.
+            Every answer should include at least one source citation. Only cite a source
+            when you are explicitly referencing it. If the assistant does not know the
+            answer to a question, it truthfully says it does not know.
+
+            Here are the relevant sources for the context:
+
+            {context_str}
+
+            Instruction: Based on the above sources, provide a detailed answer with
+            sources for the user question below. Answer "I'm sorry, I don't know" if not present in the
+            document.
+        """
+    else:
+        CUSTOM_CONTEXT_PROMPT_TEMPLATE = (
+            "You are an expert scientific communicator that helps inform people about rare diseases in an easy to "
+            "understand way by providing context and explaining complex terminology. Answer the following question by "
+            "augmenting your knowledge with information from the provided sources. Make sure to cite the appropriate "
+            "source(s) using their corresponding numbers by at the end of the respective sentences.\n\n"
+            "Example:\n"
+            "Context:\n"
+            "Source 1: sky is red in evening\n\n"
+            "Source 2: sky is blue in the morning.\n\n"
+            "Source 3: water is wet when the sky is red.\n\n"
+            "When is water wet?\n\n"
+            "Answer: Water will be wet when the sky is red [3], which occurs in the evening [1].\n\n"
+            "Now it is your turn.\n"
+            "--------------------"
+            "Cite the appropriate source(s) using their corresponding numbers. \n\n"
+            "{context_str}"
+        )
+
     query_engine = get_query_engine(retriever)
     chat_engine = query_engine.as_chat_engine(
         chat_mode=CitationChatMode.CONDENSE_PLUS_CONTEXT,
