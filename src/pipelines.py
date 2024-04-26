@@ -63,7 +63,7 @@ def get_huggingface_embed_model(embed_model_name: str =  "mixedbread-ai/mxbai-em
     )
 
 
-def get_sentence_transformer_embed_model(embed_model_name: str = "intfloat/e5-base-v2", embed_batch_size: int = 16):
+def get_sentence_transformer_embed_model(embed_model_name: str = "intfloat/e5-base-v2", embed_batch_size: int = 32):
     return (
         SentenceTransformerEmbeddings(
             model_name_or_path=embed_model_name,
