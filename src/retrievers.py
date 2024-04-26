@@ -1,6 +1,6 @@
 import logging
-from typing import Any, Callable, Dict, List, Optional, Tuple
 import re
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import faiss
 from llama_index.core import BasePromptTemplate, QueryBundle, ServiceContext, Settings, StorageContext, VectorStoreIndex
@@ -123,7 +123,7 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
     def _clean_entities(self, entities):
         # clean entities by replacing non-alphanumeric characters with space and strip
         for entity in entities:
-            cleaned_entity = re.sub('[^0-9a-zA-Z ]+', ' ', entity).strip()
+            cleaned_entity = re.sub("[^0-9a-zA-Z ]+", " ", entity).strip()
             if cleaned_entity != entity:
                 entities.append(cleaned_entity)
         return entities
@@ -194,7 +194,9 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
 
         return self._build_nodes(knowledge_sequence, rel_map, query_bundle)
 
-    def _get_knowledge_sequence(self, entities: List[str], query_bundle: QueryBundle) -> Tuple[List[List[str]], Optional[Dict[Any, Any]]]:
+    def _get_knowledge_sequence(
+        self, entities: List[str], query_bundle: QueryBundle
+    ) -> Tuple[List[List[str]], Optional[Dict[Any, Any]]]:
         """Get knowledge sequence from entities."""
         # Get SubGraph from Graph Store as Knowledge Sequence
         rel_map: Optional[Dict] = self._graph_store.get_rel_map(
@@ -229,7 +231,9 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
 
         return knowledge_sequence, rel_map
 
-    async def _aget_knowledge_sequence(self, entities: List[str], query_bundle: QueryBundle) -> Tuple[List[str], Optional[Dict[Any, Any]]]:
+    async def _aget_knowledge_sequence(
+        self, entities: List[str], query_bundle: QueryBundle
+    ) -> Tuple[List[str], Optional[Dict[Any, Any]]]:
         return self._get_knowledge_sequence(entities, query_bundle)
 
     def _get_best_rel_item(self, rel_items: str, query_bundle: QueryBundle, entities: List[str] | None = None) -> str:
@@ -250,12 +254,7 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
         if len(rel_items) == 1:
             return rel_items[0]
 
-        nodes = [
-            TextNode(
-                text=rel_item
-            )
-            for rel_item in rel_items
-        ]
+        nodes = [TextNode(text=rel_item) for rel_item in rel_items]
 
         faiss_index = faiss.IndexFlatL2(Settings.num_output)
         vector_store = FaissVectorStore(faiss_index)

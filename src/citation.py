@@ -18,8 +18,8 @@ logger = logging.getLogger(__name__)
 gard = GARD()
 
 
-def onlineFullCitation(pmid:str, citation:str):
-    '''
+def onlineFullCitation(pmid: str, citation: str):
+    """
     Search PMC by PMID. Get article title, authors,
     journal and abstract. (max 3 req per second w/out API, 10 with)
     Args:
@@ -27,8 +27,8 @@ def onlineFullCitation(pmid:str, citation:str):
         citation(str): original citation str
     Returns:
         citation(str): formatted citation
-    '''
-    full_citation = ''
+    """
+    full_citation = ""
     fetch = PubMedFetcher()
     try:
         article = fetch.article_by_pmid(pmid)
@@ -103,10 +103,10 @@ def generate_full_pmid_citation(pmid):
 
 
 def format_citation(citation: str):
-    '''
+    """
     Uses article ID to generate a URL for the source.
     Returns formatted link, with the citation as link text.
-    '''
+    """
     if citation.startswith("PMID:"):
         pmid = citation.removeprefix("PMID:")
         try:
@@ -124,7 +124,7 @@ def format_citation(citation: str):
         umls_identifier = citation.removeprefix("UMLS:")
         # temp fix for broken UMLS links
         return f"[{citation}](https://www.ncbi.nlm.nih.gov/medgen/?term={umls_identifier})"
-        #return f"[{citation}](https://uts.nlm.nih.gov/metathesaurus.html#?searchString={umls_identifier})"
+        # return f"[{citation}](https://uts.nlm.nih.gov/metathesaurus.html#?searchString={umls_identifier})"
     elif citation.startswith("GARD:"):
         gard_identifier = citation.removeprefix("GARD:")
         return f"[{citation}]({gard.get_url(gard_identifier)})"
@@ -139,11 +139,11 @@ def format_citations2(citations: List[str]):
     return citations_formatted
 
 
-async def get_formatted_sources(source_nodes:List[NodeWithScore]):
-    '''
+async def get_formatted_sources(source_nodes: List[NodeWithScore]):
+    """
     Return formatted string of source numbers and corresponding urls.
     Return dict mapping original source numbers to new source numbers.
-    '''
+    """
     references = "\n\n### Sources\n"
     citations_dict = {}
     sources_dict = {}
@@ -189,6 +189,7 @@ def get_source_ordering(source_order, source_number: str):
     except ValueError:
         return len(source_order)
 
+
 def generate_bibliography(source_nodes: List[NodeWithScore], source_order: List[int]):
     references = "\n\n### Sources\n"
     # deduplicate sources
@@ -202,7 +203,9 @@ def generate_bibliography(source_nodes: List[NodeWithScore], source_order: List[
 
     inline_citation_map = defaultdict(list)
     citation_bibliography_number = {}
-    for i, (source_number, citation) in enumerate(sorted(source_map.items(), key=lambda x: get_source_ordering(source_order, x[0]))):
+    for i, (source_number, citation) in enumerate(
+        sorted(source_map.items(), key=lambda x: get_source_ordering(source_order, x[0]))
+    ):
         if citation not in citation_bibliography_number:
             bibliography_number = len(citation_bibliography_number) + 1
             citation_bibliography_number[citation] = bibliography_number
@@ -359,6 +362,7 @@ def postprocess_citation(response):
             content = merge_adjacent_citations(content)
 
     return content, bibliography
+
 
 def get_source_order(content):
     source_order = re.findall(r"\[(\d+)\]", content)
