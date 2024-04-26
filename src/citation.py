@@ -282,19 +282,24 @@ def merge_adjacent_citations(content: str):
     citations = re.findall(r"(\[[\d,\- ]+\])", content)
     mapping = {}
     for cite in citations:
-        x = cite.removeprefix("[").removesuffix("]").split(",")
-        numbers = set()
-        for a in x:
-            if "-" in a:
-                start, end = map(int, a.split("-"))
-                numbers.update(range(start, end + 1))
-            else:
-                numbers.add(int(a))
-        numbers = list(numbers)
+        numbers = get_numbers_complex(cite)
         mapping[cite] = smart_inline_citation_format(numbers)
     for x, y in mapping.items():
         content = content.replace(x, y)
     return content
+
+
+def get_numbers_complex(cite):
+    x = cite.removeprefix("[").removesuffix("]").split(",")
+    numbers = set()
+    for a in x:
+        if "-" in a:
+            start, end = map(int, a.split("-"))
+            numbers.update(range(start, end + 1))
+        else:
+            numbers.add(int(a))
+    numbers = list(numbers)
+    return numbers
 
 
 def get_numbers(source):
@@ -328,6 +333,11 @@ def expand_citations(content: str):
             content = content.replace(f"Sources {source}", f"Source {numbers[0]}")
         else:
             content = content.replace(f"Sources {source}", ", ".join([f"Source {x}" for x in numbers]))
+    # [3, 4, 5] -> [3], [4], [5]
+    sources = re.findall(r"(\[[\d,\- ]+\])", content)
+    for source in sources:
+        numbers = get_numbers_complex(source)
+        content = content.replace(source, ", ".join([f"[{x}]" for x in numbers]))
     return content
 
 
@@ -342,16 +352,15 @@ def postprocess_citation(response):
     content = expand_citations(content)
     content = normalize_citations(content)
 
+    source_order = get_source_order(content)
+    # remove extraneous hallucinated sources
+    for i in range(len(source_nodes) + 1, max(source_order) + 1):
+        content = re.sub(rf"\W*\[{i}\],", "", content)
+        content = re.sub(rf"\W*\[{i}\]", "", content)
+
     bibliography = None
     if source_nodes:
         source_order = get_source_order(content)
-
-        # remove extraneous hallucinated sources
-        for i in range(len(source_nodes) + 1, max(source_order)):
-            content = re.sub(rf"\[{i}\]", "", content)
-
-        source_order = get_source_order(content)
-
         bibliography, inline_citation_map = generate_bibliography(source_nodes, source_order)
         for source_number, biblography_numbers in inline_citation_map.items():
             content = re.sub(rf"\[{source_number}\]", smart_inline_citation_format(biblography_numbers), content)
