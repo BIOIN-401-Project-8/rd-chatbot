@@ -198,6 +198,7 @@ def generate_bibliography(source_nodes: List[NodeWithScore], source_order: List[
         source_number = int(node.text.split(":")[0].removeprefix("Source "))
         candidate_citations = node.metadata["citation"]
         citation = candidate_citations[0]
+        print(f"Source {source_number}: {citation}")
         if source_number not in source_map:
             source_map[source_number] = format_citation(citation)
 
@@ -223,7 +224,7 @@ def get_source_nodes(response: RESPONSE_TYPE, content: str):
     for source_node in response.source_nodes:
         source = int(source_node.text.split(":")[0].removeprefix("Source "))
         if source in sources:
-            source_nodes.append(source_node)
+            source_nodes.append(source)
     return source_nodes
 
 
@@ -312,13 +313,19 @@ def get_numbers(source):
 
 def expand_citations(content: str):
     # (Sources 3, 8, and 9) -> (Source 3, Source 8, Source 9)
-    sources = re.findall(r"Sources (\d[\d, ]+), and ([\d]+)", content)
+    sources = re.findall(r"Sources (\d[\d,\- ]*), and (\d[\d,\- ]*)", content)
     for source, and_source in sources:
-        numbers = get_numbers(source)
-        numbers.append(int(and_source))
+        numbers = get_numbers_complex(source)
+        numbers.extend(get_numbers_complex(and_source))
         content = content.replace(f"Sources {source}, and {and_source}", ", ".join([f"Source {x}" for x in numbers]))
+     # (Sources 3, 8 and 9) -> (Source 3, Source 8, Source 9)
+    sources = re.findall(r"Sources (\d[\d,\- ]*) and (\d[\d,\- ]*)", content)
+    for source, and_source in sources:
+        numbers = get_numbers_complex(source)
+        numbers.extend(get_numbers_complex(and_source))
+        content = content.replace(f"Sources {source} and {and_source}", ", ".join([f"Source {x}" for x in numbers]))
     # (Sources 9-12) -> (Source 9, Source 10, Source 11, Source 12)
-    sources = re.findall(r"Sources* ([\d]+)-([\d]+)", content)
+    sources = re.findall(r"Sources* (\d[\d,\- ]*)-([\d[\d,\- ]*)", content)
     for start, end in sources:
         numbers = list(range(int(start), int(end) + 1))
         if f"Sources {start}-{end}" in content:
@@ -326,13 +333,19 @@ def expand_citations(content: str):
         else:
             content = content.replace(f"Source {start}-{end}", ", ".join([f"Source {x}" for x in numbers]))
     # (Sources 5, 6, 7) -> (Source 5), (Source 6), (Source 7)
-    sources = re.findall(r"Sources (\d[\d, ]+)", content)
+    sources = re.findall(r"Sources (\d[\d,\- ]*)", content)
     for source in sources:
-        numbers = get_numbers(source)
+        numbers = get_numbers_complex(source)
         if len(numbers) == 1:
             content = content.replace(f"Sources {source}", f"Source {numbers[0]}")
         else:
             content = content.replace(f"Sources {source}", ", ".join([f"Source {x}" for x in numbers]))
+    # [3, 4, and 5] -> [3, 4, 5]
+    sources = re.findall(r"\[(\d[\d,\- ]*), and (\d[\d,\- ]*)\]", content)
+    for source, and_source in sources:
+        numbers = get_numbers_complex(source)
+        numbers.append(int(and_source))
+        content = content.replace(f"{source}, and {and_source}", ", ".join([f"[{x}]" for x in numbers]))
     # [3, 4, 5] -> [3], [4], [5]
     sources = re.findall(r"(\[[\d,\- ]+\])", content)
     for source in sources:
@@ -343,8 +356,10 @@ def expand_citations(content: str):
 
 def postprocess_citation(response):
     content = response.response
+    print("LLM Output:")
+    print(content)
 
-    source_nodes = get_source_nodes(response, content)
+    source_nodes = response.source_nodes
 
     content = content.split("Sources:")[0].strip()
     content = content.split("\n\nSource:")[0].strip()
@@ -352,7 +367,10 @@ def postprocess_citation(response):
     content = expand_citations(content)
     content = normalize_citations(content)
 
+    print("Source Nodes: ", get_source_nodes(response, content))
+
     source_order = get_source_order(content)
+    print('Source Order:', source_order)
     # remove extraneous hallucinated sources
     for i in range(len(source_nodes) + 1, max(source_order) + 1):
         content = re.sub(rf"\W*\[{i}\],", "", content)
@@ -361,17 +379,21 @@ def postprocess_citation(response):
     bibliography = None
     if source_nodes:
         source_order = get_source_order(content)
+        print('Source Order:', source_order)
         bibliography, inline_citation_map = generate_bibliography(source_nodes, source_order)
         for source_number, biblography_numbers in inline_citation_map.items():
             content = re.sub(rf"\[{source_number}\]", smart_inline_citation_format(biblography_numbers), content)
             content = merge_adjacent_citations(content)
 
+    print('With Citations:')
+    print(content)
+    print('Bibliography:')
+    print(bibliography)
     return content, bibliography
 
 
 def normalize_citations(content):
     content = re.sub(r"Source (\d+)", r"[\1]", content, flags=re.I)
-    content = re.sub(r"\(([\d, -]+)\)[.,]", r"[\1].", content, flags=re.I)
     content = re.sub(r"\(\[", "[", content)
     content = re.sub(r"\]\)", "]", content)
     content = re.sub(r"\[\[+", "[", content)
