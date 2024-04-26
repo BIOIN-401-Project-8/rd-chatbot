@@ -196,18 +196,18 @@ def generate_bibliography(source_nodes: List[NodeWithScore], source_order: List[
     source_map = {}
     for node in source_nodes:
         source_number = int(node.text.split(":")[0].removeprefix("Source "))
-        citations = node.metadata["citation"]
-        source_map[source_number] = [format_citation(citation) for citation in citations]
+        candidate_citations = node.metadata["citation"]
+        citation = candidate_citations[0]
+        source_map[source_number] = citation
 
     inline_citation_map = defaultdict(list)
     citation_bibliography_number = {}
-    for i, (source_number, citations) in enumerate(sorted(source_map.items(), key=lambda x: source_order.index(x[0]))):
-        for citation in citations:
-            if citation not in citation_bibliography_number:
-                citation_bibliography_number[citation] = len(citation_bibliography_number) + 1
-            bibliography_number = citation_bibliography_number[citation]
-            inline_citation_map[source_number].append(bibliography_number)
-            references += f"[{bibliography_number}] {citation}\n"
+    for i, (source_number, citation) in enumerate(sorted(source_map.items(), key=lambda x: source_order.index(x[0]))):
+        if citation not in citation_bibliography_number:
+            citation_bibliography_number[citation] = len(citation_bibliography_number) + 1
+        bibliography_number = citation_bibliography_number[citation]
+        inline_citation_map[source_number].append(bibliography_number)
+        references += f"[{bibliography_number}] {citation}\n"
 
     return references, inline_citation_map
 
