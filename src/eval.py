@@ -71,14 +71,13 @@ def eval_llm():
     for model_name in models_llm_only:
         df_view = df
         slug = model_name
-        if f"response_{slugify(model_name)}" in df.columns:
-            df_view = df[df[f"error_{slugify(model_name)}"] == True]
+        if f"response_{slug}" in df.columns:
+            df_view = df[df[f"error_{slug}"] == True]
         if len(df_view) == 0:
             continue
         llm = get_llm(llm_model_name=model_name)
 
         for index, row in tqdm(df_view.iterrows(), total=len(df_view)):
-            slug = slugify(model_name)
             error = False
             start = time.time()
             try:
@@ -100,34 +99,34 @@ def eval_llm():
     models_rag = [
         "llama3:8b-instruct-q4_0",
     ]
-    # for model_name in models_rag:
-    #     df_view = df
-    #     slug = model_name
-    #     slug += "_rag"
-    #     if f"response_{slugify(model_name)}" in df.columns:
-    #         df_view = df[df[f"error_{slugify(model_name)}"] == True]
-    #     if len(df_view) == 0:
-    #         continue
-    #     llm = get_llm(llm_model_name=model_name)
+    for model_name in models_rag:
+        df_view = df
+        slug = model_name
+        slug += "_rag"
+        if f"response_{slug}" in df.columns:
+            df_view = df[df[f"error_{slug}"] == True]
+        if len(df_view) == 0:
+            continue
+        llm = get_llm(llm_model_name=model_name)
 
-    #     for index, row in tqdm(df_view.iterrows(), total=len(df_view)):
-    #         slug = slugify(model_name)
-    #         error = False
-    #         start = time.time()
-    #         try:
-    #             question = row["question"]
-    #             response = run_pipeline(model_name, question)
-    #         except Exception as e:
-    #             logger.exception(f"Failed to get response for {question}")
-    #             response = str(e)
-    #             error = True
-    #         end = time.time()
+        for index, row in tqdm(df_view.iterrows(), total=len(df_view)):
+            slug = slug
+            error = False
+            start = time.time()
+            try:
+                question = row["question"]
+                response = run_pipeline(model_name, question)
+            except Exception as e:
+                logger.exception(f"Failed to get response for {question}")
+                response = str(e)
+                error = True
+            end = time.time()
 
-    #         df_view.loc[index, f"response_{slug}"] = response
-    #         df_view.loc[index, f"time_{slug}"] = timedelta(seconds=end - start)
-    #         df_view.loc[index, f"error_{slug}"] = error
-    #         df.loc[df_view.index, df_view.columns] = df_view
-    #         df.to_csv(output_file, index=False)
+            df_view.loc[index, f"response_{slug}"] = response
+            df_view.loc[index, f"time_{slug}"] = timedelta(seconds=end - start)
+            df_view.loc[index, f"error_{slug}"] = error
+            df.loc[df_view.index, df_view.columns] = df_view
+            df.to_csv(output_file, index=False)
 
     response_columns = [column for column in df.columns if column.startswith("response_")]
     # we want to add columns for each model
@@ -141,7 +140,7 @@ def eval_llm():
             df[f"complete_{slug}"] = None
         if f"correctly_cited_{slug}" not in df.columns:
             df[f"correctly_cited_{slug}"] = None
-
+    df.to_csv(output_file, index=False)
     return df
 
 
