@@ -48,7 +48,10 @@ def get_list(text: str | list[str]):
     citations = text.split(",")
     citations[0] = citations[0].removeprefix("[")
     citations[-1] = citations[-1].removesuffix("]")
-    citations = [citation for citation in citations if not citation.startswith("Orphanet")]
+    citations = [
+        citation if not citation.startswith("Orphanet") else citation.replace("Orphanet", "ORPHA")
+        for citation in citations
+    ]
     return citations
 
 
@@ -189,6 +192,7 @@ def textualize_rels(rels: list[dict]):
         citations = get_list(rel["r_citations"]) + get_list(rel["r_value"])
         rel_map[subj].append((relationships, obj, "|".join(citations)))
     return rel_map
+
 
 def textualize_pubtator3s(rels: list[dict]):
     rel_map: Dict[str, List[List[str]]] = {}
