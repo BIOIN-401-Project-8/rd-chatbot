@@ -1,5 +1,6 @@
 import logging
 from typing import Any, Callable, Dict, List, Optional, Tuple
+import re
 
 import faiss
 from llama_index.core import BasePromptTemplate, QueryBundle, ServiceContext, Settings, StorageContext, VectorStoreIndex
@@ -108,7 +109,7 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
         # Skip if max_items is 0
         if max_items == 0:
             return []
-        return super()._process_entities(
+        entities = super()._process_entities(
             query_str=query_str,
             handle_fn=handle_fn,
             handle_llm_prompt_template=handle_llm_prompt_template,
@@ -116,6 +117,16 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
             max_items=max_items,
             result_start_token=result_start_token,
         )
+        entities = self._clean_entities(entities)
+        return entities
+
+    def _clean_entities(self, entities):
+        # clean entities by replacing non-alphanumeric characters with space and strip
+        for entity in entities:
+            cleaned_entity = re.sub('[^0-9a-zA-Z ]+', ' ', entity).strip()
+            if cleaned_entity != entity:
+                entities.append(cleaned_entity)
+        return entities
 
     async def _aprocess_entities(
         self,
@@ -130,7 +141,7 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
         # Skip if max_items is 0
         if max_items == 0:
             return []
-        return await super()._aprocess_entities(
+        entities = await super()._aprocess_entities(
             query_str=query_str,
             handle_fn=handle_fn,
             handle_llm_prompt_template=handle_llm_prompt_template,
@@ -138,6 +149,8 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
             max_items=max_items,
             result_start_token=result_start_token,
         )
+        entities = self._clean_entities(entities)
+        return entities
 
     def _retrieve_keyword(self, query_bundle: QueryBundle) -> List[NodeWithScore]:
         """Retrieve in keyword mode."""
