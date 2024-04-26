@@ -8,3 +8,5 @@ RUN yes | sh -c "$(curl -fsSL https://ftp.ncbi.nlm.nih.gov/entrez/entrezdirect/i
 
 COPY requirements.txt /tmp/
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
+
+RUN ln -s /usr/local/lib/python3.10/dist-packages/faiss/swigfaiss.py /usr/local/lib/python3.10/dist-packages/faiss/swigfaiss_avx2.py
