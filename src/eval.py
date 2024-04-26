@@ -53,8 +53,8 @@ def slugify(value, allow_unicode=False):
 
 def eval_llm():
     models_llm_only = [
-        "starling-lm:7b-alpha-q4_0",
-        "llama3:8b-instruct-q4_0",
+        "starling-lm:7b-alpha-q5_K_M",
+        "llama3:8b-instruct-q5_K_M",
         "groq:llama3-8b-8192",
         "groq:llama3-70b-8192",
         "groq:mixtral-8x7b-32768",

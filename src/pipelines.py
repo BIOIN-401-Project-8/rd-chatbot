@@ -31,7 +31,7 @@ def get_graph_store():
     )
 
 
-def get_retriever_pipeline(callback_manager: CallbackManager | None = None, llm_model_name: str = "llama3:8b-instruct-q4_0"):
+def get_retriever_pipeline(callback_manager: CallbackManager | None = None, llm_model_name: str = "llama3:8b-instruct-q5_K_M"):
     Settings.llm = get_llm(llm_model_name)
     Settings.embed_model, Settings.num_output = get_sentence_transformer_embed_model()
     Settings.callback_manager = callback_manager
@@ -42,12 +42,13 @@ def get_retriever_pipeline(callback_manager: CallbackManager | None = None, llm_
     return get_retriever(storage_context)
 
 
-def get_pipeline(callback_manager: CallbackManager | None = None, llm_model_name: str = "llama3:8b-instruct-q4_0"):
+def get_pipeline(callback_manager: CallbackManager | None = None, llm_model_name: str = "llama3:8b-instruct-q5_K_M"):
     retriever = get_retriever_pipeline(callback_manager, llm_model_name)
 
     query_engine = get_query_engine(retriever)
     chat_engine = query_engine.as_chat_engine(
         chat_mode=CitationChatMode.CONDENSE_PLUS_CONTEXT,
+        context_prompt=CUSTOM_CONTEXT_PROMPT_TEMPLATE,
         verbose=True,
     )
     return chat_engine
@@ -63,7 +64,7 @@ def get_huggingface_embed_model(embed_model_name: str =  "mixedbread-ai/mxbai-em
     )
 
 
-def get_sentence_transformer_embed_model(embed_model_name: str = "intfloat/e5-base-v2", embed_batch_size: int = 32):
+def get_sentence_transformer_embed_model(embed_model_name: str = "intfloat/e5-base-v2", embed_batch_size: int = 8):
     return (
         SentenceTransformerEmbeddings(
             model_name_or_path=embed_model_name,
@@ -87,7 +88,7 @@ def get_ollama_embed_model(embed_model_name: str = "mxbai-embed-large:335m-v1-fp
     )
 
 
-def get_llm(llm_model_name: str = "llama3:8b-instruct-q4_0"):
+def get_llm(llm_model_name: str = "llama3:8b-instruct-q5_K_M"):
     if llm_model_name.startswith("openai:"):
         llm_model_name = llm_model_name.removeprefix("openai:")
         return OpenAI(

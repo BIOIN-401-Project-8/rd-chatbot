@@ -59,6 +59,7 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
             **kwargs,
         )
         self._similarity_top_k = similarity_top_k
+        self._verbose = verbose
 
     def _build_nodes(
         self, knowledge_sequence: List[str], rel_map: Optional[Dict[Any, Any]] = None, query_bundle: QueryBundle = None
@@ -144,6 +145,8 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
             return []
         # Get entities
         entities = self._get_entities(query_bundle.query_str)
+        if self._verbose:
+            print(f"> Entities extracted from query string: {entities}")
         # Before we enable embedding/semantic search, we need to make sure
         # we don't miss any entities that's synoynm of the entities we extracted
         # in string matching based retrieval in following steps, thus we expand
@@ -163,6 +166,8 @@ class KG_RAG_KnowledgeGraphRAGRetriever(KnowledgeGraphRAGRetriever):
             return []
         # Get entities
         entities = await self._aget_entities(query_bundle.query_str)
+        if self._verbose:
+            print(f"> Entities extracted from query string: {entities}")
         # Before we enable embedding/semantic search, we need to make sure
         # we don't miss any entities that's synoynm of the entities we extracted
         # in string matching based retrieval in following steps, thus we expand
