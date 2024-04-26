@@ -1,4 +1,4 @@
-from src.citation import expand_citations, get_sources
+from src.citation import expand_citations, format_citation, generate_full_pmid_citation, get_sources
 
 
 class TestCitation:
@@ -14,4 +14,16 @@ class TestCitation:
         assert sources == {2, 3, 6, 7, 9, 10, 11, 12, 15}
 
     def test_expand_citations(self):
-        assert expand_citations("Sources 3, 8, and 9") == 'Source 3, Source 8, Source 9'
+        assert expand_citations("Sources 3, 8, and 9") == "Source 3, Source 8, Source 9"
+
+    def test_generate_full_pmid_citation(self):
+        assert (
+            generate_full_pmid_citation("11561226")
+            == "Jakobs, P. M., Hanson, E. L., Crispell, K. A., Toy, W., Keegan, H., Schilling, K., … Hershberger, R. E. (2001 , Sep). Novel lamin a/c mutations in two families with dilated cardiomyopathy and conduction system disease. Journal of cardiac failure. URL: https://pubmed.ncbi.nlm.nih.gov/11561226/, doi:10.1054/jcaf.2001.26339"
+        )
+
+    def test_format_citation(self):
+        assert (
+            format_citation("PMID:11561226")
+            == "Jakobs, P. M., Hanson, E. L., Crispell, K. A., Toy, W., Keegan, H., Schilling, K., … Hershberger, R. E. (2001 , Sep). Novel lamin a/c mutations in two families with dilated cardiomyopathy and conduction system disease. Journal of cardiac failure. URL: https://pubmed.ncbi.nlm.nih.gov/11561226/, doi:10.1054/jcaf.2001.26339"
+        )

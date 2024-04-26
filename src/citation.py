@@ -183,13 +183,6 @@ async def get_formatted_sources(source_nodes:List[NodeWithScore]):
     return references, sources_dict
 
 
-def format_citations(citations: List[str]):
-    citations_formatted = []
-    for citation in citations:
-        citations_formatted.append(format_citation(citation))
-    return ", ".join(citations_formatted)
-
-
 def generate_bibliography(source_nodes: List[NodeWithScore], source_order: List[int]):
     references = "\n\n### Sources\n"
     # deduplicate sources
@@ -198,7 +191,7 @@ def generate_bibliography(source_nodes: List[NodeWithScore], source_order: List[
         source_number = int(node.text.split(":")[0].removeprefix("Source "))
         candidate_citations = node.metadata["citation"]
         citation = candidate_citations[0]
-        source_map[source_number] = citation
+        source_map[source_number] = format_citation(citation)
 
     inline_citation_map = defaultdict(list)
     citation_bibliography_number = {}
@@ -206,8 +199,9 @@ def generate_bibliography(source_nodes: List[NodeWithScore], source_order: List[
         if citation not in citation_bibliography_number:
             citation_bibliography_number[citation] = len(citation_bibliography_number) + 1
         bibliography_number = citation_bibliography_number[citation]
+        if not bibliography_number in inline_citation_map[source_number]:
+            references += f"[{bibliography_number}] {citation}\n"
         inline_citation_map[source_number].append(bibliography_number)
-        references += f"[{bibliography_number}] {citation}\n"
 
     return references, inline_citation_map
 
