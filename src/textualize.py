@@ -48,6 +48,7 @@ def get_list(text: str | list[str]):
     citations = text.split(",")
     citations[0] = citations[0].removeprefix("[")
     citations[-1] = citations[-1].removesuffix("]")
+    citations = [citation for citation in citations if not citation.startswith("Orphanet")]
     return citations
 
 
