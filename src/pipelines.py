@@ -192,18 +192,15 @@ def get_query_engine(retriever: BaseRetriever):
 def get_retriever(
     storage_context: StorageContext,
 ):
-    if Settings.llm.model == "llama3:8b-instruct-q4_0":
-        CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL = (
-            'Given the question, extract key phrases from the question. Avoid stopwords. Reply with a comma separated list of terms.\n'
-            'question: {question}\n'
-            'TERMS: \n'
-        )
-        CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL = PromptTemplate(
-            CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL,
-            prompt_type=PromptType.QUERY_KEYWORD_EXTRACT,
-        )
-    else:
-        CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL = None
+    CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL = (
+        'What disease or diseases are mentioned in the question? Only respond in a comma separated format.\n'
+        'QUESTION: {question}\n'
+        'DISEASES: '
+    )
+    CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL = PromptTemplate(
+        CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL,
+        prompt_type=PromptType.QUERY_KEYWORD_EXTRACT,
+    )
 
     return KG_RAG_KnowledgeGraphRAGRetriever(
         storage_context=storage_context,
