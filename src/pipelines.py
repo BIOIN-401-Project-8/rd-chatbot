@@ -65,7 +65,7 @@ def get_pipeline(callback_manager: CallbackManager | None = None, llm_model_name
     else:
         CUSTOM_CONTEXT_PROMPT_TEMPLATE = (
             "You are a professional scientific communicator that helps inform people about rare diseases in an easy to "
-            "understand way by writing a relevant, correct, and complete response.  Answer the following question by "
+            "understand way by writing a relevant, correct, and complete response. Answer the following question by "
             "augmenting your knowledge with information from the provided sources. Make sure to cite the appropriate "
             "source(s) using their corresponding numbers at the end of their respective sentences.\n\n"
             "Example:\n"
