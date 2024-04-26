@@ -337,14 +337,10 @@ def postprocess_citation(response):
     source_nodes = get_source_nodes(response, content)
 
     content = content.split("Sources:")[0].strip()
+    content = content.split("\n\nSource:")[0].strip()
     content = content.split("References:")[0].strip()
     content = expand_citations(content)
-    content = re.sub(r"Source (\d+)", r"[\1]", content, flags=re.I)
-    content = re.sub(r"\(([\d, -]+)\.\)", r"[\1]\.", content, flags=re.I)
-    content = re.sub(r"\(\[", "[", content)
-    content = re.sub(r"\]\)", "]", content)
-    content = re.sub(r"\[\[+", "[", content)
-    content = re.sub(r"\]\]+", "]", content)
+    content = normalize_citations(content)
 
     bibliography = None
     if source_nodes:
@@ -362,6 +358,16 @@ def postprocess_citation(response):
             content = merge_adjacent_citations(content)
 
     return content, bibliography
+
+
+def normalize_citations(content):
+    content = re.sub(r"Source (\d+)", r"[\1]", content, flags=re.I)
+    content = re.sub(r"\(([\d, -]+)\)[.,]", r"[\1].", content, flags=re.I)
+    content = re.sub(r"\(\[", "[", content)
+    content = re.sub(r"\]\)", "]", content)
+    content = re.sub(r"\[\[+", "[", content)
+    content = re.sub(r"\]\]+", "]", content)
+    return content
 
 
 def get_source_order(content):
