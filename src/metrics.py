@@ -46,7 +46,7 @@ def plot(
     fname: str | None = None,
     title: str = "True/False Questions",
 ):
-    fig, ax = plt.subplots(figsize=(12, 6))
+    fig, ax = plt.subplots(figsize=(6, 3))
 
     g = sns.barplot(
         data=df[columns],
@@ -55,10 +55,10 @@ def plot(
         ax=ax,
     )
     n = len(df)
-    if title != "True/False Questions":
-        g.set_title(f"{title} (n = {n})")
-    else:
-        g.set_title(f"{ylabel} on (n = {n}) {title}")
+    # if title != "True/False Questions":
+    #     g.set_title(f"{title} (n = {n})")
+    # else:
+    #     g.set_title(f"{ylabel} on (n = {n}) {title}")
     g.set_ylabel(ylabel)
     g.set_xlabel("Model")
     g.set_xticks(range(len(model_names)))
