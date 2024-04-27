@@ -107,7 +107,6 @@ def eval_llm():
             df_view = df[df[f"error_{slug}"] == True]
         if len(df_view) == 0:
             continue
-        llm = get_llm(llm_model_name=model_name)
 
         for index, row in tqdm(df_view.iterrows(), total=len(df_view)):
             slug = slug
