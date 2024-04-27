@@ -1,4 +1,4 @@
-chainlit==1.0.505
+chainlit==1.0.401
 deep-translator==1.11.4
 evaluate==0.4.1  # eval
 faiss-gpu==1.7.2
