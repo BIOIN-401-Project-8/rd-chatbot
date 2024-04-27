@@ -31,7 +31,7 @@ def get_graph_store():
     )
 
 
-def get_retriever_pipeline(callback_manager: CallbackManager | None = None, llm_model_name: str = "llama3:8b-instruct-q4_0"):
+def get_retriever_pipeline(callback_manager: CallbackManager | None = None, llm_model_name: str = "llama3:8b-instruct-q5_K_M"):
     Settings.llm = get_llm(llm_model_name)
     Settings.embed_model, Settings.num_output = get_sentence_transformer_embed_model()
     Settings.callback_manager = callback_manager
@@ -42,12 +42,48 @@ def get_retriever_pipeline(callback_manager: CallbackManager | None = None, llm_
     return get_retriever(storage_context)
 
 
-def get_pipeline(callback_manager: CallbackManager | None = None, llm_model_name: str = "llama3:8b-instruct-q4_0"):
+def get_pipeline(callback_manager: CallbackManager | None = None, llm_model_name: str = "llama3:8b-instruct-q5_K_M"):
     retriever = get_retriever_pipeline(callback_manager, llm_model_name)
+
+    if llm_model_name.startswith("starling-lm"):
+        CUSTOM_CONTEXT_PROMPT_TEMPLATE = """
+            The following is a friendly conversation between a user and an AI assistant.
+            The assistant is provides an answer based solely on the provided sources. The
+            assistant cites the appropriate source(s) using their corresponding numbers.
+            Every answer should include at least one source citation. Only cite a source
+            when you are explicitly referencing it. If the assistant does not know the
+            answer to a question, it truthfully says it does not know.
+
+            Here are the relevant sources for the context:
+
+            {context_str}
+
+            Instruction: Based on the above sources, provide a detailed answer with
+            sources for the user question below. Answer "I'm sorry, I don't know" if not present in the
+            document.
+        """
+    else:
+        CUSTOM_CONTEXT_PROMPT_TEMPLATE = (
+            "You are a professional scientific communicator that helps inform people about rare diseases in an easy to "
+            "understand way by writing a relevant, correct, and complete response. Answer the following question by "
+            "augmenting your knowledge with information from the provided sources. Make sure to cite the appropriate "
+            "source(s) using their corresponding numbers at the end of their respective sentences.\n\n"
+            "Example:\n"
+            "Context:\n"
+            "Source 1: sky is red in evening\n\n"
+            "Source 2: sky is blue in the morning.\n\n"
+            "Source 3: water is wet when the sky is red.\n\n"
+            "When is water wet?\n\n"
+            "Answer: Water will be wet when the sky is red [3], which occurs in the evening [1].\n\n"
+            "Now it is your turn.\n"
+            "--------------------\n"
+            "{context_str}"
+        )
 
     query_engine = get_query_engine(retriever)
     chat_engine = query_engine.as_chat_engine(
         chat_mode=CitationChatMode.CONDENSE_PLUS_CONTEXT,
+        context_prompt=CUSTOM_CONTEXT_PROMPT_TEMPLATE,
         verbose=True,
     )
     return chat_engine
@@ -63,7 +99,7 @@ def get_huggingface_embed_model(embed_model_name: str =  "mixedbread-ai/mxbai-em
     )
 
 
-def get_sentence_transformer_embed_model(embed_model_name: str = "intfloat/e5-base-v2", embed_batch_size: int = 16):
+def get_sentence_transformer_embed_model(embed_model_name: str = "intfloat/e5-base-v2", embed_batch_size: int = 8):
     return (
         SentenceTransformerEmbeddings(
             model_name_or_path=embed_model_name,
@@ -87,7 +123,7 @@ def get_ollama_embed_model(embed_model_name: str = "mxbai-embed-large:335m-v1-fp
     )
 
 
-def get_llm(llm_model_name: str = "llama3:8b-instruct-q4_0"):
+def get_llm(llm_model_name: str = "llama3:8b-instruct-q5_K_M"):
     if llm_model_name.startswith("openai:"):
         llm_model_name = llm_model_name.removeprefix("openai:")
         return OpenAI(
@@ -191,18 +227,15 @@ def get_query_engine(retriever: BaseRetriever):
 def get_retriever(
     storage_context: StorageContext,
 ):
-    if Settings.llm.model == "llama3:8b-instruct-q4_0":
-        CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL = (
-            'Given the question, extract key phrases from the question. Avoid stopwords. Reply with a comma separated list of terms.\n'
-            'question: {question}\n'
-            'TERMS: \n'
-        )
-        CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL = PromptTemplate(
-            CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL,
-            prompt_type=PromptType.QUERY_KEYWORD_EXTRACT,
-        )
-    else:
-        CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL = None
+    CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL = (
+        'What disease or diseases are mentioned in the question? Only respond in a comma separated format.\n'
+        'QUESTION: {question}\n'
+        'DISEASES: '
+    )
+    CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL = PromptTemplate(
+        CUSTOM_QUERY_KEYWORD_EXTRACT_TEMPLATE_TMPL,
+        prompt_type=PromptType.QUERY_KEYWORD_EXTRACT,
+    )
 
     return KG_RAG_KnowledgeGraphRAGRetriever(
         storage_context=storage_context,

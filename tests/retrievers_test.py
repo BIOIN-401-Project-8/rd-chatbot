@@ -53,5 +53,27 @@ class TestKG_RAG_KnowledgeGraphRAGRetriever:
         assert texts
 
     def test_extract_mentions(self, retriever):
+        entities = retriever._get_entities("Is there a cure for cystic fibrosis?")
+        assert "Cystic fibrosis" in entities
         entities = retriever._get_entities("My right leg hurts from GNE Myopathy, what do I do?")
         assert "GNE Myopathy" in entities
+
+        # Only seems to work on Llama 70B
+        # entities = retriever._get_entities("I get drunk without drinking alcohol, what rare disease do I have?")
+        # assert "alcohol" in entities
+
+        entities = retriever._get_entities("What treats PKU?")
+        assert "PKU" in entities
+        entities = retriever._get_entities("I have Maple Syrup Urine Disease. What organizations can help me?")
+        assert "Maple Syrup Urine Disease" in entities
+        entities = retriever._get_entities("Write a 250 word summary about Mucolipidosis IV.")
+        assert "Mucolipidosis IV" in entities
+        entities = retriever._get_entities("I have Klinefelter syndrome, what are the odds my children inherit it?")
+        assert "Klinefelter syndrome" in entities
+        entities = retriever._get_entities("How many people have Zellweger Spectrum Disorders?")
+        assert "Zellweger Spectrum Disorders" in entities
+        entities = retriever._get_entities("What causes L1 Syndrome?")
+        assert "L1 Syndrome" in entities
+        entities = retriever._get_entities("My child has GRACILE syndrome, how long will he live for?")
+        assert "GRACILE syndrome" in entities
+

@@ -104,14 +104,14 @@ class CitationCondensePlusContextChatEngine(CondensePlusContextChatEngine):
         for postprocessor in self._node_postprocessors:
             nodes = postprocessor.postprocess_nodes(nodes, query_bundle=QueryBundle(message))
 
-        context_str = "\n\n".join([n.node.get_content(metadata_mode=MetadataMode.LLM).strip() for n in nodes])
+        context_str = "\n" + "\n\n".join([n.node.get_content(metadata_mode=MetadataMode.LLM).strip() for n in nodes])
         return context_str, nodes
 
     async def _aretrieve_context(self, message: str) -> Tuple[str, List[NodeWithScore]]:
         """Build context for a message from retriever."""
         nodes = await self._retriever.aretrieve(message)
         nodes = self._create_citation_nodes(nodes)
-        context_str = "\n\n".join([n.node.get_content(metadata_mode=MetadataMode.LLM).strip() for n in nodes])
+        context_str = "\n" + "\n\n".join([n.node.get_content(metadata_mode=MetadataMode.LLM).strip() for n in nodes])
         return context_str, nodes
 
     @trace_method("chat")
@@ -194,3 +194,7 @@ class CitationCondensePlusContextChatEngine(CondensePlusContextChatEngine):
         thread.start()
 
         return chat_response
+
+    def reset(self) -> None:
+        self._nodes = []
+        super().reset()

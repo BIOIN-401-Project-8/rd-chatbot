@@ -1,6 +1,5 @@
 import cProfile
 import logging
-import re
 import sys
 import time
 
@@ -10,13 +9,7 @@ from llama_index.core.callbacks import CallbackManager
 from llama_index.core.chat_engine.types import BaseChatEngine
 
 from callbacks import CustomLlamaIndexCallbackHandler
-from citation import (
-    expand_citations,
-    generate_bibliography,
-    get_source_nodes,
-    merge_adjacent_citations,
-    smart_inline_citation_format
-)
+from citation import postprocess_citation
 from lingua_iso_codes import IsoCode639_1
 from pipelines import get_pipeline
 from translation import BaseTranslator, detect_language, get_language_detector, get_translator, translate
@@ -133,27 +126,7 @@ async def on_message(message: cl.Message):
     response = await cl.make_async(chat)(chat_engine, content, profile=False)
     response_message = cl.Message(content="")
 
-    content = response.response
-
-    source_nodes = get_source_nodes(response, content)
-
-    content = content.split("Sources:")[0].strip()
-    content = expand_citations(content)
-    content = re.sub(r"Source (\d+)", r"[\1]", content, flags=re.I)
-    content = re.sub(r"\(\[", "[", content)
-    content = re.sub(r"\]\)", "]", content)
-    content = re.sub(r"\[\[+", "[", content)
-    content = re.sub(r"\]\]+", "]", content)
-
-    bibliography = None
-    if source_nodes:
-        # get order of sources
-        source_order = re.findall(r"\[(\d+)\]", content)
-        source_order = [int(source) for source in source_order]
-        bibliography, inline_citation_map = generate_bibliography(source_nodes, source_order)
-        for source_number, biblography_numbers in inline_citation_map.items():
-            content = re.sub(rf"\[{source_number}\]", smart_inline_citation_format(biblography_numbers), content)
-            content = merge_adjacent_citations(content)
+    content, bibliography = postprocess_citation(response)
 
     if language != "en" and language is not None:
         content = await translate(translator, content, source="en", target=language)
