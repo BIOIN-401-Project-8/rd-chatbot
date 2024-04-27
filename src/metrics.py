@@ -46,7 +46,7 @@ def plot(
     fname: str | None = None,
     title: str = "True/False Questions",
 ):
-    fig, ax = plt.subplots(figsize=(12, 6))
+    fig, ax = plt.subplots(figsize=(6, 3))
 
     g = sns.barplot(
         data=df[columns],
@@ -55,10 +55,10 @@ def plot(
         ax=ax,
     )
     n = len(df)
-    if title != "True/False Questions":
-        g.set_title(f"{title} (n = {n})")
-    else:
-        g.set_title(f"{ylabel} on (n = {n}) {title}")
+    # if title != "True/False Questions":
+    #     g.set_title(f"{title} (n = {n})")
+    # else:
+    #     g.set_title(f"{ylabel} on (n = {n}) {title}")
     g.set_ylabel(ylabel)
     g.set_xlabel("Model")
     g.set_xticks(range(len(model_names)))
@@ -68,7 +68,7 @@ def plot(
     g.yaxis.grid(True)
 
     if fname is None:
-        fname = f"/workspaces/rgd-chatbot/eval/results/KG_RAG/one_hop_true_false_v2_df_{ylabel.lower()}.v2.png"
+        fname = f"/workspaces/rd-chatbot/eval/results/KG_RAG/one_hop_true_false_v2_df_{ylabel.lower()}.v2.png"
 
     plt.savefig(fname, bbox_inches="tight")
 
@@ -78,7 +78,7 @@ def metrics_llm():
     fh.setLevel(logging.DEBUG)
     logger.addHandler(fh)
 
-    input_csv = "/workspaces/rgd-chatbot/eval/results/KG_RAG/test_questions_one_hop_true_false_v2.csv"
+    input_csv = "/workspaces/rd-chatbot/eval/results/KG_RAG/test_questions_one_hop_true_false_v2.csv"
     output_csv = input_csv.replace(".csv", "_metrics.csv")
 
     df = pd.read_csv(input_csv)
@@ -106,7 +106,7 @@ def metrics_llm():
 
 
 def metrics_translation():
-    input_csv = "/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_translation.csv"
+    input_csv = "/workspaces/rd-chatbot/eval/results/RD/gard_corpus_translation.csv"
     output_csv = input_csv.replace(".csv", "_metrics.csv")
 
     df = pd.read_csv(input_csv)
@@ -124,7 +124,7 @@ def metrics_translation():
 
     column = columns[-1]
 
-    methods = ["google", "opusmt", "seamlessm4tv2", "mixtral8x7b", "mixtral_8x7b-instruct-v0.1-q4_0"]
+    methods = ["google", "opusmt", "mixtral8x7b", "mixtral_8x7b-instruct-v0.1-q4_0"]
     df_out = pd.DataFrame()
 
     for target in ["fr", "it"]:
@@ -163,9 +163,9 @@ def metrics_translation():
     cols = [
         "Google Translate",
         "OpusMT",
-        "SeamlessM4Tv2",
+        # "SeamlessM4Tv2",
         "Mixtral-8x7B",
-        "Mixtral-8x7B_q4",
+        "Mixtral-8x7B q4_0",
     ]
     plot(
         df_out,
@@ -173,7 +173,7 @@ def metrics_translation():
         cols,
         "BLEU",
         (0, 1),
-        "/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_translation_bleu_fr.png",
+        "/workspaces/rd-chatbot/eval/results/RD/gard_corpus_translation_bleu_fr.png",
         title="French Translation",
     )
     bleu_columns_it = [column for column in bleu_columns if "_it" in column]
@@ -183,7 +183,7 @@ def metrics_translation():
         cols,
         "BLEU",
         (0, 1),
-        "/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_translation_bleu_it.png",
+        "/workspaces/rd-chatbot/eval/results/RD/gard_corpus_translation_bleu_it.png",
         title="Italian Translation",
     )
 
@@ -195,7 +195,7 @@ def metrics_translation():
         cols,
         "BLEU",
         (0, 1),
-        "/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_back_translation_bleu_fr.png",
+        "/workspaces/rd-chatbot/eval/results/RD/gard_corpus_back_translation_bleu_fr.png",
         title="French Back Translation",
     )
     bleu_back_columns_it = [column for column in bleu_back_columns if "_it" in column]
@@ -205,7 +205,7 @@ def metrics_translation():
         cols,
         "BLEU",
         (0, 1),
-        "/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_back_translation_bleu_it.png",
+        "/workspaces/rd-chatbot/eval/results/RD/gard_corpus_back_translation_bleu_it.png",
         title="Italian Back Translation",
     )
 
@@ -221,6 +221,7 @@ def metrics_translation():
         ]
     )
     time_columns = [column for column in df_time.columns if "time_" in column]
+    time_columns = [column for column in time_columns if "seamlessm4tv2" not in column]
     for time_column in time_columns:
         df_time[time_column + "_seconds"] = df_time[time_column].apply(lambda x: pd.to_timedelta(x).total_seconds())
     time_columns_fr = [column + "_seconds" for column in time_columns if "_fr" in column]
@@ -230,7 +231,7 @@ def metrics_translation():
         cols,
         "Time (s)",
         None,
-        "/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_translation_time_fr.png",
+        "/workspaces/rd-chatbot/eval/results/RD/gard_corpus_translation_time_fr.png",
         title="French Translation",
     )
     time_columns_it = [column + "_seconds" for column in time_columns if "_it" in column]
@@ -240,7 +241,7 @@ def metrics_translation():
         cols,
         "Time (s)",
         None,
-        "/workspaces/rgd-chatbot/eval/results/RD/gard_corpus_translation_time_it.png",
+        "/workspaces/rd-chatbot/eval/results/RD/gard_corpus_translation_time_it.png",
         title="Italian Translation",
     )
 

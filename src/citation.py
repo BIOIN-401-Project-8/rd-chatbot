@@ -349,7 +349,7 @@ def expand_citations(content: str):
         numbers.append(int(and_source))
         content = content.replace(f"{source}, and {and_source}", ", ".join([f"[{x}]" for x in numbers]))
     # [3, 4, 5] -> [3], [4], [5]
-    sources = re.findall(r"(\[[\d,\- ]+\])", content)
+    sources = re.findall(r"\[(\d[\d,\- ]+)\]", content)
     for source in sources:
         numbers = get_numbers_complex(source)
         content = content.replace(source, ", ".join([f"[{x}]" for x in numbers]))
@@ -368,17 +368,20 @@ def postprocess_citation(response):
     content = normalize_citations(content)
 
 
+    print("Normalized Citations:")
+    print(content)
+
     source_order = get_source_order(content)
     print('Source Order:', source_order)
-    
+
     source_nodes =  get_source_nodes(response, content, source_order)
     print("Source Nodes: ", len(source_nodes))
 
     # remove extraneous hallucinated sources
-    if source_order:
-        for i in range(len(source_nodes) + 1, max(source_order) + 1):
-            content = re.sub(rf"\W*\[{i}\],", "", content)
-            content = re.sub(rf"\W*\[{i}\]", "", content)
+    # if source_order:
+    #     for i in range(len(source_nodes) + 1, max(source_order) + 1):
+    #         content = re.sub(rf"\W*\[{i}\],", "", content)
+    #         content = re.sub(rf"\W*\[{i}\]", "", content)
 
     bibliography = None
     if source_nodes:
@@ -398,7 +401,7 @@ def postprocess_citation(response):
 
 def normalize_citations(content):
     content = re.sub(r"Source (\d+)", r"[\1]", content, flags=re.I)
-    content = re.sub(r"\(([\d, -]+)\)[.,]", r"[\1].", content)
+    content = re.sub(r"\(([\d, -]+)\)[., ]", r"[\1].", content)
     content = re.sub(r"\(\[", "[", content)
     content = re.sub(r"\]\)", "]", content)
     content = re.sub(r"\[\[+", "[", content)
