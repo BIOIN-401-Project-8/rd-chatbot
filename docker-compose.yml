@@ -27,7 +27,8 @@ services:
       - ~/.wakatime.cfg:/root/.wakatime.cfg:cached
       - ~/.cache:/root/.cache:cached
       - ${DATA_PATH_1}:/data:cached
-      - ${DATA_PATH_2}:/data/Archive:cached
+      # Only needs this on my computer
+      # - ${DATA_PATH_2}:/data/Archive:cached
     command: sleep infinity
 
   app:
@@ -58,7 +59,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ~/.cache:/root/.cache:cached
       - ${DATA_PATH_1}:/data:cached
-      - ${DATA_PATH_2}:/data/Archive:cached
+      # Only needs this on my computer
+      # - ${DATA_PATH_2}:/data/Archive:cached
     working_dir: /workspaces/rd-chatbot
     command: chainlit run -h src/app.py
 
