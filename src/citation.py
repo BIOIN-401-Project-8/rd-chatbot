@@ -218,13 +218,12 @@ def generate_bibliography(source_nodes: List[NodeWithScore], source_order: List[
     return references, inline_citation_map
 
 
-def get_source_nodes(response: RESPONSE_TYPE, content: str):
-    sources = get_sources(content)
+def get_source_nodes(response: RESPONSE_TYPE, content: str, sources: set[int]):
     source_nodes = []
     for source_node in response.source_nodes:
         source = int(source_node.text.split(":")[0].removeprefix("Source "))
         if source in sources:
-            source_nodes.append(source)
+            source_nodes.append(source_node)
     return source_nodes
 
 
@@ -297,8 +296,10 @@ def get_numbers_complex(cite):
         if "-" in a:
             start, end = map(int, a.split("-"))
             numbers.update(range(start, end + 1))
-        else:
+        try:
             numbers.add(int(a))
+        except ValueError:
+            pass
     numbers = list(numbers)
     return numbers
 
@@ -327,7 +328,8 @@ def expand_citations(content: str):
     # (Sources 9-12) -> (Source 9, Source 10, Source 11, Source 12)
     sources = re.findall(r"Sources* (\d[\d,\- ]*)-([\d[\d,\- ]*)", content)
     for start, end in sources:
-        numbers = list(range(int(start), int(end) + 1))
+        end = get_numbers_complex(end)[-1]
+        numbers = list(range(int(start), end + 1))
         if f"Sources {start}-{end}" in content:
             content = content.replace(f"Sources {start}-{end}", ", ".join([f"Source {x}" for x in numbers]))
         else:
@@ -359,22 +361,24 @@ def postprocess_citation(response):
     print("LLM Output:")
     print(content)
 
-    source_nodes = response.source_nodes
-
     content = content.split("Sources:")[0].strip()
     content = content.split("\n\nSource:")[0].strip()
     content = content.split("References:")[0].strip()
     content = expand_citations(content)
     content = normalize_citations(content)
 
-    print("Source Nodes: ", get_source_nodes(response, content))
 
     source_order = get_source_order(content)
     print('Source Order:', source_order)
+    
+    source_nodes =  get_source_nodes(response, content, source_order)
+    print("Source Nodes: ", len(source_nodes))
+
     # remove extraneous hallucinated sources
-    for i in range(len(source_nodes) + 1, max(source_order) + 1):
-        content = re.sub(rf"\W*\[{i}\],", "", content)
-        content = re.sub(rf"\W*\[{i}\]", "", content)
+    if source_order:
+        for i in range(len(source_nodes) + 1, max(source_order) + 1):
+            content = re.sub(rf"\W*\[{i}\],", "", content)
+            content = re.sub(rf"\W*\[{i}\]", "", content)
 
     bibliography = None
     if source_nodes:
@@ -394,6 +398,7 @@ def postprocess_citation(response):
 
 def normalize_citations(content):
     content = re.sub(r"Source (\d+)", r"[\1]", content, flags=re.I)
+    content = re.sub(r"\(([\d, -]+)\)[.,]", r"[\1].", content)
     content = re.sub(r"\(\[", "[", content)
     content = re.sub(r"\]\)", "]", content)
     content = re.sub(r"\[\[+", "[", content)
